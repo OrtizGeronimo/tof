@@ -205,7 +205,9 @@
             ?> 
             <div class="item selfie col-lg-3 col-md-4 col-6 col-sm">
                <a href="<?= $path ?>" class="fancylight popup-btn" data-fancybox-group="light"> 
-               <img class="img-fluid" src="<?= $path ?>" alt="">
+               <div class="img-container">
+                    <img class="img-fluid" src="<?= $path ?>" alt="">
+                </div>
                </a>
             </div>
             <?php }?>

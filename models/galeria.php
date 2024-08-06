@@ -16,7 +16,7 @@ class Galeria{
     }
 
     public static function getFileName($img, $servicio){
-        return file_exists('./archivos/user_'.($servicio["user_login"]).'/galeria/'.($img["img"]).'')?'./archivos/user_'.($servicio["user_login"]).'/'.($img["img"]).'' : './assets/img/user_profile.webp';
+        return file_exists('./archivos/user_'.($servicio["user_login"]).'/galeria/'.($img["img"]).'')?'./archivos/user_'.($servicio["user_login"]).'/galeria/'.($img["img"]).'' : './assets/img/user_profile.webp';
     }
 }
 
