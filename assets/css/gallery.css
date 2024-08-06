@@ -1,0 +1,25 @@
+.carousel-item {
+    height: 100%;
+}
+
+.carousel-item img{
+    width: auto;
+    max-height: 500px;
+    height: fit-content;
+    object-fit: contain;
+}
+
+.carousel {
+    height: 500px;
+}
+
+
+
+.portfolio-item{
+	/*width:100%;*/
+}
+.portfolio-item .item{
+	/*width:303px;*/
+	float:left;
+	margin-bottom:10px;
+}
