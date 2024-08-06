@@ -1,0 +1,42 @@
+.carousel-item {
+    height: 100%;
+}
+
+.carousel-item img{
+    width: auto;
+    max-height: 500px;
+    height: fit-content;
+    object-fit: contain;
+}
+
+.carousel {
+    height: 500px;
+}
+
+
+.portfolio-item .item{
+	/*width:303px;*/
+	float:left;
+	margin-bottom:10px;
+}
+
+.item {
+    position: relative;
+    overflow: hidden;
+}
+
+.img-container {
+    position: relative;
+    width: 100%;
+    padding-top: 75%; 
+}
+
+.img-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    object-position: center;
+}
