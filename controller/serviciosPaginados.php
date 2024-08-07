@@ -26,24 +26,24 @@
 
 <div class="row row-cols-2">
     <?php while($row = mysqli_fetch_array($servicios)){ ?>
-            <div class="servicio-item">
-                <a href="./userProfile.php?idServicio=<?=($row["idServicio"])?>">
-                    <div class="d-flex">
-                        <img src="./archivos/user_<?=($row["user_login"]).'/'.($row["servicio_imagen"])?>" class="servicio-img flex-shrink-0" alt="">
-                        <div>
-                            <h3><?=($row["servicio_nombre"])?></h3>
-                            <h4><?=($row["user_nombre"])?></h4>
-                            <!-- <div class="stars">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div> -->
-                        </div>
+        <div class="servicio-item ">
+            <a href="./userProfile.php?idServicio=<?=($row["idServicio"])?>">
+                <div class="d-flex">
+                    <img src="./archivos/user_<?=($row["user_login"]).'/'.($row["servicio_imagen"])?>" class="servicio-img flex-shrink-0" alt="">
+                    <div>
+                        <h3><?=($row["servicio_nombre"])?></h3>
+                        <h4><?=($row["user_nombre"])?></h4>
+                        <!-- <div class="stars">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div> -->
                     </div>
-                </a>
-            </div>
+                </div>
+            </a>
+        </div>
     <?php } ?> 
 </div> 
 
