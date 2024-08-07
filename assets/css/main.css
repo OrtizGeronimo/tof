@@ -32,6 +32,10 @@
   --black: #000000;
   --transpartent-black: rgba(127, 137, 161, 0.25);
   --transparent-dark-grenn: rgba(0, 131, 116, 0.4);
+  --transpartent-gold: rgba(255, 215, 0, 0.5);
+  --gold:  rgba(255, 215, 0);
+  --transpartent-bronce:rgba(205, 127, 50, 0.5);
+  --transparent-diamante:rgba(185, 242, 255, 0.8);  
   --red: #df1529;
 }
 
