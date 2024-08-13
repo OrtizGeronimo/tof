@@ -36,33 +36,40 @@ function validacionInicioSesionYusuario(){
             type: "POST",
             datatype: "json",
             data: {"user":user, "pass":pass},
-            success: function(data){
-                console.log(data);
-                if(data == "null" || data == null){
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Datos incorrectos',
-                        text: 'Usuario o contraseña incorrectos.',
-                        showCancelButton: true,
-                        cancelButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
-                        showConfirmButton: false
-                    });
-                }else{
-                    console.log(data)
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Bienvenido!',
-                        text: 'Redirigiendo a la página principal...',
-                        showCancelButton: false,
-                        timer: 2000,
-                        showConfirmButton: false
-                    }).then((result) => {
-                        
-                        window.location.href = "index.php";
-                        
-                    });
+            success: function(response){
+                console.log(response);
+                try{
+                    var jsonResponse = JSON.parse(response);
+
+                    console.log(response);
+                    if(jsonResponse.success){
+                        console.log(response)
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Bienvenido!',
+                            text: 'Redirigiendo a la página principal...',
+                            showCancelButton: false,
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then((result) => {
+                            
+                            window.location.href = "index.php";
+                            
+                        });                    
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Datos incorrectos',
+                            text: 'Usuario o contraseña incorrectos.',
+                            showCancelButton: true,
+                            cancelButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar',
+                            showConfirmButton: false
+                        });
+                    }
+                } catch (e) {
+                    console.error("Invalid JSON response", e);
                 }
             }
-        });
+        });    
     }
 }

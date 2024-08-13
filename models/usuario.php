@@ -1,4 +1,7 @@
 <?php
+// Incluir el archivo de logging
+include 'logConfig.php';
+
 (file_exists("./../config/conexion.php"))? require_once('./../config/conexion.php') : require_once('./config/conexion.php');
 class Usuario{
     
@@ -52,6 +55,16 @@ class Usuario{
     }
 
     public static function updateUsuario($nomUsuario,$password,$email,$imgLogoRuta,$telefono,$nombreApellido,$usuarioModificacion,$idUsuario){
+        writeLog("UPDATE usuario
+                    SET user_nombre = '$nombreApellido',
+                        user_email = '$email',
+                        user_login = '$nomUsuario',
+                        user_telefono = '$telefono',
+                        user_img_perfil = '$imgLogoRuta',
+                        usr_mod = '$usuarioModificacion',
+                        fec_mod = now()
+                    WHERE idUsuario = $idUsuario;");
+
         if($password == ""){
             return BaseDeDatos::consulta("UPDATE usuario
                                         SET user_nombre = '$nombreApellido',
