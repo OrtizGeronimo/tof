@@ -41,7 +41,6 @@
                 $_SESSION["s_id_usuario"] = $lastUser["idUsuario"];
                 $_SESSION["s_nombre"]     = $newUser["nombre"];
                 $_SESSION["s_nombre_usuario"] = $newUser["nombreUsuario"];
-                $_SESSION["s_rol"]        = 'basico';
                 $_SESSION["s_img_perfil"] =  'archivos/user_'.$newUser["nombreUsuario"].'/user_profile.webp';
             }                                          
 
