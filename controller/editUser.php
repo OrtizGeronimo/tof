@@ -27,7 +27,6 @@
         }
 
         try {
-            writeLog($img_url);
             $user = Usuario::updateUsuario($newUser["nombreUsuario"],
                                             $newUser["newpassword"],
                                             $newUser["email"],
@@ -37,7 +36,6 @@
                                             $_SESSION["s_nombre_usuario"],
                                             $newUser["idUsuario"]);
             if($user){
-                writeLog("Llego hasta aca");
                 $lastUser = Usuario::getLastUsuario();
                 $lastUser = mysqli_fetch_array($lastUser);
                 $_SESSION["s_id_usuario"] = $lastUser["idUsuario"];
@@ -45,7 +43,6 @@
                 $_SESSION["s_nombre_usuario"] = $newUser["nombreUsuario"];
                 $_SESSION["s_rol"]        = 'basico';
                 $_SESSION["s_img_perfil"] =  'archivos/user_'.$newUser["nombreUsuario"].'/user_profile.webp';
-                writeLog($dir_img);   
             }                                          
 
             header('Location: ./../editUser.php?success');
