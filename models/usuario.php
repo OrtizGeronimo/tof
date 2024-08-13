@@ -55,15 +55,6 @@ class Usuario{
     }
 
     public static function updateUsuario($nomUsuario,$password,$email,$imgLogoRuta,$telefono,$nombreApellido,$usuarioModificacion,$idUsuario){
-        writeLog("UPDATE usuario
-                    SET user_nombre = '$nombreApellido',
-                        user_email = '$email',
-                        user_login = '$nomUsuario',
-                        user_telefono = '$telefono',
-                        user_img_perfil = '$imgLogoRuta',
-                        usr_mod = '$usuarioModificacion',
-                        fec_mod = now()
-                    WHERE idUsuario = $idUsuario;");
 
         if($password == ""){
             return BaseDeDatos::consulta("UPDATE usuario
