@@ -2,6 +2,7 @@
 session_start();
 require('./../models/servicio.php');
 require('./../assets/php/uploadImg.php');
+require('./../models/usuario.php');
 $servicio = $_POST;
 $imagenes  = Array(
     'Img' => $_FILES["imgLogo"],
@@ -99,23 +100,33 @@ if(
             
             $addTipo = $Servicio::addTipoServicios($servicio["tipo"],$idLastServicio,$_SESSION["s_nombre"]);
 
-            foreach($imagenes as $tipoImg => $img){
-                $name_img = ($tipoImg === "Img")? $nameImgServicio : $nameBannerServicio;
-                $dir_img = ($img["name"] != "") 
-                            ? "./../archivos/user_".$_SESSION["s_nombre_usuario"].""
-                            : "--";
+            $imgsGaleria = $_FILES["imgGaleria"];
 
-                if($dir_img!="--"){
-                    if(!file_exists($dir_img))
-                        mkdir($dir_img,7777,true);
-                    Imagen::upload($img,$name_img,$dir_img);
+            
+            $usuario = mysqli_fetch_array(Usuario::getUsuarioByServicio($idLastServicio));
+
+            
+
+            if (!empty($imgsGaleria['name'][0])) {
+                $dir_img = "./../archivos/user_".$usuario["user_login"]."/galeria";
+            } else {
+                $dir_img = "--";
+            }
+            if($dir_img!="--"){
+                if(!file_exists($dir_img)){
+                    mkdir($dir_img,0777,true);
+                }
+                
+                if (!empty($imgsGaleria['name'][0])) {
+                    $updateImgGallery = Imagen::uploadGallery($imgsGaleria,$usuario["user_login"],$dir_img, $idLastServicio);
                 }
             }
 
-            header("Location: ./../admin/index.php?successService");
+                header("Location: ./../admin/index.php?successService");
+        
         }
 
-    }else{
+    } else{
         header("Location: ./../admin/index.php?errorService");
     }
 }

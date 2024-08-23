@@ -46,6 +46,13 @@ class Usuario{
         return $user;
     }
 
+    public static function getUsuarioByServicio($idServicio){
+        $user = BaseDeDatos::consulta("SELECT u.*
+                                      FROM usuario u join servicio s ON u.idUsuario = s.FK_idUsuario
+                                      WHERE s.idServicio = $idServicio;");
+        return $user;
+    }
+
     public static function getLastUsuario(){
         return BaseDeDatos::consulta("SELECT * FROM usuario
                                       WHERE idUsuario IN (SELECT MAX(idUsuario) FROM usuario);");
