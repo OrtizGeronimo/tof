@@ -166,23 +166,32 @@
                       </div>
                     </div> -->
 
+                    <?php
+                      if($servicio["FK_idRol"] == 4 || $servicio["FK_idRol"] == 5 || $servicio["FK_idRol"] == 7){
+                    ?>
                     <h4 class="card-title">Imágenes y archivos</h4>
 
                     <div class="row mb-3">
                       <label for="imgLogo" class="col-md-4 col-lg-3 col-form-label">Imagen de servicio <span class="camposObligatorios">*</span></label>
                       <div class="col-md-8 col-lg-9">
                           <!-- <img id="imgLogo" src="" alt="Profile"> -->
-                          <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg">
+                          <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg" required>
                         </div>
                     </div>
-
+                    
                     <div class="row mb-3">
                       <label for="imgBanner" class="col-md-4 col-lg-3 col-form-label">Imagen de banner</label>
                       <div class="col-md-8 col-lg-9">
                         <!-- <img class="imgBanner" id="imgBanner" src="" alt="Profile"> -->
                         <input name="imgBanner" class="form-control" type="file" id="btnSubirImgBanner" accept="image/png, .jpeg, .jpg">
                       </div>
-                    </div>                     
+                    </div>  
+                    
+                    
+                      <!-- agregar galeria -->
+                    <?php
+                      }
+                    ?>                    
   
                     <!-- <div class="row mb-3">
                       <label for="company" class="col-md-4 col-lg-3 col-form-label">Galeria de imagen</label>

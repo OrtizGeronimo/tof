@@ -13,8 +13,11 @@ $imagenes  = Array(
 if($servicio["nombreServicio"] != null && $servicio["telefono"]!= null && $servicio["descripción"] != null && $servicio["categoria"]!= null && $servicio["provincia"] != null && $servicio["departamento"] != null && isset($_SESSION["s_id_usuario"]) && isset($_SESSION["s_nombre"])){
     $modelServicio = new Servicio();
     
-    $nameImgServicio = preg_replace('/[^a-zA-Z0-9._ ]/', '', 'img_'.$servicio["nombreServicio"]);   
-    $nameBannerServicio = preg_replace('/[^a-zA-Z0-9._ ]/', '', 'imgBanner_'.$servicio["nombreServicio"]);
+    $usr_servicio = $modelServicio::getServicio($servicio["idServicio"]);
+    $usr_servicio = mysqli_fetch_array($usr_servicio);
+
+    $nameImgServicio = preg_replace('/[^a-zA-Z0-9._ ]/', '', 'service_'.$usr_servicio["user_login"]);   
+    $nameBannerServicio = preg_replace('/[^a-zA-Z0-9._ ]/', '', 'imgBanner_'.$usr_servicio["user_login"]);
     
     $updateServicio = $modelServicio::updateServicio($servicio["idServicio"],$servicio["nombreServicio"],$servicio["descripción"],$servicio["emailContacto"],$servicio["telefono"],$servicio["sitioWeb"],$nameImgServicio.'.webp',$nameBannerServicio.'.webp',$servicio["provincia"],$servicio["departamento"],$_SESSION["s_id_usuario"],$_SESSION["s_nombre"]);
 
@@ -68,7 +71,7 @@ if($servicio["nombreServicio"] != null && $servicio["telefono"]!= null && $servi
                         : "--";
                 if($dir_img!="--"){
                 if(!file_exists($dir_img))
-                    mkdir($dir_img,7777,true);
+                    mkdir($dir_img,0777,true);
                 $updateImageService = Imagen::upload($img,$name_img,$dir_img);
             }
         }
