@@ -3,8 +3,10 @@
   require('../models/categoria.php');
   require('../models/provincia.php');
   require('../models/servicio.php');
+  require('../models/galeria.php');
   $categorias = Categoria::traerCategoria();
   $provincias = Provincia::traerProvincia();
+
 ?>
 
 <!DOCTYPE html>
@@ -22,6 +24,7 @@
     $tipoServicio = mysqli_fetch_array($tipoServicio);
     $categoriaServicioAux = Servicio::getCategoriasServicio($_GET["idServicio"]);
     $categoriaServicio = array();
+    $galeriaImgs = Galeria::getGaleria($_GET["idServicio"]);
     while($row = mysqli_fetch_array($categoriaServicioAux))
       array_push($categoriaServicio,["id" => $row["idCategoria"],"tipo"=>$row["tipo"]]);    
     
@@ -166,23 +169,50 @@
                       </div>
                     </div> -->
 
+                    <?php
+                      if($servicio["FK_idRol"] == 4 || $servicio["FK_idRol"] == 5 || $servicio["FK_idRol"] == 7){
+                    ?>
                     <h4 class="card-title">Imágenes y archivos</h4>
 
                     <div class="row mb-3">
                       <label for="imgLogo" class="col-md-4 col-lg-3 col-form-label">Imagen de servicio <span class="camposObligatorios">*</span></label>
                       <div class="col-md-8 col-lg-9">
                           <!-- <img id="imgLogo" src="" alt="Profile"> -->
-                          <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg">
+                          <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg" required>
                         </div>
                     </div>
-
+                    
                     <div class="row mb-3">
                       <label for="imgBanner" class="col-md-4 col-lg-3 col-form-label">Imagen de banner</label>
                       <div class="col-md-8 col-lg-9">
                         <!-- <img class="imgBanner" id="imgBanner" src="" alt="Profile"> -->
                         <input name="imgBanner" class="form-control" type="file" id="btnSubirImgBanner" accept="image/png, .jpeg, .jpg">
                       </div>
-                    </div>                     
+                    </div>     
+                    
+                    <div class="row mb-3">
+                      <label for="imgGaleria[]" class="col-md-4 col-lg-3 col-form-label">Imágenes de Galería</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="imgGaleria[]" class="form-control" type="file" id="btnSubirImgGaleria" accept="image/png, .jpeg, .jpg" multiple>
+                          <div id="imgPreviewContainer" class="img-preview-container">
+                            <?php
+                              while($img=mysqli_fetch_array($galeriaImgs)){
+                              $path =  Galeria::getFileName($img, $servicio);
+                              $finalPath = file_exists("../".$path) ? "../".$path : "./../assets/img/user_profile.webp";
+                            ?>
+                              <div class="img-wrapper" style="position: relative; display: inline-block; margin: 10px;">
+                                <img class="img-fluid" src="<?= $finalPath ?>" style="max-width: 200px;">
+                                <span class="remove-img" style="position: absolute; top: -1px; right: -1px; cursor: pointer; font-size: 18px; color: red;">&times;</span>
+                                <input type="hidden" name="existingImgGaleria[]" value="<?= $img["img"]; ?>">
+                              </div>
+                            <?php }?> 
+                          </div>
+                        </div>
+                    </div>
+                  
+                    <?php
+                      }
+                    ?> 
   
                     <!-- <div class="row mb-3">
                       <label for="company" class="col-md-4 col-lg-3 col-form-label">Galeria de imagen</label>
@@ -801,6 +831,10 @@
 
   <div id="preloader"></div>
 
+  <script>
+    const userRole = <?= $servicio["FK_idRol"]; ?>;
+    
+</script>
   <!-- Vendor JS Files -->
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/vendor/aos/aos.js"></script>

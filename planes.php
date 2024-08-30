@@ -57,11 +57,12 @@
               </div>
               <h4><sup>$</sup>0<span> / mes</span></h4>
               <ul>
-                <li><i class="bi bi-check"></i> 2 Imagenes en la galeria </li>
-                <li><i class="bi bi-check"></i> 1 foto de perfil y galeria</li>
-                <li><i class="bi bi-check"></i> NO COBRAMOS POR COMISION DE VENTA!</li>                
-                <li class="na"><i class="bi bi-x"></i> <span>Destaque en los buscadores de su categoria</span></li>
-                <li class="na"><i class="bi bi-x"></i> <span>Ediciones en tu negocio</span></li>
+                <li><i class="bi bi-check"></i> Publica tu negocio </li>
+                <li><i class="bi bi-check"></i> 1 foto de perfil genérica </li>     
+                <li><i class="bi bi-check"></i> 1 Imagen en la galeria </li>
+                <li><i class="bi bi-check"></i> 1 Categoría disponible </li>
+                <li><i class="bi bi-check"></i> <span>Edicion de tu perfil 1 vez por mes</span></li>
+                <li><i class="bi bi-check"></i> Sin comisión por venta!</li>   
               </ul>
               <div class="text-center"><a href="./registerUser.php" class="buy-btn"></a></div>
             </div>
@@ -76,12 +77,13 @@
 
               <h4><sup>$</sup>750<span> / mes</span></h4>
               <ul>
-                <li><i class="bi bi-check"></i> Publicar tu negocio</li>
-                <li><i class="bi bi-check"></i> 4 imagenes en la galeria</li>
-                <li><i class="bi bi-check"></i> 1 foto de perfil y galeria</li>
-                <li><i class="bi bi-check"></i> Ediciones en tu negocio</li>
+                <li><i class="bi bi-check"></i> Publica tu negocio </li>
+                <li><i class="bi bi-check"></i> 1 foto de perfil y de portada </li>     
+                <li><i class="bi bi-check"></i> 3 Imagenes en la galeria </li>
+                <li><i class="bi bi-check"></i> 2 Categorías disponibles </li>
+                <li><i class="bi bi-check"></i> <span>Edicion de tu perfil 1 vez por semana</span></li>
                 <li><i class="bi bi-check"></i> Destaque en los buscadores de su categoria</li>
-                <li><i class="bi bi-check"></i>  NO COBRAMOS POR COMISION DE VENTA!</li>
+                <li><i class="bi bi-check"></i> Sin comisión por venta!</li>   
               </ul>
               <div class="text-center"><a href="#" class="buy-btn">Obtener</a></div>
             </div>
@@ -95,12 +97,16 @@
               </div>
               <h4><sup>$</sup>1500<span> / mes</span></h4>
               <ul>
-                <li><i class="bi bi-check"></i> Publicar tu negocio</li>
-                <li><i class="bi bi-check"></i> 10 imagenes en la galeria</li>
-                <li><i class="bi bi-check"></i> 1 foto de perfil y de portada</li>
-                <li><i class="bi bi-check"></i> Destaque en el home</li>
-                <li><i class="bi bi-check"></i> Destaque en los buscadores por su categoria</li>
-                <li><i class="bi bi-check"></i> NO COBRAMOS POR COMISION DE VENTA!</li>
+                <li><i class="bi bi-check"></i> Publica tu negocio </li>
+                <li><i class="bi bi-check"></i> 1 foto de perfil y de portada </li>     
+                <li><i class="bi bi-check"></i> +10 Imagenes en la galeria </li>
+                <li><i class="bi bi-check"></i> Categorías ilimitadas </li>
+                <li><i class="bi bi-check"></i> <span>Edicion de tu perfil en tiempo real</span></li>
+                <li><i class="bi bi-check"></i> Destaque en los buscadores de su categoria</li>
+                <li><i class="bi bi-check"></i> Destaque en el inicio de la web</li>
+                <li><i class="bi bi-check"></i> Desbloqueo de pauta/banner publicitario dentro de la web</li>
+                <li><i class="bi bi-check"></i> Atención al cliente 24/7</li> 
+                <li><i class="bi bi-check"></i> Sin comisión por venta!</li>   
               </ul>
               <div class="text-center"><a href="#" class="buy-btn">Obtener</a></div>
             </div>

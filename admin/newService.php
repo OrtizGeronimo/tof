@@ -2,8 +2,11 @@
   session_start();
   require('../models/categoria.php');
   require('../models/provincia.php');
+  require('../models/usuario.php');
   $categorias = Categoria::traerCategoria();
   $provincias = Provincia::traerProvincia();
+
+  
 ?>
 
 <!DOCTYPE html>
@@ -23,6 +26,9 @@
     if(!isset($_SESSION["s_id_usuario"])){
       header("Location:../index.php");
     }
+
+    $idUsuario = $_SESSION["s_id_usuario"];
+    $usuario = mysqli_fetch_array(Usuario::getUsuario($idUsuario));
   ?>
   <!-- End Header -->
 
@@ -153,7 +159,9 @@
                         <input name="renewpassword" type="password" class="form-control" id="renewPassword" maxlength="30" pattern="[!-~]{8,30}" required>
                       </div>
                     </div> -->
-
+                    <?php
+                      if($usuario["FK_idRol"] == 4 || $usuario["FK_idRol"] == 5 || $usuario["FK_idRol"] == 7){
+                    ?>
                     <h4 class="card-title">Imágenes y archivos</h4>
 
                     <div class="row mb-3">
@@ -163,15 +171,27 @@
                           <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg" required>
                         </div>
                     </div>
-
+                    
                     <div class="row mb-3">
                       <label for="imgBanner" class="col-md-4 col-lg-3 col-form-label">Imagen de banner</label>
                       <div class="col-md-8 col-lg-9">
                         <!-- <img class="imgBanner" id="imgBanner" src="" alt="Profile"> -->
                         <input name="imgBanner" class="form-control" type="file" id="btnSubirImgBanner" accept="image/png, .jpeg, .jpg">
                       </div>
-                    </div>                     
-  
+                    </div>    
+                    
+                    <div class="row mb-3">
+                      <label for="imgGaleria[]" class="col-md-4 col-lg-3 col-form-label">Imágenes de Galería</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="imgGaleria[]" class="form-control" type="file" id="btnSubirImgGaleria" accept="image/png, .jpeg, .jpg" multiple>
+                          <div id="imgPreviewContainer" class="img-preview-container">
+                             
+                          </div>
+                        </div>
+                    </div>
+                    <?php
+                      }
+                    ?>
                     <!-- <div class="row mb-3">
                       <label for="company" class="col-md-4 col-lg-3 col-form-label">Galeria de imagen</label>
                       <div class="col-md-8 col-lg-9">
@@ -785,6 +805,10 @@
 
   <div id="preloader"></div>
 
+  <script>
+    const userRole = <?= $usuario["FK_idRol"]; ?>;
+    
+</script>
   <!-- Vendor JS Files -->
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/vendor/aos/aos.js"></script>

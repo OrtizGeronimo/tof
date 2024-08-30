@@ -16,9 +16,8 @@
                         ? "./../archivos/user_".$newUser["nombreUsuario"].""
                         : "--";
         if($dir_img!="--"){
-            if(!file_exists($dir_img)){
-                mkdir($dir_img,7777,true);
-            }
+            if(!file_exists($dir_img))
+                mkdir($dir_img,0777,true);
             Imagen::upload($newUserImg,$name_img,$dir_img);
             $clean_name_img = preg_replace('/[^a-zA-Z0-9._ ]/', '', $name_img);
             $img_url = "$dir_img/$clean_name_img.webp";
