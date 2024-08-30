@@ -36,7 +36,8 @@ class Servicio{
                                                   provincia_name,
                                                   departamento,
                                                   user_nombre,
-                                                  s.fec_alta
+                                                  s.fec_alta,
+                                                  r.rol
                                            FROM servicio s,provincia p,departamento d, usuario u,rol r
                                             WHERE p.idProvincia = s.FK_idProvincia
                                             AND d.idDepartamento = s.FK_idDepartamento
@@ -63,7 +64,12 @@ class Servicio{
         $tags      = (isset($filtro["tags"]) && $filtro["tags"]!="")?"AND t.tags IN (".implode(",",$filtro["tags"]).")" : '';
         
         $query = "SELECT *
-                    FROM servicio  s,usuario u, rol r,provincia p, categoria_servicio cs, categoria c
+                    FROM servicio  s,
+                        usuario u,
+                        rol r,
+                        provincia p, 
+                        categoria_servicio cs, 
+                        categoria c
                     where u.idUsuario = s.FK_idUsuario
                     and u.FK_idRol  = r.idRol
                     and s.FK_idProvincia = p.idProvincia                    
@@ -71,15 +77,16 @@ class Servicio{
                     and c.idCategoria = cs.FK_idCategoria
                     and s.fec_baja IS NULL
                     AND cs.fec_baja IS NULL
+                    AND s.FK_idUsuario = u.idUsuario
                     ".$categoria."
                     ".$provincia."
                     GROUP BY s.idServicio
-                    ORDER BY 
-                    CASE r.rol
-                    WHEN r.rol = 'pro'    THEN 'pro'
-                    WHEN r.rol = 'basico' THEN 'basico'
-                    WHEN r.rol = 'gratis' THEN 'gratis'
-                    END
+                    ORDER BY CASE 
+                        WHEN rol = 'pro'    THEN 1
+                        WHEN rol = 'basico' THEN 2
+                        WHEN rol = 'gratis' THEN 3
+                        ELSE 4
+                    END ASC
                     LIMIT $inicio,$cant";
         //echo $query;                  
         $servicio = BaseDeDatos::consulta($query);

@@ -7,7 +7,7 @@
     $pass = (isset($_POST['pass'])) ? $_POST['pass'] : '';
     //encr pass
     $passEnc = sha1($pass);
-
+ 
     $consulta = Usuario::getUsuarioContraseña($user,$passEnc);
     
     $numRows = mysqli_num_rows($consulta);
@@ -27,17 +27,15 @@
             $_SESSION["s_nombre"] = $nombre;
             $_SESSION["s_nombre_usuario"] = $usuario;
             $_SESSION["s_rol"] = $rol;
-            $_SESSION["s_img_perfil"] = 'archivos/user_'.$usuario.'/'.$img_perfil;
-            //asdasds
-            $data = json_encode($consulta);
+            $_SESSION["s_img_perfil"] = 'archivos/user_'.$usuario.'/user_profile.webp';
+            echo json_encode(['success' => true]);
         }else{
-            $data = null;
+            echo json_encode(['success' => false]);
         }
         
     }
     else{
         $_SESSION["s_nombre"] = null;
-        $data = null;
+        echo json_encode(['success' => false]);
     }
-    print json_encode($data);
 ?>
