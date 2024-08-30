@@ -132,7 +132,7 @@ class Usuario{
                                         AND forgot_pass = '$forgotPassword';");
     }
 
-    public static function correspondeEditarUsuario($usuario, $rol){
+    public static function editUserRolValidation($usuario, $rol){
         $query = ""
 
         If($rol = "gratis"){
