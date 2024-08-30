@@ -29,7 +29,7 @@
         try {
             if($dir_img!="--"){
                 if(!file_exists($dir_img))
-                    mkdir($dir_img,7777,true);
+                    mkdir($dir_img,0777,true);
                 Imagen::upload($newUserImg,$name_img,$dir_img);
             }
         } catch (\Throwable $th) {
