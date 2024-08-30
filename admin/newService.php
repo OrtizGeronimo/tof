@@ -5,6 +5,8 @@
   require('../models/usuario.php');
   $categorias = Categoria::traerCategoria();
   $provincias = Provincia::traerProvincia();
+
+  
 ?>
 
 <!DOCTYPE html>
@@ -157,7 +159,9 @@
                         <input name="renewpassword" type="password" class="form-control" id="renewPassword" maxlength="30" pattern="[!-~]{8,30}" required>
                       </div>
                     </div> -->
-
+                    <?php
+                      if($usuario["FK_idRol"] == 4 || $usuario["FK_idRol"] == 5 || $usuario["FK_idRol"] == 7){
+                    ?>
                     <h4 class="card-title">Imágenes y archivos</h4>
 
                     <div class="row mb-3">
@@ -167,14 +171,14 @@
                           <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg" required>
                         </div>
                     </div>
-
+                    
                     <div class="row mb-3">
                       <label for="imgBanner" class="col-md-4 col-lg-3 col-form-label">Imagen de banner</label>
                       <div class="col-md-8 col-lg-9">
                         <!-- <img class="imgBanner" id="imgBanner" src="" alt="Profile"> -->
                         <input name="imgBanner" class="form-control" type="file" id="btnSubirImgBanner" accept="image/png, .jpeg, .jpg">
                       </div>
-                    </div>        
+                    </div>    
                     
                     <div class="row mb-3">
                       <label for="imgGaleria[]" class="col-md-4 col-lg-3 col-form-label">Imágenes de Galería</label>
@@ -185,7 +189,9 @@
                           </div>
                         </div>
                     </div>
-  
+                    <?php
+                      }
+                    ?>
                     <!-- <div class="row mb-3">
                       <label for="company" class="col-md-4 col-lg-3 col-form-label">Galeria de imagen</label>
                       <div class="col-md-8 col-lg-9">
