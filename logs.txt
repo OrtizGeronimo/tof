@@ -214,3 +214,12 @@
                     WHERE idUsuario = 2200;
 2024-08-13 23:34:21 - Llego hasta aca
 2024-08-13 23:34:21 - ./../archivos/user_nicolascasado
+2024-08-19 16:37:32 - 
+2024-08-19 16:37:36 - AND c.tipo IN ('Abogacía')
+2024-08-19 16:42:37 - 
+2024-08-19 16:42:43 - AND cs.FK_idCategoria = (SELECT idCategoria FROM categoria WHERE tipo IN ('Repostería'))
+2024-08-19 16:42:50 - AND cs.FK_idCategoria = (SELECT idCategoria FROM categoria WHERE tipo IN ('Repostería','Cerrajería'))
+2024-08-19 16:46:52 - 
+2024-08-19 16:46:59 - AND cs.FK_idCategoria IN (SELECT idCategoria FROM categoria WHERE tipo IN ('Huigiene y seguridad'))
+2024-08-19 16:47:02 - AND cs.FK_idCategoria IN (SELECT idCategoria FROM categoria WHERE tipo IN ('Huigiene y seguridad','Repostería'))
+2024-08-19 16:47:04 - AND cs.FK_idCategoria IN (SELECT idCategoria FROM categoria WHERE tipo IN ('Huigiene y seguridad','Repostería','Delivery'))

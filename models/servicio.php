@@ -1,5 +1,6 @@
 <?php
-
+// Incluir el archivo de logging
+include 'logConfig.php';
 (file_exists('./config/conexion.php'))?include_once('./config/conexion.php'):include_once('./../config/conexion.php');
 (file_exists("./../config/conexion.php"))? require_once('./../config/conexion.php') : require_once('./config/conexion.php');
 
@@ -59,28 +60,25 @@ class Servicio{
         $provincia = "";
         $tags      = "";
         
-        $categoria = (isset($filtro["categorias"]) && $filtro["categorias"]!="")?"AND c.tipo IN (".implode(",",$filtro["categorias"]).")" : '';
+        $categoria = (isset($filtro["categorias"]) && $filtro["categorias"]!="")?"AND cs.FK_idCategoria IN (SELECT idCategoria FROM categoria WHERE tipo IN (".implode(",",$filtro["categorias"])."))" : '';
         $provincia = (isset($filtro["provincias"]) && $filtro["provincias"]!="")?"AND p.provincia_name IN (".implode(",",$filtro["provincias"]).")" : '';
         $tags      = (isset($filtro["tags"]) && $filtro["tags"]!="")?"AND t.tags IN (".implode(",",$filtro["tags"]).")" : '';
         
-        $query = "SELECT *
-                    FROM servicio  s,
-                        usuario u,
-                        rol r,
-                        provincia p, 
-                        categoria_servicio cs, 
-                        categoria c
-                    where u.idUsuario = s.FK_idUsuario
-                    and u.FK_idRol  = r.idRol
-                    and s.FK_idProvincia = p.idProvincia                    
-                    and cs.FK_idServicio = s.idServicio
-                    and c.idCategoria = cs.FK_idCategoria
-                    and s.fec_baja IS NULL
-                    AND cs.fec_baja IS NULL
-                    AND s.FK_idUsuario = u.idUsuario
-                    ".$categoria."
-                    ".$provincia."
-                    GROUP BY s.idServicio
+        $query = "SELECT 
+                        s.*, 
+                        u.*, 
+                        r.*, 
+                        p.*
+                    FROM servicio  s
+                    INNER JOIN	usuario u ON s.FK_idUsuario = u.idUsuario
+                    INNER JOIN	rol r ON u.FK_idRol  = r.idRol
+                    INNER JOIN	provincia p ON s.FK_idProvincia = p.idProvincia  
+                    LEFT JOIN categoria_servicio cs ON s.idServicio = cs.FK_idServicio
+                    WHERE s.fec_baja IS NULL
+                        AND cs.fec_baja IS NULL
+                        ".$categoria."
+                        ".$provincia."
+                    GROUP BY s.idServicio, u.idUsuario
                     ORDER BY CASE 
                         WHEN rol = 'pro'    THEN 1
                         WHEN rol = 'basico' THEN 2

@@ -63,7 +63,7 @@
                 <li class="na"><i class="bi bi-x"></i> <span>Destaque en los buscadores de su categoria</span></li>
                 <li class="na"><i class="bi bi-x"></i> <span>Ediciones en tu negocio</span></li>
               </ul>
-              <div class="text-center"><a href="./registerUser.php" class="buy-btn">Obtener</a></div>
+              <div class="text-center"><a href="./registerUser.php" class="buy-btn"></a></div>
             </div>
           </div><!-- End Pricing Item -->
 
@@ -83,7 +83,7 @@
                 <li><i class="bi bi-check"></i> Destaque en los buscadores de su categoria</li>
                 <li><i class="bi bi-check"></i>  NO COBRAMOS POR COMISION DE VENTA!</li>
               </ul>
-              <div class="text-center"><a href="#" class="buy-btn">Disponible proximamente</a></div>
+              <div class="text-center"><a href="#" class="buy-btn">Obtener</a></div>
             </div>
           </div><!-- End Pricing Item -->
 
@@ -102,7 +102,7 @@
                 <li><i class="bi bi-check"></i> Destaque en los buscadores por su categoria</li>
                 <li><i class="bi bi-check"></i> NO COBRAMOS POR COMISION DE VENTA!</li>
               </ul>
-              <div class="text-center"><a href="#" class="buy-btn">Disponible proximamente</a></div>
+              <div class="text-center"><a href="#" class="buy-btn">Obtener</a></div>
             </div>
           </div><!-- End Pricing Item -->
 
