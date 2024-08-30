@@ -120,11 +120,33 @@ if(
             }
 
             /* SUBIDA DE FOTOS DE GALERIA */
+          
+            $imgsGaleria = $_FILES["imgGaleria"];
 
-            header("Location: ./../admin/index.php?successService");
+            
+            $usuario = mysqli_fetch_array(Usuario::getUsuarioByServicio($idLastServicio));
+
+            
+
+            if (!empty($imgsGaleria['name'][0])) {
+                $dir_img = "./../archivos/user_".$usuario["user_login"]."/galeria";
+            } else {
+                $dir_img = "--";
+            }
+            if($dir_img!="--"){
+                if(!file_exists($dir_img)){
+                    mkdir($dir_img,0777,true);
+                }
+                
+                if (!empty($imgsGaleria['name'][0])) {
+                    $updateImgGallery = Imagen::uploadGallery($imgsGaleria,$usuario["user_login"],$dir_img, $idLastServicio);
+                }
+            }
+
+                header("Location: ./../admin/index.php?successService");
         }
 
-    }else{
+    } else{
         header("Location: ./../admin/index.php?errorService");
     }
 }

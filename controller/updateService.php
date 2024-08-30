@@ -60,35 +60,64 @@ if($servicio["nombreServicio"] != null && $servicio["telefono"]!= null && $servi
         }
     }
 
-    $usr_servicio = $modelServicio::getServicio($servicio["idServicio"]);
-    $usr_servicio = mysqli_fetch_array($usr_servicio);
+    
     $updateImageService = false;
+
     foreach($imagenes as $tipoImg => $img){
         if($img["name"] !== ""){
             $name_img = ($tipoImg === "Img")? $nameImgServicio : $nameBannerServicio;
             $dir_img = ($img["name"] != "") 
                         ? "./../archivos/user_".$usr_servicio["user_login"].""
                         : "--";
+            
                 if($dir_img!="--"){
-                if(!file_exists($dir_img))
-                    mkdir($dir_img,0777,true);
+                    if(!file_exists($dir_img)){
+                        echo "Creating directory: " . $dir_img;
+                        if (!mkdir($dir_img, 0777, true)) {
+                            echo "Failed to create directory: " . $dir_img;
+                            continue;
+                        }
+                    }
                 $updateImageService = Imagen::upload($img,$name_img,$dir_img);
+                    
             }
         }
     }
 
+    $imgsGaleria = $_FILES["imgGaleria"];
+    $updateImgGallery = false;
+
+    if (isset($_POST['existingImgGaleria']) || !empty($imgsGaleria['name'][0])) {
+        $dir_img = "./../archivos/user_".$usr_servicio["user_login"]."/galeria";
+    } else {
+        $dir_img = "--";
+    }
+    if($dir_img!="--"){
+        if(!file_exists($dir_img)){
+            mkdir($dir_img,0777,true);
+        }
+        if (isset($_POST['existingImgGaleria'])) {
+            $updateImgGallery = Imagen::uploadExistingGallery($_POST['existingImgGaleria'],$usr_servicio["user_login"],$dir_img, $servicio["idServicio"]);
+        } 
+        
+        if (!empty($imgsGaleria['name'][0])) {
+            $updateImgGallery = Imagen::uploadGallery($imgsGaleria,$usr_servicio["user_login"],$dir_img, $servicio["idServicio"]);
+        }
+    }
     
-    if($updateServicio && $updateCategoriaServicio && $updateRedSocial && $updateTipoServicio && (!isset($updateHoraServicio) || $updateHoraServicio) && (isset($updateImageService) || $updateImageService)){
+        
+    
+    if($updateServicio && $updateCategoriaServicio && $updateRedSocial && $updateTipoServicio && (!isset($updateHoraServicio) || $updateHoraServicio) && (isset($updateImageService) || $updateImageService) && (isset($updateImgGallery) || $updateImgGallery)){
+        //echo "dir_img: " . $dir_img;
         header("Location: ./../admin/index.php?successModService");
     }else{
-        header("Location: ./../admin/index.php?errorModService");
-        // echo '<p>updateServicio'.$updateServicio.'</p>';
-        // echo '<p>updateCategoriaServicio'.$updateCategoriaServicio.'</p>';
-        // echo '<p>updateRedSocial'.$updateRedSocial.'</p>';
-        // echo '<p>updateTipoServicio'.$updateTipoServicio.'</p>';
-        // echo '<p>updateHoraServicio'.$updateHoraServicio.'</p>';
-        // echo '<p>updateHoraServicio'.$updateHoraServicio.'</p>';
-        // echo '<p>updateImagenService'.$updateImageService.'</p>';
-        // echo '<p>updateImagenService'.$updateImageService.'</p>';
+        //header("Location: ./../admin/index.php?errorModService");
+         echo '<p>updateServicio'.var_dump($updateServicio).'</p>';
+         echo '<p>updateCategoriaServicio'.var_dump($updateCategoriaServicio).'</p>';
+         echo '<p>updateRedSocial'.var_dump($updateRedSocial).'</p>';
+         echo '<p>updateTipoServicio'.var_dump($updateTipoServicio).'</p>';
+         echo '<p>updateHoraServicio'.var_dump($updateHoraServicio).'</p>';
+         echo '<p>updateImagenService'.var_dump($updateImageService).'</p>';
+         echo '<p>updateImgGallery'.var_dump($updateImgGallery).'</p>';
     }
 }

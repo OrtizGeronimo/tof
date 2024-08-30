@@ -180,7 +180,15 @@
                       </div>
                     </div>    
                     
-                    <!-- agregar galeria -->
+                    <div class="row mb-3">
+                      <label for="imgGaleria[]" class="col-md-4 col-lg-3 col-form-label">Imágenes de Galería</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="imgGaleria[]" class="form-control" type="file" id="btnSubirImgGaleria" accept="image/png, .jpeg, .jpg" multiple>
+                          <div id="imgPreviewContainer" class="img-preview-container">
+                             
+                          </div>
+                        </div>
+                    </div>
                     <?php
                       }
                     ?>
@@ -797,6 +805,10 @@
 
   <div id="preloader"></div>
 
+  <script>
+    const userRole = <?= $usuario["FK_idRol"]; ?>;
+    
+</script>
   <!-- Vendor JS Files -->
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/vendor/aos/aos.js"></script>
