@@ -138,39 +138,4 @@ class Usuario{
                                         WHERE user_login = '$userlogin'
                                         AND forgot_pass = '$forgotPassword';");
     }
-
-    public static function editUserRolValidation($usuario, $rol){
-        $query = ""
-
-        If($rol = "gratis"){
-            $query = "  SELECT 
-                            CASE 
-                                WHEN s.fec_mod IS NULL THEN 'S'
-                                WHEN s.fec_mod < DATE_SUB(CURRENT_DATE, INTERVAL 1 WEEK) THEN 'S'
-                                ELSE 'N'
-                            END
-                        FROM servicio s
-                        INNER JOIN usuario u
-                            ON s.FK_idUsuario = u.idUsuario
-                        INNER JOIN rol r
-                            ON u.FK_idRol = r.idRol
-                        WHERE idUsuario = '$usuario';";
-        }elseif ($rol = "basico") {
-            $query = "  SELECT 
-                            CASE 
-                                WHEN s.fec_mod IS NULL THEN 'S'
-                                WHEN s.fec_mod < DATE_SUB(CURRENT_DATE, INTERVAL 1 WEEK) THEN 'S'
-                                ELSE 'N'
-                            END
-                        FROM servicio s
-                        INNER JOIN usuario u
-                            ON s.FK_idUsuario = u.idUsuario
-                        INNER JOIN rol r
-                            ON u.FK_idRol = r.idRol
-                        WHERE idUsuario = '$usuario';";
-        }elseif ($rol = "pro") {
-            $query = "SELECT 'S'"
-        }
-        return BaseDeDatos::consulta($query);
-    }
 }

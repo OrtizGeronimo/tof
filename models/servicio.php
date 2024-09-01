@@ -272,4 +272,35 @@ class Servicio{
         $serviciosBasicos = BaseDeDatos::consulta("SELECT * FROM servicio WHERE $idUsuario = FK_idUsuario");
         return $serviciosBasicos;                                                  
     }
+
+    public static function editServiceRolValidation($idServicio, $rol){
+        $query = "SELECT DATEDIFF(NOW(), IFNULL(fec_mod, NOW())) AS days_difference
+                    FROM servicio
+                    WHERE idServicio = $idServicio;";
+
+        $result = BaseDeDatos::consulta($query);
+        $result = mysqli_fetch_array($result);
+        $datediff = $result["days_difference"];
+        $edit[0] = false;
+        $edit[1] = 0;
+
+        switch ($rol){
+            case "gratis":
+                if($datediff > 30)
+                    $edit[1] = true;
+                else
+                    $edit[2] = 30 - $datediff;
+                break;                 
+            case "basico":
+                if($datediff > 7)
+                    $edit[0] = true;
+                else
+                    $edit[1] = 7 - $datediff;
+                break;
+            default:
+                $edit[0] = true;
+                break;
+        }
+        return $edit;
+    }
 }

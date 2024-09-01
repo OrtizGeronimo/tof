@@ -18,6 +18,7 @@
     if(!isset($_SESSION["s_id_usuario"]) && !isset($_GET["idServicio"])){
       header("Location:../index.php");
     }
+    $editService = Servicio::editServiceRolValidation($_GET["idServicio"], $_SESSION["s_rol"]);
     $servicio = Servicio::getServicio($_GET["idServicio"]);
     $servicio = mysqli_fetch_array($servicio);
     $tipoServicio = Servicio::getTipoServicio($_GET["idServicio"]);
@@ -781,6 +782,9 @@
                     </div>
 
                     <div class="col-12">
+                      <?php if(!$editService[0]){ ?>
+                        <h4 id="rolValidation">Ha alcanzado el límite de ediciones del servicio para su plan, espere <?php echo $editService[1] ?> dias o contrate uno superior</h4>
+                      <?php } ?>
                       <button class="btn btn-secondary w-100" type="submit">Modificar Servicio</button>
                     </div>
                   </form>
