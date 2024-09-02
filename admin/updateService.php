@@ -32,8 +32,26 @@
     $horariosServicioAux = Servicio::getHorariosServicio($_GET["idServicio"]);
     $horariosServicio = array();
     while($row = mysqli_fetch_array($horariosServicioAux))
-      array_push($horariosServicio,$row);            
+      array_push($horariosServicio,$row);
+    
+      $limiteCategorias = 0;
+
+      switch ($_SESSION["s_rol"]) {
+          case 'gratis':
+              $limiteCategorias = 1;
+              break;
+          case 'basico':
+              $limiteCategorias = 3;
+              break;
+          case 'pro':
+              $limiteCategorias = PHP_INT_MAX;
+              break;
+      }
   ?>
+  <script>
+        // Pasar la variable PHP al archivo JS externo
+        const limiteCategorias = <?= $limiteCategorias ?>;
+  </script>
   <link href="../assets/css/styleForms.css" rel="stylesheet">
 </head>
 
@@ -785,7 +803,7 @@
                       <?php if(!$editService[0]){ ?>
                         <h4 id="rolValidation">Ha alcanzado el límite de ediciones del servicio para su plan, espere <?php echo $editService[1] ?> dias o contrate uno superior</h4>
                       <?php } ?>
-                      <button class="btn btn-secondary w-100" type="submit">Modificar Servicio</button>
+                      <button class="btn btn-secondary w-100" type="submit" <?php echo $editService[0] ? '' : 'disabled'; ?>>Modificar Servicio</button>
                     </div>
                   </form>
                 </div>
