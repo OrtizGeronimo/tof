@@ -223,3 +223,91 @@
 2024-08-19 16:46:59 - AND cs.FK_idCategoria IN (SELECT idCategoria FROM categoria WHERE tipo IN ('Huigiene y seguridad'))
 2024-08-19 16:47:02 - AND cs.FK_idCategoria IN (SELECT idCategoria FROM categoria WHERE tipo IN ('Huigiene y seguridad','Repostería'))
 2024-08-19 16:47:04 - AND cs.FK_idCategoria IN (SELECT idCategoria FROM categoria WHERE tipo IN ('Huigiene y seguridad','Repostería','Delivery'))
+2024-09-03 01:06:09 - SELECT 
+                        s.*, 
+                        u.*, 
+                        r.*, 
+                        p.*
+                    FROM servicio  s
+                    INNER JOIN	usuario u ON s.FK_idUsuario = u.idUsuario
+                    INNER JOIN	rol r ON u.FK_idRol  = r.idRol
+                    INNER JOIN	provincia p ON s.FK_idProvincia = p.idProvincia  
+                    LEFT JOIN categoria_servicio cs ON s.idServicio = cs.FK_idServicio
+                    WHERE s.fec_baja IS NULL
+                        AND cs.fec_baja IS NULL
+                        
+                        
+                    GROUP BY s.idServicio, u.idUsuario
+                    ORDER BY CASE 
+                        WHEN rol = 'pro'    THEN 1
+                        WHEN rol = 'basico' THEN 2
+                        WHEN rol = 'gratis' THEN 3
+                        ELSE 4
+                    END ASC
+                    LIMIT 0,20
+2024-09-03 01:06:53 - SELECT 
+                        s.*, 
+                        u.*, 
+                        r.*, 
+                        p.*
+                    FROM servicio  s
+                    INNER JOIN	usuario u ON s.FK_idUsuario = u.idUsuario
+                    INNER JOIN	rol r ON u.FK_idRol  = r.idRol
+                    INNER JOIN	provincia p ON s.FK_idProvincia = p.idProvincia  
+                    LEFT JOIN categoria_servicio cs ON s.idServicio = cs.FK_idServicio
+                    WHERE s.fec_baja IS NULL
+                        AND cs.fec_baja IS NULL
+                        AND cs.FK_idCategoria IN (SELECT idCategoria FROM categoria WHERE tipo IN ('Delivery'))
+                        
+                    GROUP BY s.idServicio, u.idUsuario
+                    ORDER BY CASE 
+                        WHEN rol = 'pro'    THEN 1
+                        WHEN rol = 'basico' THEN 2
+                        WHEN rol = 'gratis' THEN 3
+                        ELSE 4
+                    END ASC
+                    LIMIT 0,20
+2024-09-03 01:07:02 - SELECT 
+                        s.*, 
+                        u.*, 
+                        r.*, 
+                        p.*
+                    FROM servicio  s
+                    INNER JOIN	usuario u ON s.FK_idUsuario = u.idUsuario
+                    INNER JOIN	rol r ON u.FK_idRol  = r.idRol
+                    INNER JOIN	provincia p ON s.FK_idProvincia = p.idProvincia  
+                    LEFT JOIN categoria_servicio cs ON s.idServicio = cs.FK_idServicio
+                    WHERE s.fec_baja IS NULL
+                        AND cs.fec_baja IS NULL
+                        AND cs.FK_idCategoria IN (SELECT idCategoria FROM categoria WHERE tipo IN ('Delivery'))
+                        
+                    GROUP BY s.idServicio, u.idUsuario
+                    ORDER BY CASE 
+                        WHEN rol = 'pro'    THEN 1
+                        WHEN rol = 'basico' THEN 2
+                        WHEN rol = 'gratis' THEN 3
+                        ELSE 4
+                    END ASC
+                    LIMIT 20,20
+2024-09-03 01:07:04 - SELECT 
+                        s.*, 
+                        u.*, 
+                        r.*, 
+                        p.*
+                    FROM servicio  s
+                    INNER JOIN	usuario u ON s.FK_idUsuario = u.idUsuario
+                    INNER JOIN	rol r ON u.FK_idRol  = r.idRol
+                    INNER JOIN	provincia p ON s.FK_idProvincia = p.idProvincia  
+                    LEFT JOIN categoria_servicio cs ON s.idServicio = cs.FK_idServicio
+                    WHERE s.fec_baja IS NULL
+                        AND cs.fec_baja IS NULL
+                        AND cs.FK_idCategoria IN (SELECT idCategoria FROM categoria WHERE tipo IN ('Delivery'))
+                        
+                    GROUP BY s.idServicio, u.idUsuario
+                    ORDER BY CASE 
+                        WHEN rol = 'pro'    THEN 1
+                        WHEN rol = 'basico' THEN 2
+                        WHEN rol = 'gratis' THEN 3
+                        ELSE 4
+                    END ASC
+                    LIMIT 0,20
