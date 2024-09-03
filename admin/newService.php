@@ -29,9 +29,26 @@
 
     $idUsuario = $_SESSION["s_id_usuario"];
     $usuario = mysqli_fetch_array(Usuario::getUsuario($idUsuario));
+
+    $limiteCategorias = 0;
+
+      switch ($usuario["rol"]) {
+          case 'gratis':
+              $limiteCategorias = 1;
+              break;
+          case 'basico':
+              $limiteCategorias = 3;
+              break;
+          default:
+              $limiteCategorias = PHP_INT_MAX;
+              break;          
+      }
   ?>
   <!-- End Header -->
-
+  <script>
+        // Pasar la variable PHP al archivo JS externo
+        const limiteCategorias = <?= $limiteCategorias ?>;
+  </script>
   <main id="main">
 
   <!-- ======= Breadcrumbs ======= -->

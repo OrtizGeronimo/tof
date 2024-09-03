@@ -70,8 +70,10 @@ if(
 
             /*----------------- CATEGORIA -----------------*/
             $categorias  = $servicio["categoria"];
+            echo $categorias;
             foreach($categorias as $key => $idCategoria){
                 $addCategoria = $Servicio::addCategoria($idLastServicio,$idCategoria,$_SESSION["s_nombre"]);
+                
             }
             /*----------------- FIN CATEGORIA -----------------*/
 

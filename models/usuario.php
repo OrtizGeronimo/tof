@@ -44,7 +44,9 @@ class Usuario{
 
     public static function getUsuario($idUsuario){
         $user = BaseDeDatos::consulta("SELECT *
-                                      FROM usuario
+                                      FROM usuario u
+                                      INNER JOIN rol r
+                                      ON u.FK_idRol = r.idRol
                                       WHERE idUsuario = $idUsuario");
         return $user;
     }

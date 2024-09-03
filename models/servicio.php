@@ -86,7 +86,7 @@ class Servicio{
                         ELSE 4
                     END ASC
                     LIMIT $inicio,$cant";
-        //echo $query;                  
+        //writeLog($query);       
         $servicio = BaseDeDatos::consulta($query);
 
         return $servicio;

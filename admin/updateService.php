@@ -43,7 +43,7 @@
           case 'basico':
               $limiteCategorias = 3;
               break;
-          case 'pro':
+          default:
               $limiteCategorias = PHP_INT_MAX;
               break;
       }
