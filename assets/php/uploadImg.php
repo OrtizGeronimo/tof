@@ -28,25 +28,26 @@ class Imagen {
     }
 
 
-    public static function uploadGallery($files,$username,$dir,$idServicio){
+    public static function uploadGallery($files,$username,$dir,$idServicio, $hasFreePlan){
         try {
 
             $result = Galeria::getGaleria($idServicio);
 
-            /*if ($result) {
+            if ($result && $hasFreePlan) {
                 while ($row = mysqli_fetch_array($result)) {
                     var_dump($row);  // Debugging
                     $rutaImg = Galeria::formulateFileNameToAbsolutePath($row, $username);
                     
                     if (file_exists($rutaImg)) {
                         array_map('unlink', glob($rutaImg));
-                        unlink($rutaImg); // Delete the file
+                        unlink($rutaImg); // Elimina el archivo
+                        $borrar = Galeria::borrarItemGaleria($row["id"]);
                     }
                 }
             } else {
                 echo "No records found.";
             }
-
+/*
             $borrar = Galeria::borrarGaleria($idServicio);
             
             if ($borrar === false){
@@ -58,6 +59,7 @@ class Imagen {
                 mkdir($dir, 0777, true); // Crea el directorio si no existe, incluyendo directorios padres
             }
             for($i=0;$i<count($files["name"]);$i++){
+                
                 $name_img = $username.'_';
                 $response = Galeria::agregarGaleria($name_img,$idServicio);
                 $nameAfterSave = Galeria::getLastInserted($idServicio);
@@ -85,7 +87,7 @@ class Imagen {
 
     public static function uploadExistingGallery($files,$username,$dir,$idServicio){
         try {
-
+            echo "ejecutando uploadExistingGallery";
 
             if (!file_exists($dir)) {
                 mkdir($dir, 0777, true); // Crea el directorio si no existe, incluyendo directorios padres

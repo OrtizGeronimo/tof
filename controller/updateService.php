@@ -4,10 +4,7 @@ require('./../models/servicio.php');
 require('./../assets/php/uploadImg.php');
 $servicio = $_POST;
 
-$imagenes  = Array(
-    'Img' => $_FILES["imgLogo"],
-    'Banner' => $_FILES["imgBanner"]
-);
+
 
 
 if($servicio["nombreServicio"] != null && $servicio["telefono"]!= null && $servicio["descripción"] != null && $servicio["categoria"]!= null && $servicio["provincia"] != null && $servicio["departamento"] != null && isset($_SESSION["s_id_usuario"]) && isset($_SESSION["s_nombre"])){
@@ -18,12 +15,15 @@ if($servicio["nombreServicio"] != null && $servicio["telefono"]!= null && $servi
 
     $nameImgServicio = preg_replace('/[^a-zA-Z0-9._ ]/', '', 'service_'.$usr_servicio["user_login"]);   
     $nameBannerServicio = preg_replace('/[^a-zA-Z0-9._ ]/', '', 'imgBanner_'.$usr_servicio["user_login"]);
-    
+    $hasFreePlan = $usr_servicio["FK_idRol"] == 6 ? true : false;
     $updateServicio = $modelServicio::updateServicio($servicio["idServicio"],$servicio["nombreServicio"],$servicio["descripción"],$servicio["emailContacto"],$servicio["telefono"],$servicio["sitioWeb"],$nameImgServicio.'.webp',$nameBannerServicio.'.webp',$servicio["provincia"],$servicio["departamento"],$_SESSION["s_id_usuario"],$_SESSION["s_nombre"]);
 
     Servicio::deleteCategoriaServicio($servicio["idServicio"],$_SESSION["s_nombre"]);
     foreach ($servicio["categoria"] as $key => $idCategoria) {
         $updateCategoriaServicio = $modelServicio::updateCategoriaServicio($servicio["idServicio"],$idCategoria,$_SESSION["s_nombre"]);
+    }
+    if($hasFreePlan){
+        $updateCategoriaServicio = $modelServicio::updateGenericImg("category_".$servicio["categoria"][0].".webp", $servicio["idServicio"]);
     }
 
     $redes = $servicio["redes"];
@@ -63,26 +63,34 @@ if($servicio["nombreServicio"] != null && $servicio["telefono"]!= null && $servi
     
     $updateImageService = false;
 
-    foreach($imagenes as $tipoImg => $img){
-        if($img["name"] !== ""){
-            $name_img = ($tipoImg === "Img")? $nameImgServicio : $nameBannerServicio;
-            $dir_img = ($img["name"] != "") 
-                        ? "./../archivos/user_".$usr_servicio["user_login"].""
-                        : "--";
-            
-                if($dir_img!="--"){
-                    if(!file_exists($dir_img)){
-                        echo "Creating directory: " . $dir_img;
-                        if (!mkdir($dir_img, 0777, true)) {
-                            echo "Failed to create directory: " . $dir_img;
-                            continue;
+    $imagenes  = Array(
+        'Img' => $_FILES["imgLogo"],
+        'Banner' => $_FILES["imgBanner"]
+    );
+    if (!$hasFreePlan) {
+        foreach($imagenes as $tipoImg => $img){
+            if($img["name"] !== ""){
+                $name_img = ($tipoImg === "Img")? $nameImgServicio : $nameBannerServicio;
+                $dir_img = ($img["name"] != "") 
+                            ? "./../archivos/user_".$usr_servicio["user_login"].""
+                            : "--";
+                
+                    if($dir_img!="--"){
+                        if(!file_exists($dir_img)){
+                            echo "Creating directory: " . $dir_img;
+                            if (!mkdir($dir_img, 0777, true)) {
+                                echo "Failed to create directory: " . $dir_img;
+                                continue;
+                            }
                         }
-                    }
-                $updateImageService = Imagen::upload($img,$name_img,$dir_img);
-                    
+                    $updateImageService = Imagen::upload($img,$name_img,$dir_img);
+                        
+                }
             }
         }
     }
+
+   
 
     $imgsGaleria = $_FILES["imgGaleria"];
     $updateImgGallery = false;
@@ -101,7 +109,8 @@ if($servicio["nombreServicio"] != null && $servicio["telefono"]!= null && $servi
         } 
         
         if (!empty($imgsGaleria['name'][0])) {
-            $updateImgGallery = Imagen::uploadGallery($imgsGaleria,$usr_servicio["user_login"],$dir_img, $servicio["idServicio"]);
+            echo "ejecutando uploadGallery";
+            $updateImgGallery = Imagen::uploadGallery($imgsGaleria,$usr_servicio["user_login"],$dir_img, $servicio["idServicio"], $hasFreePlan);
         }
     }
     
@@ -109,7 +118,7 @@ if($servicio["nombreServicio"] != null && $servicio["telefono"]!= null && $servi
     
     if($updateServicio && $updateCategoriaServicio && $updateRedSocial && $updateTipoServicio && (!isset($updateHoraServicio) || $updateHoraServicio) && (isset($updateImageService) || $updateImageService) && (isset($updateImgGallery) || $updateImgGallery)){
         //echo "dir_img: " . $dir_img;
-        header("Location: ./../admin/index.php?successModService");
+        //header("Location: ./../admin/index.php?successModService");
     }else{
         //header("Location: ./../admin/index.php?errorModService");
          echo '<p>updateServicio'.var_dump($updateServicio).'</p>';

@@ -208,7 +208,9 @@
                         <input name="imgBanner" class="form-control" type="file" id="btnSubirImgBanner" accept="image/png, .jpeg, .jpg">
                       </div>
                     </div>     
-                    
+                    <?php
+                      }
+                    ?> 
                     <div class="row mb-3">
                       <label for="imgGaleria[]" class="col-md-4 col-lg-3 col-form-label">Imágenes de Galería</label>
                       <div class="col-md-8 col-lg-9">
@@ -229,9 +231,7 @@
                         </div>
                     </div>
                   
-                    <?php
-                      }
-                    ?> 
+                    
   
                     <!-- <div class="row mb-3">
                       <label for="company" class="col-md-4 col-lg-3 col-form-label">Galeria de imagen</label>
@@ -265,7 +265,7 @@
                       <div class="col-md-8 col-lg-9">
                         <div class="input-group">
                           <span class="input-group-text" id="basic-addon1">+54</span>
-                          <input name="telefono" id="telefono" type="tel" class="form-control" size="10" maxlength="10" placeholder="2611234567" pattern="[1-6]{3}[0-9]{3}[0-9]{4}" aria-label="Username"
+                          <input name="telefono" id="telefono" type="tel" class="form-control" size="10" maxlength="10" placeholder="2611234567" pattern="[0-6]{3}[0-9]{3}[0-9]{4}" aria-label="Username"
                             aria-describedby="basic-addon1" value="<?=($servicio["servicio_telefono"]!== null)? $servicio["servicio_telefono"] : ''?>" required>
                         </div>
                       </div>
