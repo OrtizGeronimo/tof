@@ -2,24 +2,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function categoriasSeleccionadas(event) {
         let selectCategorias = document.querySelector("#categoria");
+        debugger;
         let categoriasSeleccionadasLabel = document.querySelector("#categorias-seleccionadas");
 
         let opcionesSeleccionadas = [...selectCategorias.options].filter(option => option.selected);
         let categoriasSeleccionadasCount = opcionesSeleccionadas.length;
+        console.log(event.target.value);
 
         if (categoriasSeleccionadasCount > limiteCategorias) {
             alert("No puede seleccionar más categorías porque alcanzó el límite de su plan.");
 
-            // Deseleccionar la última opción seleccionada
-            event.target.selected = false;
-
-            // Refrescar el estado visual del select
-            opcionesSeleccionadas.forEach((option, index) => {
-                if (index === opcionesSeleccionadas.length - 1) {
-                    option.selected = false;
-                }
-            });
-
+            let optionModificado = document.getElementById(`categoria_option_${event.target.value}`);
+            
+            optionModificado.selected = false;
             categoriasSeleccionadasCount--; // Reducir el contador ya que la última selección no cuenta
         }
 
