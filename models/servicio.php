@@ -289,16 +289,16 @@ class Servicio{
         $datediff = $result["days_difference"];
         $edit[0] = false;
         $edit[1] = 0;
-
+        
         switch ($rol){
             case "gratis":
-                if($datediff > 30)
-                    $edit[1] = true;
+                if($datediff < 30)
+                    $edit[0] = true;
                 else
-                    $edit[2] = 30 - $datediff;
+                    $edit[1] = 30 - $datediff;
                 break;                 
             case "basico":
-                if($datediff > 7)
+                if($datediff < 7)
                     $edit[0] = true;
                 else
                     $edit[1] = 7 - $datediff;

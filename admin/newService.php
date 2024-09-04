@@ -290,7 +290,7 @@
 
                             $contador = 1;
                             while($row=mysqli_fetch_array($categorias)) {            
-                              ?> <option value="<?php echo $row['idCategoria'] ?>"> <?php echo $row['tipo'] ?> </option> <?php
+                              ?> <option id="categoria_option" value="<?php echo $row['idCategoria'] ?>" > <?php echo $row['tipo'] ?> </option> <?php
                               $contador++;
                             }
                           
