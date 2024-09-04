@@ -115,6 +115,12 @@ class Servicio{
                                       VALUE ($idServicio,$idCategoria,'$usuarioAlta',now());");
     }
 
+    public static function updateGenericImg($imagen, $idServicio){
+        return BaseDeDatos::consulta("UPDATE servicio
+                                      SET servicio_imagen = '$imagen'
+                                      WHERE idServicio = $idServicio;");
+    }
+
     public static function addRedesSociales($instagram,$linkedin,$facebook,$idServicio,$usuarioAlta){
         return BaseDeDatos::consulta("INSERT INTO red_social (redSocial_Instagram,redSocial_LinkedIn,redSocial_Facebook,FK_idServicio,usr_alta,fec_alta)
                                       VALUES ('$instagram','$linkedin','$facebook',$idServicio,'$usuarioAlta',now());");

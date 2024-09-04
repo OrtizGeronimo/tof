@@ -75,7 +75,7 @@
                 $img_banner = "./archivos/user_".$servicio['user_login']."/".$servicio['servicio_banner'].""; 
               ?>
               <div class="post-author align-items-center text-center" style="background-image: url('<?php echo (file_exists($img_banner))? $img_banner :'./assets/img/hero-bg-abstract.jpg'?>')">
-                <img src="<?=file_exists('./archivos/user_'.($servicio["user_login"]).'/'.($servicio["servicio_imagen"]).'')?'./archivos/user_'.($servicio["user_login"]).'/'.($servicio["servicio_imagen"]).'' : './assets/img/user_profile.webp'?>" class="rounded-circle flex-shrink-0" alt="IMG_PROFILE ">
+                <img src="<?=file_exists('./archivos/user_'.($servicio["user_login"]).'/'.($servicio["servicio_imagen"]).'')?'./archivos/user_'.($servicio["user_login"]).'/'.($servicio["servicio_imagen"]).'' : './assets/img/category_'.mysqli_fetch_array($categorias)["idCategoria"].'.webp'?>" class="rounded-circle flex-shrink-0" alt="IMG_PROFILE ">
               </div> 
             </div>
 

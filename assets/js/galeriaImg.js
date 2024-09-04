@@ -131,7 +131,9 @@ document.addEventListener("DOMContentLoaded", function() {
       const fileIndex = e.target.getAttribute('data-file-index');
       console.log("File Index:", fileIndex);
       dt = removeFileFromInput(fileIndex);
-      
+      if (dt.files.length === 0) {
+        i = 0;
+      }
       //dt.files = dtRemoved.files;
       imgWrapper.remove(); // Removes the image wrapper div from the DOM
     }
