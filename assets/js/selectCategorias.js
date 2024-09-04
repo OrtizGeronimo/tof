@@ -31,9 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         categoriasSeleccionadasLabel.innerHTML = categoriasSeleccionadasTexto;
-        validarLimiteCategorias(categoriasSeleccionadasCount);
+        //validarLimiteCategorias(categoriasSeleccionadasCount);
     }
-
+/*
     function validarLimiteCategorias(categoriasSeleccionadasCount = 0) {
         let selectCategorias = document.querySelector("#categoria");
         let options = [...selectCategorias.options];
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
+*/
     document.querySelector("#categoria").addEventListener('change', (event) => {
         categoriasSeleccionadas(event);
     });
