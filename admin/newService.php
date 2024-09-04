@@ -66,7 +66,7 @@
       <nav>
         <div class="container">
           <ol>
-            <li><a href="index.php">Inicio</a></li>
+            <li><a href="index.php">Inicio</a></li> 
             <li>Registrar Servicio</li>
           </ol>
         </div>
@@ -290,7 +290,7 @@
 
                             $contador = 1;
                             while($row=mysqli_fetch_array($categorias)) {            
-                              ?> <option id="categoria_option" value="<?php echo $row['idCategoria'] ?>" > <?php echo $row['tipo'] ?> </option> <?php
+                              ?> <option id="categoria_option_<?php echo $row['idCategoria'] ?>" value="<?php echo $row['idCategoria'] ?>" > <?php echo $row['tipo'] ?> </option> <?php
                               $contador++;
                             }
                           
