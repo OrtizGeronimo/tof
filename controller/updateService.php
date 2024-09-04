@@ -118,7 +118,7 @@ if($servicio["nombreServicio"] != null && $servicio["telefono"]!= null && $servi
     
     if($updateServicio && $updateCategoriaServicio && $updateRedSocial && $updateTipoServicio && (!isset($updateHoraServicio) || $updateHoraServicio) && (isset($updateImageService) || $updateImageService) && (isset($updateImgGallery) || $updateImgGallery)){
         //echo "dir_img: " . $dir_img;
-        //header("Location: ./../admin/index.php?successModService");
+        header("Location: ./../admin/index.php?successModService");
     }else{
         //header("Location: ./../admin/index.php?errorModService");
          echo '<p>updateServicio'.var_dump($updateServicio).'</p>';
