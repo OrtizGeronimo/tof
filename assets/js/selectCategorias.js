@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function categoriasSeleccionadas(event) {
         let selectCategorias = document.querySelector("#categoria");
-        debugger;
         let categoriasSeleccionadasLabel = document.querySelector("#categorias-seleccionadas");
 
         let opcionesSeleccionadas = [...selectCategorias.options].filter(option => option.selected);

@@ -292,13 +292,13 @@ class Servicio{
         
         switch ($rol){
             case "gratis":
-                if($datediff < 30)
+                if($datediff > 30)
                     $edit[0] = true;
                 else
                     $edit[1] = 30 - $datediff;
                 break;                 
             case "basico":
-                if($datediff < 7)
+                if($datediff > 7)
                     $edit[0] = true;
                 else
                     $edit[1] = 7 - $datediff;
