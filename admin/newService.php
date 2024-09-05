@@ -37,7 +37,7 @@
               $limiteCategorias = 1;
               break;
           case 'basico':
-              $limiteCategorias = 3;
+              $limiteCategorias = 2;
               break;
           default:
               $limiteCategorias = PHP_INT_MAX;
