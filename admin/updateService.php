@@ -41,7 +41,7 @@
               $limiteCategorias = 1;
               break;
           case 'basico':
-              $limiteCategorias = 3;
+              $limiteCategorias = 2;
               break;
           default:
               $limiteCategorias = PHP_INT_MAX;
@@ -800,10 +800,10 @@
                     </div>
 
                     <div class="col-12">
-                      <?php if(!$editService[0]){ ?>
-                        <h4 id="rolValidation">Ha alcanzado el límite de ediciones del servicio para su plan, espere <?php echo $editService[1] ?> dias o contrate uno superior</h4>
+                      <?php if(!$editService["canEdit"]){ ?>
+                        <h4 id="rolValidation">Ha alcanzado el límite de ediciones del servicio para su plan, espere <?php echo $editService["daysRemaining"] ?> dias o contrate uno superior</h4>
                       <?php } ?>
-                      <button class="btn btn-secondary w-100" type="submit" <?php echo $editService[0] ? '' : 'disabled'; ?>>Modificar Servicio</button>
+                      <button class="btn btn-secondary w-100" type="submit" <?php echo $editService["canEdit"] ? '' : 'disabled'; ?>>Modificar Servicio</button>
                     </div>
                   </form>
                 </div>
