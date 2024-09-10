@@ -314,7 +314,7 @@
                           <option value = "">Seleccione una o mas categorias</option>
                           <?php  
                             while($row=mysqli_fetch_array($categorias)) { 
-                               echo "<option value=".$row['idCategoria'].">".$row['tipo']."</option>";
+                              ?> <option id="categoria_option_<?php echo $row['idCategoria'] ?>" value="<?php echo $row['idCategoria'] ?>" > <?php echo $row['tipo'] ?> </option> <?php
                             }
                           ?>
                         </select>
