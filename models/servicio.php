@@ -1,5 +1,6 @@
 <?php
-
+// Incluir el archivo de logging
+include 'logConfig.php';
 (file_exists('./config/conexion.php'))?include_once('./config/conexion.php'):include_once('./../config/conexion.php');
 (file_exists("./../config/conexion.php"))? require_once('./../config/conexion.php') : require_once('./config/conexion.php');
 
@@ -36,7 +37,8 @@ class Servicio{
                                                   provincia_name,
                                                   departamento,
                                                   user_nombre,
-                                                  s.fec_alta
+                                                  s.fec_alta,
+                                                  r.rol
                                            FROM servicio s,provincia p,departamento d, usuario u,rol r
                                             WHERE p.idProvincia = s.FK_idProvincia
                                             AND d.idDepartamento = s.FK_idDepartamento
@@ -58,30 +60,33 @@ class Servicio{
         $provincia = "";
         $tags      = "";
         
-        $categoria = (isset($filtro["categorias"]) && $filtro["categorias"]!="")?"AND c.tipo IN (".implode(",",$filtro["categorias"]).")" : '';
+        $categoria = (isset($filtro["categorias"]) && $filtro["categorias"]!="")?"AND cs.FK_idCategoria IN (SELECT idCategoria FROM categoria WHERE tipo IN (".implode(",",$filtro["categorias"])."))" : '';
         $provincia = (isset($filtro["provincias"]) && $filtro["provincias"]!="")?"AND p.provincia_name IN (".implode(",",$filtro["provincias"]).")" : '';
         $tags      = (isset($filtro["tags"]) && $filtro["tags"]!="")?"AND t.tags IN (".implode(",",$filtro["tags"]).")" : '';
         
-        $query = "SELECT *
-                    FROM servicio  s,usuario u, rol r,provincia p, categoria_servicio cs, categoria c
-                    where u.idUsuario = s.FK_idUsuario
-                    and u.FK_idRol  = r.idRol
-                    and s.FK_idProvincia = p.idProvincia                    
-                    and cs.FK_idServicio = s.idServicio
-                    and c.idCategoria = cs.FK_idCategoria
-                    and s.fec_baja IS NULL
-                    AND cs.fec_baja IS NULL
-                    ".$categoria."
-                    ".$provincia."
-                    GROUP BY s.idServicio
-                    ORDER BY 
-                    CASE r.rol
-                    WHEN r.rol = 'pro'    THEN 'pro'
-                    WHEN r.rol = 'basico' THEN 'basico'
-                    WHEN r.rol = 'gratis' THEN 'gratis'
-                    END
+        $query = "SELECT 
+                        s.*, 
+                        u.*, 
+                        r.*, 
+                        p.*
+                    FROM servicio  s
+                    INNER JOIN	usuario u ON s.FK_idUsuario = u.idUsuario
+                    INNER JOIN	rol r ON u.FK_idRol  = r.idRol
+                    INNER JOIN	provincia p ON s.FK_idProvincia = p.idProvincia  
+                    LEFT JOIN categoria_servicio cs ON s.idServicio = cs.FK_idServicio
+                    WHERE s.fec_baja IS NULL
+                        AND cs.fec_baja IS NULL
+                        ".$categoria."
+                        ".$provincia."
+                    GROUP BY s.idServicio, u.idUsuario
+                    ORDER BY CASE 
+                        WHEN rol = 'pro'    THEN 1
+                        WHEN rol = 'basico' THEN 2
+                        WHEN rol = 'gratis' THEN 3
+                        ELSE 4
+                    END ASC
                     LIMIT $inicio,$cant";
-        //echo $query;                  
+        //writeLog($query);       
         $servicio = BaseDeDatos::consulta($query);
 
         return $servicio;
@@ -106,8 +111,14 @@ class Servicio{
     }
 
     public static function addCategoria($idServicio,$idCategoria,$usuarioAlta){
-        return BaseDeDatos::consulta("INSERT INTO Categoria_Servicio (FK_idServicio,FK_idCategoria,usr_alta,fec_alta)
+        return BaseDeDatos::consulta("INSERT INTO categoria_servicio (FK_idServicio,FK_idCategoria,usr_alta,fec_alta)
                                       VALUE ($idServicio,$idCategoria,'$usuarioAlta',now());");
+    }
+
+    public static function updateGenericImg($imagen, $idServicio){
+        return BaseDeDatos::consulta("UPDATE servicio
+                                      SET servicio_imagen = '$imagen'
+                                      WHERE idServicio = $idServicio;");
     }
 
     public static function addRedesSociales($instagram,$linkedin,$facebook,$idServicio,$usuarioAlta){
@@ -249,14 +260,14 @@ class Servicio{
     }
 
     public static function deleteCategoriaServicio($idServicio,$usuarioBaja){
-        return BaseDeDatos::consulta("UPDATE CATEGORIA_SERVICIO
+        return BaseDeDatos::consulta("UPDATE categoria_servicio
                                         SET usr_baja = '$usuarioBaja',
                                             fec_baja = now()
                                         WHERE FK_idServicio = $idServicio;");
     }
     
     public static function agregarServiciosBasicos($descripción,$idCategoria,$idProvincia,$idDepartamento,$idUsuario,$emailContacto,$sitioWeb,$nombreServicio){
-        $agregarServiciosBasicos = BaseDeDatos::consulta("INSERT INTO Servicio (servicio_descripcion,FK_idCategoria,FK_idProvincia,FK_idDepartamento,FK_idUsuario,usr_alta,fec_alta,servicio_email,servicio_web,servicio_nombre) VALUES ('$descripción',$idCategoria,$idProvincia,$idDepartamento,$idUsuario,'DESARROLLO',now(),'$emailContacto','$sitioWeb','$nombreServicio');");
+        $agregarServiciosBasicos = BaseDeDatos::consulta("INSERT INTO servicio (servicio_descripcion,FK_idCategoria,FK_idProvincia,FK_idDepartamento,FK_idUsuario,usr_alta,fec_alta,servicio_email,servicio_web,servicio_nombre) VALUES ('$descripción',$idCategoria,$idProvincia,$idDepartamento,$idUsuario,'DESARROLLO',now(),'$emailContacto','$sitioWeb','$nombreServicio');");
 
         return $agregarServiciosBasicos;                                                  
     }
@@ -266,5 +277,42 @@ class Servicio{
 
         $serviciosBasicos = BaseDeDatos::consulta("SELECT * FROM servicio WHERE $idUsuario = FK_idUsuario");
         return $serviciosBasicos;                                                  
+    }
+
+    public static function editServiceRolValidation($idServicio, $rol){
+        // Saneamos el valor de $idServicio para evitar inyección SQL
+        $idServicio = intval($idServicio);
+    
+        $query = "SELECT IFNULL(DATEDIFF(NOW(), fec_mod), 31) AS days_difference
+                    FROM servicio
+                    WHERE idServicio = $idServicio;";
+        
+        $result = BaseDeDatos::consulta($query);
+    
+        if($result){
+            $data = mysqli_fetch_array($result);
+            $datediff = $data["days_difference"];
+    
+            $edit = ["canEdit" => false, "daysRemaining" => 0];
+            switch ($rol){
+                case "gratis":
+                    
+                    if($datediff > 30)
+                        $edit["canEdit"] = true;
+                    else
+                        $edit["daysRemaining"] = 30 - $datediff;
+                    break;
+                case "basico":
+                    if($datediff > 7)
+                        $edit["canEdit"] = true;
+                    else
+                        $edit["daysRemaining"] = 7 - $datediff;
+                    break;
+                default:
+                    $edit["canEdit"] = true;
+                    break;
+            }            
+            return $edit;
+        } 
     }
 }

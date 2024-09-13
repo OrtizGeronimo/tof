@@ -1,8 +1,8 @@
 <?php
     session_start();
     (file_exists("./models/comentarioServicio.php"))? require_once('./models/comentarioServicio.php') : require_once('../models/comentarioServicio.php');
-    
     include_once('./models/servicio.php');
+    include_once('./models/galeria.php');
     if(isset($_GET['idServicio'])){
       $servicio = Servicio::getServicio($_GET['idServicio']);
       $servicio = mysqli_fetch_array($servicio);
@@ -10,6 +10,7 @@
       $comentarios = Comentario::getComentario($_GET['idServicio']);
       $horarioServicio = Array();
       $categorias = Servicio::getCategoriasServicio($_GET["idServicio"]);
+      $imagenesGaleria = Galeria::getGaleria($_GET['idServicio']);
       while($hora = mysqli_fetch_array($auxHorariosServicio)){
         (!array_key_exists($hora["dia"],$horarioServicio))? $horarioServicio[$hora["dia"]] = Array() : '';
 
@@ -29,13 +30,14 @@
 
 <head>
   <?php require("./assets/php/head.php");?>
+  <link href="<?= file_exists('./assets/css/gallery.css')? './assets/css/gallery.css' : '../assets/css/gallery.css' ?>" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.css" />
 </head>
 
 <body>
   
   <?php require("./assets/php/header.php");?>
   <!-- End Header -->
-
   <main id="main">
 
     <!-- ======= Breadcrumbs ======= -->
@@ -73,7 +75,7 @@
                 $img_banner = "./archivos/user_".$servicio['user_login']."/".$servicio['servicio_banner'].""; 
               ?>
               <div class="post-author align-items-center text-center" style="background-image: url('<?php echo (file_exists($img_banner))? $img_banner :'./assets/img/hero-bg-abstract.jpg'?>')">
-                <img src="<?=file_exists('./archivos/user_'.($servicio["user_login"]).'/'.($servicio["servicio_imagen"]).'')?'./archivos/user_'.($servicio["user_login"]).'/'.($servicio["servicio_imagen"]).'' : './assets/img/user_profile.webp'?>" class="rounded-circle flex-shrink-0" alt="IMG_PROFILE ">
+                <img src="<?=file_exists('./archivos/user_'.($servicio["user_login"]).'/'.($servicio["servicio_imagen"]).'')?'./archivos/user_'.($servicio["user_login"]).'/'.($servicio["servicio_imagen"]).'' : './assets/img/category_'.mysqli_fetch_array($categorias)["idCategoria"].'.webp'?>" class="rounded-circle flex-shrink-0" alt="IMG_PROFILE ">
               </div> 
             </div>
 
@@ -194,6 +196,23 @@
             <!-- End Blog Sidebar -->
           </div>
         </div>
+        <!--Galería-->
+        <h4 class="comments-count">Galería</h4>
+        <div class="gallery">
+         <div class="portfolio-item row">
+          <?php while($img=mysqli_fetch_array($imagenesGaleria)){
+            $path =  Galeria::getFileName($img, $servicio);
+            ?> 
+            <div class="item selfie col-lg-3 col-md-4 col-6 col-sm">
+               <a href="<?= $path ?>" class="fancylight popup-btn" data-fancybox-group="light"> 
+               <div class="img-container">
+                    <img class="img-fluid" src="<?= $path ?>" alt="">
+                </div>
+               </a>
+            </div>
+            <?php }?>
+         </div>
+        </div>
 
         <!--Comentarios-->
         <div class="comments">
@@ -252,7 +271,7 @@
 
   <div id="preloader"></div>
 
-  <!-- Vendor JS Files -->
+  <!-- Vendor JS Files --> 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
@@ -261,11 +280,32 @@
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/jquery.magnific-popup.min.js"></script>
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
   <script src="assets/js/comentario.js"></script>
 
+  <script> 
+    $('.portfolio-menu ul li').click(function(){
+        $('.portfolio-menu ul li').removeClass('active');
+        $(this).addClass('active');
+        
+        var selector = $(this).attr('data-filter');
+        $('.portfolio-item').isotope({
+            filter:selector
+        });
+        return  false;
+    });
+    $(document).ready(function() {
+    var popup_btn = $('.popup-btn');
+    popup_btn.magnificPopup({
+    type : 'image',
+        gallery : {
+            enabled : true
+        }
+      });
+    });
+</script>
 </body>
 
 </html>

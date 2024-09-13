@@ -2,8 +2,11 @@
   session_start();
   require('../models/categoria.php');
   require('../models/provincia.php');
+  require('../models/usuario.php');
   $categorias = Categoria::traerCategoria();
   $provincias = Provincia::traerProvincia();
+
+  
 ?>
 
 <!DOCTYPE html>
@@ -23,9 +26,29 @@
     if(!isset($_SESSION["s_id_usuario"])){
       header("Location:../index.php");
     }
+
+    $idUsuario = $_SESSION["s_id_usuario"];
+    $usuario = mysqli_fetch_array(Usuario::getUsuario($idUsuario));
+
+    $limiteCategorias = 0;
+
+      switch ($usuario["rol"]) {
+          case 'gratis':
+              $limiteCategorias = 1;
+              break;
+          case 'basico':
+              $limiteCategorias = 2;
+              break;
+          default:
+              $limiteCategorias = PHP_INT_MAX;
+              break;          
+      }
   ?>
   <!-- End Header -->
-
+  <script>
+        // Pasar la variable PHP al archivo JS externo
+        const limiteCategorias = <?= $limiteCategorias ?>;
+  </script>
   <main id="main">
 
   <!-- ======= Breadcrumbs ======= -->
@@ -43,7 +66,7 @@
       <nav>
         <div class="container">
           <ol>
-            <li><a href="index.php">Inicio</a></li>
+            <li><a href="index.php">Inicio</a></li> 
             <li>Registrar Servicio</li>
           </ol>
         </div>
@@ -153,7 +176,9 @@
                         <input name="renewpassword" type="password" class="form-control" id="renewPassword" maxlength="30" pattern="[!-~]{8,30}" required>
                       </div>
                     </div> -->
-
+                    <?php
+                      if($usuario["FK_idRol"] == 4 || $usuario["FK_idRol"] == 5 || $usuario["FK_idRol"] == 7){
+                    ?>
                     <h4 class="card-title">Imágenes y archivos</h4>
 
                     <div class="row mb-3">
@@ -163,15 +188,27 @@
                           <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg" required>
                         </div>
                     </div>
-
+                    
                     <div class="row mb-3">
                       <label for="imgBanner" class="col-md-4 col-lg-3 col-form-label">Imagen de banner</label>
                       <div class="col-md-8 col-lg-9">
                         <!-- <img class="imgBanner" id="imgBanner" src="" alt="Profile"> -->
                         <input name="imgBanner" class="form-control" type="file" id="btnSubirImgBanner" accept="image/png, .jpeg, .jpg">
                       </div>
-                    </div>                     
-  
+                    </div>    
+                    <?php
+                      }
+                    ?>
+                    <div class="row mb-3">
+                      <label for="imgGaleria[]" class="col-md-4 col-lg-3 col-form-label">Imágenes de Galería</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="imgGaleria[]" class="form-control" type="file" id="btnSubirImgGaleria" accept="image/png, .jpeg, .jpg" multiple>
+                          <div id="imgPreviewContainer" class="img-preview-container">
+                             
+                          </div>
+                        </div>
+                    </div>
+                    
                     <!-- <div class="row mb-3">
                       <label for="company" class="col-md-4 col-lg-3 col-form-label">Galeria de imagen</label>
                       <div class="col-md-8 col-lg-9">
@@ -204,7 +241,7 @@
                       <div class="col-md-8 col-lg-9">
                         <div class="input-group">
                           <span class="input-group-text" id="basic-addon1">+54</span>
-                          <input name="telefono" id="telefono" type="tel" class="form-control" size="10" maxlength="10" placeholder="2611234567" pattern="[1-6]{3}[0-9]{3}[0-9]{4}" aria-label="Username"
+                          <input name="telefono" id="telefono" type="tel" class="form-control" size="10" maxlength="10" placeholder="2611234567" pattern="[0-6]{3}[0-9]{3}[0-9]{4}" aria-label="Username"
                             aria-describedby="basic-addon1" value="" required>
                         </div>
                       </div>
@@ -253,7 +290,7 @@
 
                             $contador = 1;
                             while($row=mysqli_fetch_array($categorias)) {            
-                              ?> <option value="<?php echo $row['idCategoria'] ?>"> <?php echo $row['tipo'] ?> </option> <?php
+                              ?> <option id="categoria_option_<?php echo $row['idCategoria'] ?>" value="<?php echo $row['idCategoria'] ?>" > <?php echo $row['tipo'] ?> </option> <?php
                               $contador++;
                             }
                           
@@ -785,6 +822,10 @@
 
   <div id="preloader"></div>
 
+  <script>
+    const userRole = <?= $usuario["FK_idRol"]; ?>;
+    
+</script>
   <!-- Vendor JS Files -->
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/vendor/aos/aos.js"></script>

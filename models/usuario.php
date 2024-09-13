@@ -1,17 +1,20 @@
 <?php
+// Incluir el archivo de logging
+include 'logConfig.php';
+
 (file_exists("./../config/conexion.php"))? require_once('./../config/conexion.php') : require_once('./config/conexion.php');
 class Usuario{
     
     public static function agregarUsuarios($nomUsuario,$password,$email,$imgLogoRuta,$imgBannerRuta,$telefono,$nombreApellido,$idRol = null){
         if(!$idRol){
-            $servicioBasico = BaseDeDatos::consulta("SELECT * 
+            $respuesta = BaseDeDatos::consulta("SELECT * 
                                                      FROM rol
-                                                     WHERE upper(rol) = 'BASICO'");
+                                                     WHERE upper(rol) = 'GRATIS'");
     
-            if($row = mysqli_fetch_array($servicioBasico)){
-                $idRolBasico = $row["idRol"];
+            if($row = mysqli_fetch_array($respuesta)){
+                $idRolPredeterminado = $row["idRol"];
                 $user = BaseDeDatos::consulta("INSERT INTO usuario (user_login,user_pass,user_email,user_img_perfil,user_img_banner,user_telefono,user_nombre,usr_alta,fec_alta,FK_idRol) 
-                                               VALUES ('$nomUsuario',sha1('$password'),'$email','$imgLogoRuta','$imgBannerRuta','$telefono','$nombreApellido','DESARROLLO',now(),'$idRolBasico');");
+                                               VALUES ('$nomUsuario',sha1('$password'),'$email','$imgLogoRuta','$imgBannerRuta','$telefono','$nombreApellido','DESARROLLO',now(),'$idRolPredeterminado');");
     
             }
         }else{
@@ -41,17 +44,29 @@ class Usuario{
 
     public static function getUsuario($idUsuario){
         $user = BaseDeDatos::consulta("SELECT *
-                                      FROM usuario
+                                      FROM usuario u
+                                      INNER JOIN rol r
+                                      ON u.FK_idRol = r.idRol
                                       WHERE idUsuario = $idUsuario");
         return $user;
     }
 
+    public static function getUsuarioByServicio($idServicio){
+        $user = BaseDeDatos::consulta("SELECT u.*
+                                      FROM usuario u join servicio s ON u.idUsuario = s.FK_idUsuario
+                                      WHERE s.idServicio = $idServicio;");
+        return $user;
+    }
+
     public static function getLastUsuario(){
-        return BaseDeDatos::consulta("SELECT * FROM usuario
-                                      WHERE idUsuario IN (SELECT MAX(idUsuario) FROM usuario);");
+        return BaseDeDatos::consulta("SELECT * FROM usuario u
+                                        INNER JOIN rol r
+                                        ON u.FK_idRol = r.idRol
+                                        WHERE idUsuario IN (SELECT MAX(idUsuario) FROM usuario);");
     }
 
     public static function updateUsuario($nomUsuario,$password,$email,$imgLogoRuta,$telefono,$nombreApellido,$usuarioModificacion,$idUsuario){
+
         if($password == ""){
             return BaseDeDatos::consulta("UPDATE usuario
                                         SET user_nombre = '$nombreApellido',

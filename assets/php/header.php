@@ -44,12 +44,15 @@
       <?php if(isset($_SESSION['s_nombre'])){ ?>
           <div class="col-2 justify-content-end navLinkPerfil">
             <li class="nav-item dropdown pe-3">
+              <?php echo $_SESSION['s_img_perfil']?>
               <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                 <img src="<?php
                   if(file_exists($_SESSION['s_img_perfil'])){
                     echo $_SESSION['s_img_perfil'];
                   }else if(file_exists("../".$_SESSION['s_img_perfil'])){
                     echo '../'.$_SESSION['s_img_perfil'];
+                  }else if(file_exists("../../".$_SESSION['s_img_perfil'])){
+                    echo '../../'.$_SESSION['s_img_perfil'];
                   }else{
                     echo (file_exists('./assets/img/user_profile.webp')?'./assets/img/user_profile.webp':'./../assets/img/user_profile.webp');
                   }?>" alt="Profile" class="rounded-circle">

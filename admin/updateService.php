@@ -3,8 +3,10 @@
   require('../models/categoria.php');
   require('../models/provincia.php');
   require('../models/servicio.php');
+  require('../models/galeria.php');
   $categorias = Categoria::traerCategoria();
   $provincias = Provincia::traerProvincia();
+
 ?>
 
 <!DOCTYPE html>
@@ -16,20 +18,40 @@
     if(!isset($_SESSION["s_id_usuario"]) && !isset($_GET["idServicio"])){
       header("Location:../index.php");
     }
+    $editService = Servicio::editServiceRolValidation($_GET["idServicio"], $_SESSION["s_rol"]);
     $servicio = Servicio::getServicio($_GET["idServicio"]);
     $servicio = mysqli_fetch_array($servicio);
     $tipoServicio = Servicio::getTipoServicio($_GET["idServicio"]);
     $tipoServicio = mysqli_fetch_array($tipoServicio);
     $categoriaServicioAux = Servicio::getCategoriasServicio($_GET["idServicio"]);
     $categoriaServicio = array();
+    $galeriaImgs = Galeria::getGaleria($_GET["idServicio"]);
     while($row = mysqli_fetch_array($categoriaServicioAux))
       array_push($categoriaServicio,["id" => $row["idCategoria"],"tipo"=>$row["tipo"]]);    
     
     $horariosServicioAux = Servicio::getHorariosServicio($_GET["idServicio"]);
     $horariosServicio = array();
     while($row = mysqli_fetch_array($horariosServicioAux))
-      array_push($horariosServicio,$row);            
+      array_push($horariosServicio,$row);
+    
+      $limiteCategorias = 0;
+
+      switch ($_SESSION["s_rol"]) {
+          case 'gratis':
+              $limiteCategorias = 1;
+              break;
+          case 'basico':
+              $limiteCategorias = 2;
+              break;
+          default:
+              $limiteCategorias = PHP_INT_MAX;
+              break;
+      }
   ?>
+  <script>
+        // Pasar la variable PHP al archivo JS externo
+        const limiteCategorias = <?= $limiteCategorias ?>;
+  </script>
   <link href="../assets/css/styleForms.css" rel="stylesheet">
 </head>
 
@@ -166,23 +188,50 @@
                       </div>
                     </div> -->
 
+                    <?php
+                      if($servicio["FK_idRol"] == 4 || $servicio["FK_idRol"] == 5 || $servicio["FK_idRol"] == 7){
+                    ?>
                     <h4 class="card-title">Imágenes y archivos</h4>
 
                     <div class="row mb-3">
                       <label for="imgLogo" class="col-md-4 col-lg-3 col-form-label">Imagen de servicio <span class="camposObligatorios">*</span></label>
                       <div class="col-md-8 col-lg-9">
                           <!-- <img id="imgLogo" src="" alt="Profile"> -->
-                          <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg">
+                          <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg" required>
                         </div>
                     </div>
-
+                    
                     <div class="row mb-3">
                       <label for="imgBanner" class="col-md-4 col-lg-3 col-form-label">Imagen de banner</label>
                       <div class="col-md-8 col-lg-9">
                         <!-- <img class="imgBanner" id="imgBanner" src="" alt="Profile"> -->
                         <input name="imgBanner" class="form-control" type="file" id="btnSubirImgBanner" accept="image/png, .jpeg, .jpg">
                       </div>
-                    </div>                     
+                    </div>     
+                    <?php
+                      }
+                    ?> 
+                    <div class="row mb-3">
+                      <label for="imgGaleria[]" class="col-md-4 col-lg-3 col-form-label">Imágenes de Galería</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="imgGaleria[]" class="form-control" type="file" id="btnSubirImgGaleria" accept="image/png, .jpeg, .jpg" multiple>
+                          <div id="imgPreviewContainer" class="img-preview-container">
+                            <?php
+                              while($img=mysqli_fetch_array($galeriaImgs)){
+                              $path =  Galeria::getFileName($img, $servicio);
+                              $finalPath = file_exists("../".$path) ? "../".$path : "./../assets/img/user_profile.webp";
+                            ?>
+                              <div class="img-wrapper" style="position: relative; display: inline-block; margin: 10px;">
+                                <img class="img-fluid" src="<?= $finalPath ?>" style="max-width: 200px;">
+                                <span class="remove-img" style="position: absolute; top: -1px; right: -1px; cursor: pointer; font-size: 18px; color: red;">&times;</span>
+                                <input type="hidden" name="existingImgGaleria[]" value="<?= $img["img"]; ?>">
+                              </div>
+                            <?php }?> 
+                          </div>
+                        </div>
+                    </div>
+                  
+                    
   
                     <!-- <div class="row mb-3">
                       <label for="company" class="col-md-4 col-lg-3 col-form-label">Galeria de imagen</label>
@@ -216,7 +265,7 @@
                       <div class="col-md-8 col-lg-9">
                         <div class="input-group">
                           <span class="input-group-text" id="basic-addon1">+54</span>
-                          <input name="telefono" id="telefono" type="tel" class="form-control" size="10" maxlength="10" placeholder="2611234567" pattern="[1-6]{3}[0-9]{3}[0-9]{4}" aria-label="Username"
+                          <input name="telefono" id="telefono" type="tel" class="form-control" size="10" maxlength="10" placeholder="2611234567" pattern="[0-6]{3}[0-9]{3}[0-9]{4}" aria-label="Username"
                             aria-describedby="basic-addon1" value="<?=($servicio["servicio_telefono"]!== null)? $servicio["servicio_telefono"] : ''?>" required>
                         </div>
                       </div>
@@ -265,7 +314,7 @@
                           <option value = "">Seleccione una o mas categorias</option>
                           <?php  
                             while($row=mysqli_fetch_array($categorias)) { 
-                               echo "<option value=".$row['idCategoria'].">".$row['tipo']."</option>";
+                              ?> <option id="categoria_option_<?php echo $row['idCategoria'] ?>" value="<?php echo $row['idCategoria'] ?>" > <?php echo $row['tipo'] ?> </option> <?php
                             }
                           ?>
                         </select>
@@ -751,7 +800,10 @@
                     </div>
 
                     <div class="col-12">
-                      <button class="btn btn-secondary w-100" type="submit">Modificar Servicio</button>
+                      <?php if(!$editService["canEdit"]){ ?>
+                        <h4 id="rolValidation">Ha alcanzado el límite de ediciones del servicio para su plan, espere <?php echo $editService["daysRemaining"] ?> dias o contrate uno superior</h4>
+                      <?php } ?>
+                      <button class="btn btn-secondary w-100" type="submit" <?php echo $editService["canEdit"] ? '' : 'disabled'; ?>>Modificar Servicio</button>
                     </div>
                   </form>
                 </div>
@@ -801,6 +853,10 @@
 
   <div id="preloader"></div>
 
+  <script>
+    const userRole = <?= $servicio["FK_idRol"]; ?>;
+    
+</script>
   <!-- Vendor JS Files -->
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/vendor/aos/aos.js"></script>

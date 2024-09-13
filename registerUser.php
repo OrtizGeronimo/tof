@@ -112,7 +112,7 @@
                       <div class="col-md-8 col-lg-9">
                         <div class="input-group">
                           <span class="input-group-text" id="basic-addon1">+54</span>
-                          <input name="telefono" id="telefono" type="tel" class="form-control" size="10" maxlength="10" placeholder="2611234567" pattern="[1-6]{3}[0-9]{3}[0-9]{4}" value="" aria-label="Username"
+                          <input name="telefono" id="telefono" type="tel" class="form-control" size="10" maxlength="10" placeholder="2611234567" pattern="[0-6]{3}[0-9]{3}[0-9]{4}" value="" aria-label="Username"
                           aria-describedby="basic-addon1" required>
                         </div>
                       </div>

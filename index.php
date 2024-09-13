@@ -1,6 +1,6 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
   session_start();
   require('./models/servicio.php');
@@ -64,9 +64,12 @@ error_reporting(E_ALL);
 
   <main id="main">
   
-    <!-- ======= Testimonials Section ======= -->
-    <section id="testimonials" class="testimonials">
+  
+
+    <!-- ======= Our Team Section ======= -->
+    <section id="team" class="testimonials">
       <div class="container" data-aos="fade-up">
+        
         <div class="section-header">
           <h2>Servicios mas solicitados</h2>
           <p>Estos son alguno de nuestros servicios mas solicitados, hace click en el que necesites para saber mas.</p>
@@ -74,49 +77,7 @@ error_reporting(E_ALL);
 
         <div class="slides-3 swiper" data-aos="fade-up" data-aos-delay="100">
           <div class="swiper-wrapper">
-            <?php while($row=mysqli_fetch_array($servicioPro)){?>
-                    <div class="swiper-slide">
-                    <a href="./userProfile.php?idServicio=<?=($row["idServicio"])?>">
-                      <div class="testimonial-wrap">
-                        <div class="testimonial-item">
-                          <div class="d-flex align-items-center">
-                            <img src="<?=(($row["servicio_imagen"])!=null)?'./archivos/user_'.($row["user_login"]).'/'.($row["servicio_imagen"]):''?>" class="testimonial-img flex-shrink-0" alt="">
-                            <div>
-                              <h3><?=($row["servicio_nombre"])?></h3>
-                              <h4><?=($row["user_nombre"])?></h4>
-                              <!-- <div class="stars">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                              </div> -->
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                    </div><!-- End testimonial item -->   
-            <?php } ?>
-            
-
-          </div>
-          <div class="swiper-pagination"></div>
-        </div>
-
-      </div>
-    </section><!-- End Testimonials Section -->
-
-
-
-    <!-- ======= Our Team Section ======= -->
-    <section id="team" class="testimonials">
-      <div class="container" data-aos="fade-up">
-        
-        <div class="section-header">
-          <h2>Servicios Basico</h2>
-          <p>Encontra el servicio que buscas</p>
-        </div>
-
-        <div class="slides-3 swiper" data-aos="fade-up" data-aos-delay="100">
-          <div class="swiper-wrapper">
-            <?php while($row = mysqli_fetch_array($servicioBasicos)) {?>
+            <?php while($row = mysqli_fetch_array($servicioPro)) {?>
                       <div class="swiper-slide">  
                       <a href="./userProfile.php?idServicio=<?=($row["idServicio"])?>">
                       <div class="testimonial-wrap">

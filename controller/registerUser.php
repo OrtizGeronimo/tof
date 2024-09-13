@@ -29,7 +29,7 @@
         try {
             if($dir_img!="--"){
                 if(!file_exists($dir_img))
-                    mkdir($dir_img,7777,true);
+                    mkdir($dir_img,0777,true);
                 Imagen::upload($newUserImg,$name_img,$dir_img);
             }
         } catch (\Throwable $th) {
@@ -51,7 +51,7 @@
                 $_SESSION["s_id_usuario"] = $lastUser["idUsuario"];
                 $_SESSION["s_nombre"]     = $newUser["nombre"];
                 $_SESSION["s_nombre_usuario"] = $newUser["nombreUsuario"];
-                $_SESSION["s_rol"]        = 'basico';
+                $_SESSION["s_rol"]     = $lastUser["rol"];
                 $_SESSION["s_img_perfil"] = ($dir_img!="--")? 'archivos/user_'.$newUser["nombreUsuario"].'/user_profile.webp' : "";
                 
                 echo '1';
