@@ -7,8 +7,8 @@ class Provincia{
     public static function getProvincia(){
         return BaseDeDatos::consulta('SELECT p.provincia_name, 
                                              COUNT(p.provincia_name) AS cantidad_servicios
-                                        FROM Provincia p,
-                                             Servicio s
+                                        FROM provincia p,
+                                             servicio s
                                         WHERE p.idProvincia = s.FK_idProvincia
                                         AND s.fec_baja IS NULL
                                         GROUP BY p.provincia_name'

@@ -7,6 +7,7 @@ $servicio = $_POST;
 
 
 
+
 if($servicio["nombreServicio"] != null && $servicio["telefono"]!= null && $servicio["descripción"] != null && $servicio["categoria"]!= null && $servicio["provincia"] != null && $servicio["departamento"] != null && isset($_SESSION["s_id_usuario"]) && isset($_SESSION["s_nombre"])){
     $modelServicio = new Servicio();
     
@@ -109,7 +110,6 @@ if($servicio["nombreServicio"] != null && $servicio["telefono"]!= null && $servi
         } 
         
         if (!empty($imgsGaleria['name'][0])) {
-            echo "ejecutando uploadGallery";
             $updateImgGallery = Imagen::uploadGallery($imgsGaleria,$usr_servicio["user_login"],$dir_img, $servicio["idServicio"], $hasFreePlan);
         }
     }
@@ -120,7 +120,7 @@ if($servicio["nombreServicio"] != null && $servicio["telefono"]!= null && $servi
         //echo "dir_img: " . $dir_img;
         header("Location: ./../admin/index.php?successModService");
     }else{
-        //header("Location: ./../admin/index.php?errorModService");
+        header("Location: ./../admin/index.php?errorModService");
          echo '<p>updateServicio'.var_dump($updateServicio).'</p>';
          echo '<p>updateCategoriaServicio'.var_dump($updateCategoriaServicio).'</p>';
          echo '<p>updateRedSocial'.var_dump($updateRedSocial).'</p>';

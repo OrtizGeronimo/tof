@@ -111,7 +111,7 @@ class Servicio{
     }
 
     public static function addCategoria($idServicio,$idCategoria,$usuarioAlta){
-        return BaseDeDatos::consulta("INSERT INTO Categoria_Servicio (FK_idServicio,FK_idCategoria,usr_alta,fec_alta)
+        return BaseDeDatos::consulta("INSERT INTO categoria_servicio (FK_idServicio,FK_idCategoria,usr_alta,fec_alta)
                                       VALUE ($idServicio,$idCategoria,'$usuarioAlta',now());");
     }
 
@@ -260,14 +260,14 @@ class Servicio{
     }
 
     public static function deleteCategoriaServicio($idServicio,$usuarioBaja){
-        return BaseDeDatos::consulta("UPDATE CATEGORIA_SERVICIO
+        return BaseDeDatos::consulta("UPDATE categoria_servicio
                                         SET usr_baja = '$usuarioBaja',
                                             fec_baja = now()
                                         WHERE FK_idServicio = $idServicio;");
     }
     
     public static function agregarServiciosBasicos($descripción,$idCategoria,$idProvincia,$idDepartamento,$idUsuario,$emailContacto,$sitioWeb,$nombreServicio){
-        $agregarServiciosBasicos = BaseDeDatos::consulta("INSERT INTO Servicio (servicio_descripcion,FK_idCategoria,FK_idProvincia,FK_idDepartamento,FK_idUsuario,usr_alta,fec_alta,servicio_email,servicio_web,servicio_nombre) VALUES ('$descripción',$idCategoria,$idProvincia,$idDepartamento,$idUsuario,'DESARROLLO',now(),'$emailContacto','$sitioWeb','$nombreServicio');");
+        $agregarServiciosBasicos = BaseDeDatos::consulta("INSERT INTO servicio (servicio_descripcion,FK_idCategoria,FK_idProvincia,FK_idDepartamento,FK_idUsuario,usr_alta,fec_alta,servicio_email,servicio_web,servicio_nombre) VALUES ('$descripción',$idCategoria,$idProvincia,$idDepartamento,$idUsuario,'DESARROLLO',now(),'$emailContacto','$sitioWeb','$nombreServicio');");
 
         return $agregarServiciosBasicos;                                                  
     }

@@ -3,8 +3,11 @@
   require('../models/categoria.php');
   require('../models/provincia.php');
   require('../models/usuario.php');
+  require('../models/usuario.php');
   $categorias = Categoria::traerCategoria();
   $provincias = Provincia::traerProvincia();
+
+  
 
   
 ?>

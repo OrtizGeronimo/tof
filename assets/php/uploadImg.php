@@ -44,9 +44,7 @@ class Imagen {
                         $borrar = Galeria::borrarItemGaleria($row["id"]);
                     }
                 }
-            } else {
-                echo "No records found.";
-            }
+}
 /*
             $borrar = Galeria::borrarGaleria($idServicio);
             
@@ -65,11 +63,12 @@ class Imagen {
                 $nameAfterSave = Galeria::getLastInserted($idServicio);
                 $completeName = ["img" => $nameAfterSave];
                 $rutaImg = Galeria::formulateFileNameToAbsolutePath($completeName, $username);
+                $rutaImg = './../archivos/user_'.($username).'/galeria/'.($completeName["img"]).'';
                 if (file_exists($rutaImg)) {
                     array_map('unlink', glob($rutaImg));
                     unlink($rutaImg); // Elimina el archivo si ya existe
                 }
-                echo "<br>uploading".$files["name"][$i]."---->".$rutaImg;
+                //echo "<br>uploading".$files["name"][$i]."---->".$rutaImg;
                 move_uploaded_file($files['tmp_name'][$i], $rutaImg);
                 if($response === false){
                     return false;
@@ -87,7 +86,7 @@ class Imagen {
 
     public static function uploadExistingGallery($files,$username,$dir,$idServicio){
         try {
-            echo "ejecutando uploadExistingGallery";
+            
 
             if (!file_exists($dir)) {
                 mkdir($dir, 0777, true); // Crea el directorio si no existe, incluyendo directorios padres
@@ -101,10 +100,11 @@ class Imagen {
 
             while ($row = mysqli_fetch_array($result)) {
                 $rutaImg = Galeria::formulateFileNameToAbsolutePath($row, $username);
+                $rutaImg = './../archivos/user_'.($username).'/galeria/'.($row["img"]).'';
                 $name = basename($rutaImg);
                 
                 if (file_exists($rutaImg) && !in_array($name, $files)) {
-                    echo "<br>eliminando archivo.. ".$name."<br>";
+                    
                     array_map('unlink', glob($rutaImg));
                     unlink($rutaImg); // Elimina el archivo
                     $borrar = Galeria::borrarItemGaleria($row["id"]);
