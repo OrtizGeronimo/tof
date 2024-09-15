@@ -7,6 +7,7 @@ $servicio = $_POST;
 
 
 
+
 if($servicio["nombreServicio"] != null && $servicio["telefono"]!= null && $servicio["descripción"] != null && $servicio["categoria"]!= null && $servicio["provincia"] != null && $servicio["departamento"] != null && isset($_SESSION["s_id_usuario"]) && isset($_SESSION["s_nombre"])){
     $modelServicio = new Servicio();
     
