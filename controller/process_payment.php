@@ -8,7 +8,14 @@ use MercadoPago\Client\PreApprovalPlan\PreApprovalPlanClient;
 use MercadoPago\Exceptions\MPApiException;
 use MercadoPago\MercadoPagoConfig;
 
-MercadoPagoConfig::setAccessToken("APP_USR-6005228073203989-030315-0090d9cc3c7f5a324e2f13ee98a073ba-491464209");
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+
+$access_token = $_ENV['ACCESS_TOKEN'] ?? null;
+
+MercadoPagoConfig::setAccessToken($access_token);
+
 
 
 $client = new PaymentClient();

@@ -1,5 +1,5 @@
 
-const mp = new MercadoPago("APP_USR-492a1ba6-e95d-4545-a0e7-0f43717fcfef");
+
 
 const cardForm = mp.cardForm({
     amount: "100.5",
