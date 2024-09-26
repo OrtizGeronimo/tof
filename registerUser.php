@@ -5,9 +5,9 @@
   $categorias = Categoria::traerCategoria();
   $provincias = Provincia::traerProvincia();
 
-  require_once './../vendor/autoload.php';
+  require_once './vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__."/config/");
 $dotenv->load();
 
 // Access your environment variables using the $_ENV superglobal or getenv()
