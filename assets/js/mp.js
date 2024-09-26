@@ -160,16 +160,25 @@ const cardForm = mp.cardForm({
 
                 // 3. Handle the payment response
                 if (paymentResult.status === 'approved' || paymentResult.status === 'authorized') {
-                  alertSwal('success', 'Bienvenido! Te suscribiste correctamente.');
-    
-                  setTimeout(() => {
-                      location.replace('./admin/newService.php');
-                  }, 2000);
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Bienvenido!',
+                    text: 'Te suscribiste correctamente.',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    location.replace('./admin/newService.php');
+                });
                 } else if (paymentResult.status === 'in_process') {
-                    alertSwal('info', 'El pago está siendo procesado, te notificaremos por correo cuando se realice.');
-                    setTimeout(() => {
-                      location.replace('./admin/newService.php');
-                  }, 2000);
+                  Swal.fire({
+                    icon: 'info',
+                    title: 'El pago está siendo procesado',
+                    text: 'Te notificaremos por correo cuando se realice.',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    location.replace('./admin/newService.php');
+                });
                 } else if (paymentResult.status === 'rejected' || paymentResult.status === 'cancelled') {
                     // Payment failed, delete the user (rollback)
                     await $.ajax({
