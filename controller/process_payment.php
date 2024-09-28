@@ -1,6 +1,6 @@
 <?php
 require_once './../vendor/autoload.php';
-echo "Entrando a process payment";
+
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Client\PreApproval\PreApprovalClient;
@@ -8,7 +8,14 @@ use MercadoPago\Client\PreApprovalPlan\PreApprovalPlanClient;
 use MercadoPago\Exceptions\MPApiException;
 use MercadoPago\MercadoPagoConfig;
 
-MercadoPagoConfig::setAccessToken("APP_USR-6005228073203989-030315-0090d9cc3c7f5a324e2f13ee98a073ba-491464209");
+$dotenv = Dotenv\Dotenv::createImmutable("./../config/");
+$dotenv->load();
+
+
+$access_token = $_ENV['ACCESS_TOKEN'] ?? null;
+
+MercadoPagoConfig::setAccessToken($access_token);
+
 
 
 $client = new PaymentClient();
@@ -18,7 +25,7 @@ $client = new PaymentClient();
 $input = file_get_contents('php://input');  // Get the raw POST data
 $data = json_decode($input, true);  
 
-var_dump($data);
+//var_dump($data);
 try {
 /*$payment = $client->create([
     "transaction_amount" => (float) $data['transaction_amount'], // Transaction amount
@@ -76,15 +83,13 @@ if  (true/*$data['plan'] == "basico"*/) {
 }
   
   echo json_encode($preapproval);
-  echo "<br>";
+  
   
 
 //$payment_json = json_encode($payment);
 //echo ($payment_json);
 } catch (MPApiException $e) {
     echo $e->getMessage();
-    echo $e->getApiResponse()->getStatusCode();
-    var_dump ($e->getApiResponse()->getContent());
 }
 
 ?>

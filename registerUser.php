@@ -4,6 +4,15 @@
   require('models/provincia.php');
   $categorias = Categoria::traerCategoria();
   $provincias = Provincia::traerProvincia();
+
+  require_once './vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__."/config/");
+$dotenv->load();
+
+// Access your environment variables using the $_ENV superglobal or getenv()
+$public_key = $_ENV['PUBLIC_KEY'] ?? null;
+
 ?>
 
 <!DOCTYPE html>
@@ -62,7 +71,7 @@
                 <form id="form-checkout" onsubmit="return passwordValid()" class="row g-3 needs-validation" validate action="" method="post" enctype="multipart/form-data">
                     
                     <!-- Hidden input to store your integration public key -->
-                    <input type="hidden" id="mercado-pago-public-key" value="APP_USR-492a1ba6-e95d-4545-a0e7-0f43717fcfef">
+                    <input type="hidden" id="mercado-pago-public-key" value="<?= $public_key?>">
                    
                     <h4 class="card-title">General</h4>
                               
@@ -333,6 +342,9 @@
       }
     });
     */
+  </script>
+  <script> 
+    const mp = new MercadoPago("<?= $public_key ?>");
   </script>
   <script src="assets/js/mp.js"></script>
   <?php
