@@ -5,21 +5,16 @@ include 'logConfig.php';
 (file_exists("./../config/conexion.php"))? require_once('./../config/conexion.php') : require_once('./config/conexion.php');
 class Usuario{
     
-    public static function agregarUsuarios($nomUsuario,$password,$email,$imgLogoRuta,$imgBannerRuta,$telefono,$nombreApellido,$idRol = null){
-        if(!$idRol){
-            $respuesta = BaseDeDatos::consulta("SELECT * 
-                                                     FROM rol
-                                                     WHERE upper(rol) = 'GRATIS'");
-    
-            if($row = mysqli_fetch_array($respuesta)){
-                $idRolPredeterminado = $row["idRol"];
-                $user = BaseDeDatos::consulta("INSERT INTO usuario (user_login,user_pass,user_email,user_img_perfil,user_img_banner,user_telefono,user_nombre,usr_alta,fec_alta,FK_idRol) 
-                                               VALUES ('$nomUsuario',sha1('$password'),'$email','$imgLogoRuta','$imgBannerRuta','$telefono','$nombreApellido','DESARROLLO',now(),'$idRolPredeterminado');");
-    
-            }
-        }else{
+    public static function agregarUsuarios($nomUsuario,$password,$email,$imgLogoRuta,$imgBannerRuta,$telefono,$nombreApellido, $rol){
+        $respuesta = BaseDeDatos::consulta("SELECT * 
+                                                    FROM rol
+                                                    WHERE upper(rol) = upper('$rol')");
+
+        if($row = mysqli_fetch_array($respuesta)){
+            $idRolPredeterminado = $row["idRol"];
             $user = BaseDeDatos::consulta("INSERT INTO usuario (user_login,user_pass,user_email,user_img_perfil,user_img_banner,user_telefono,user_nombre,usr_alta,fec_alta,FK_idRol) 
-                                           VALUES ('$nomUsuario',sha1('$password'),'$email','$imgLogoRuta','$imgBannerRuta','$telefono','$nombreApellido','DESARROLLO',now(),'$idRol');");
+                                            VALUES ('$nomUsuario',sha1('$password'),'$email','$imgLogoRuta','$imgBannerRuta','$telefono','$nombreApellido','DESARROLLO',now(),'$idRolPredeterminado');");
+
         }
 
         return $user;
