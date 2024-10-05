@@ -11,12 +11,9 @@ use MercadoPago\MercadoPagoConfig;
 $dotenv = Dotenv\Dotenv::createImmutable("./../config/");
 $dotenv->load();
 
-
 $access_token = $_ENV['ACCESS_TOKEN'] ?? null;
 
 MercadoPagoConfig::setAccessToken($access_token);
-
-
 
 $client = new PaymentClient();
 $request_options = new RequestOptions();
@@ -25,9 +22,9 @@ $request_options->setCustomHeaders(["X-Idempotency-Key: <SOME_UNIQUE_VALUE>"]);
 $input = file_get_contents('php://input');  // Get the raw POST data
 $data = json_decode($input, true);  
 
-var_dump($data);
+//var_dump($data);
 try {
-  $payment = $client->create([
+  /*$payment = $client->create([
     "transaction_amount" => (float) $data['transaction_amount'], // Transaction amount
     "token" => $data['token'],                                   // Card token
     "description" => $data['description'],                       // Description
@@ -41,7 +38,7 @@ try {
         "number" => $data['payer']['identification']['number'],  // Payer's ID number
       ]
     ]
-  ]);
+  ]);*/
 
   $preapproval_plan = new PreApprovalClient();
 
@@ -82,9 +79,9 @@ if  ($data['plan'] == "basico") {
 } else {
 }
   
-  //echo json_encode($preapproval); 
+echo json_encode($preapproval); 
 
-$payment_json = json_encode($payment);
+//$payment_json = json_encode($payment);
 //echo ($payment_json);
 } catch (MPApiException $e) {
     echo $e->getMessage();

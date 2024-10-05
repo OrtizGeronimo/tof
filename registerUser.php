@@ -139,8 +139,8 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
                         <div class="input-group">
                           <select id="plan" name="plan" class="form-control" required>
                             <option value="gratis">Plan Gratuito</option>
-                            <option value="basico">Plan Básico - $1500/mes</option>
-                            <option value="pro">Plan Pro - $5000/mes</option>
+                            <option value="basico">Plan Básico</option>
+                            <option value="pro">Plan Pro</option>
                           </select>
                         </div>
                       </div>
@@ -148,7 +148,13 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
 
                     <!-- MERCADO PAGO FORM -->
                     <div id="payment-form">
-                      <h4 class="card-title">Datos de pago</h4>                       
+                      <h4 class="card-title d-flex justify-content-between align-items-center">
+                        Datos de pago
+                        <span class="secure-payment">
+                            <img src="assets/img/mpSeguro.png" alt="Check Verde" style="width: 200px; height: 80px; vertical-align: middle;"/>
+                            <span style="color: lightskyblue;">Pago seguro con Mercado Pago</span>
+                        </span>
+                      </h4>                  
                       <div class="row mb-3">
                         <input type="hidden" id="form-checkout__cardholderEmail" name="emailCardHolder" value="example@gmail.com"/>
                         <label for="doc" class="col-md-4 col-lg-3 col-form-label">DNI <span class="camposObligatorios">*</span></label>
@@ -159,8 +165,8 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
                           </div>
                         </div>
                       </div>
-                      <br>
-                      <h4 class="card-title">Datos de tarjeta</h4>
+                      <!--<br>
+                      <h4 class="card-title">Datos de tarjeta</h4>-->
                       <div class="row mb-3">
                         <label for="doc" class="col-md-4 col-lg-3 col-form-label">Nombre <span class="camposObligatorios">*</span></label>
                         <div class="col-md-8 col-lg-9">
@@ -237,10 +243,10 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
                     </div>
 
                     <div class="col-12">
-                      <p id="btn_crearCuenta" class="btn btn-secondary w-100">Crear una cuenta</p>
-                      <button type="submit" id="form-checkout__submit" class="btn btn-secondary w-100">Pagar</button>
-                      <!--<button type="submit" id="form-checkout__submit1">Enviarform</button> -->
-                      <progress value="0" class="progress-bar">Cargando...</progress>
+                      <p id="btn_crearCuenta" class="btn btn-secondary w-100">Crear cuenta</p>
+                      <button type="submit" id="form-checkout__submit" class="btn btn-secondary w-100">Crear cuenta</button>
+                      <!--<button type="submit" id="form-checkout__submit1">Enviarform</button> 
+                      <progress value="0" class="progress-bar">Cargando...</progress>-->
                     </div>
                   </form>
 
@@ -320,7 +326,7 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
       }
     })
 
-    document.querySelector("#btn_crearCuenta").addEventListener('click',() => {
+   document.querySelector("#btn_crearCuenta").addEventListener('click',() => {
 
       let isCamposLlenos = true;
 
@@ -348,8 +354,15 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
           contentType: false,
           success: function(result) {
             if(result === '1'){
-              alertSwal('success',result);
-              location.replace('./admin/newService.php');
+              Swal.fire({
+                  icon: 'success',
+                  title: 'Bienvenido!',
+                  text: 'Te suscribiste correctamente.',
+                  timer: 2000,
+                  showConfirmButton: false
+              }).then(() => {
+                  location.replace('./admin/newService.php');
+              });
             }else{
               alertSwal('error',result);
             }
@@ -360,7 +373,7 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
           }
         });
       }
-    });
+    }); 
 
   </script>
   <script> 

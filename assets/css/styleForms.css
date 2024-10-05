@@ -1043,10 +1043,21 @@ h6 {
   justify-content: flex-start; /* Alineación adecuada */
 }
 
+.secure-payment {
+  display: flex;
+  align-items: center;
+  font-size: 14px; /* Ajusta el tamaño de la fuente según lo necesites */
+  color: lightskyblue; /* Cambia el color si lo deseas */
+}
+.secure-payment img {
+  margin-right: 5px; /* Espacio entre el icono y el texto */
+}
+
 #payment-form {
   display: flex;
   flex-direction: column; /* Para que los elementos se apilen */
   align-items: flex-end; /* Alineación a la derecha */
+  padding-right: 12px;
 }
 
 
