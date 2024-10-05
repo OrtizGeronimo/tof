@@ -220,16 +220,7 @@ const cardForm = mp.cardForm({
         }
     }
     ,
-      onFetching: (resource) => {
-        console.log("Fetching resource: ", resource);
-
-        // Animate progress bar
-        const progressBar = document.querySelector(".progress-bar");
-        progressBar.removeAttribute("value");
-
-        return () => {
-          progressBar.setAttribute("value", "0");
-        };
+      onFetching: (resource) => {        
       }
     },
   });
