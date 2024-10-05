@@ -68,7 +68,7 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
 
                 <div class="card-body">
 
-                <form id="form-checkout" onsubmit="return passwordValid()" class="row g-3 needs-validation" validate action="" method="post" enctype="multipart/form-data">
+                  <form id="form-checkout" onsubmit="return passwordValid()" class="row g-3 needs-validation" validate action="" method="post" enctype="multipart/form-data">
                     
                     <!-- Hidden input to store your integration public key -->
                     <input type="hidden" id="mercado-pago-public-key" value="<?= $public_key?>">
@@ -132,60 +132,88 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
                       </div>
                     </div>
 
-                    <!-- MERCADO PAGO FORM -->
-                    
-                    <h3 class="title">Datos de pago</h3>
-                        
-                        <div class="row">
-                              <input type="hidden" id="form-checkout__cardholderEmail" name="emailCardHolder" value="example@gmail.com"/>
-                            <div class="form-group col-sm-7">
-                              <label for="doc" class="col-md-4 col-lg-3 col-form-label">DNI <span class="camposObligatorios">*</span></label>
-                              <div class="form-group col-sm-5">
-                                <select id="form-checkout__identificationType" name="identificationType" class="form-control"></select>
-                            </div>
-                            <div class="form-group col-sm-7">
-                                <input id="form-checkout__identificationNumber" name="docNumber" type="text" class="form-control"/>
-                            </div>
-                            </div>
+                    <!-- Selección del plan -->
+                    <div class="row mb-3">
+                      <label for="plan" class="col-md-4 col-lg-3 col-form-label">Plan <span class="camposObligatorios">*</span></label>
+                      <div class="col-md-8 col-lg-9">
+                        <div class="input-group">
+                          <select id="plan" name="plan" class="form-control" required>
+                            <option value="gratis">Plan Gratuito</option>
+                            <option value="basico">Plan Básico</option>
+                            <option value="pro">Plan Pro</option>
+                          </select>
                         </div>
-                        <br>
-                        <h4 class="title">Datos de tarjeta</h4>
-                        <div class="row">
-                            <div class="form-group col-sm-8">
-                            <label for="doc" class="col-md-4 col-lg-3 col-form-label">Nombre <span class="camposObligatorios">*</span></label>
-                                <input id="form-checkout__cardholderName" name="cardholderName" type="text" class="form-control"/>
-                            </div>
-                            <div class="form-group col-sm-6">
-                            <label for="doc" class="col-md-4 col-lg-3 col-form-label">Fecha y año de vencimiento <span class="camposObligatorios">*</span></label>
-                                <div class="input-group expiration-date">
-                                    <div id="form-checkout__cardExpirationMonth" name="cardExpirationMonth" type="text" class="form-control"></div>
-                                    <span class="date-separator">/</span>
-                                    <div id="form-checkout__cardExpirationYear" name="cardExpirationYear" type="text" class="form-control"> </div>
-                                </div>
-                            </div>
-                            <!--<input id="form-checkout__expirationDate" name="cardExpirationDate" type="hidden" class="form-control"/>-->
-                                    
-                            <div class="form-group col-sm-8">
-                                <label for="cardNumber" class="col-md-4 col-lg-3 col-form-label">Número de tarjeta <span class="camposObligatorios">*</span></label>
-                                  <div id="form-checkout__cardNumber" name="cardNumber" type="text" class="form-control"> </div>
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="doc" class="col-md-4 col-lg-3 col-form-label">Código de seguridad <span class="camposObligatorios">*</span></label>
-                                <div>
-                                <div id="form-checkout__securityCode" name="securityCode" type="text" class="form-control"> </div>
-                                </div>
-                              </div>
-                            <div id="issuerInput" class="form-group col-sm-12 hidden">
-                            <label for="doc" class="col-md-4 col-lg-3 col-form-label">Banco <span class="camposObligatorios">*</span></label>
-                                <select id="form-checkout__issuer" name="issuer" class="form-control"></select>
-                            </div>
-                            <div class="form-group col-sm-12">
-                            <label for="doc" class="col-md-4 col-lg-3 col-form-label">Cuotas <span class="camposObligatorios">*</span></label>
-                                <select id="form-checkout__installments" name="installments" type="text" class="form-control"></select>
-                            </div>
-                        </div>
+                      </div>
+                    </div>
 
-<!--
+                    <!-- MERCADO PAGO FORM -->
+                    <div id="payment-form">
+                      <h4 class="card-title d-flex justify-content-between align-items-center">
+                        Datos de pago
+                        <span class="secure-payment">
+                            <img src="assets/img/mpSeguro.png" alt="Check Verde" style="width: 200px; height: 80px; vertical-align: middle;"/>
+                            <span style="color: lightskyblue;">Pago seguro con Mercado Pago</span>
+                        </span>
+                      </h4>                  
+                      <div class="row mb-3">
+                        <input type="hidden" id="form-checkout__cardholderEmail" name="emailCardHolder" value="example@gmail.com"/>
+                        <label for="doc" class="col-md-4 col-lg-3 col-form-label">DNI <span class="camposObligatorios">*</span></label>
+                        <div class="col-md-8 col-lg-9">
+                          <div class="input-group">
+                            <select id="form-checkout__identificationType" name="identificationType" class="form-control" ></select>
+                            <input id="form-checkout__identificationNumber" name="docNumber" type="text" class="form-control"  />
+                          </div>
+                        </div>
+                      </div>
+                      <!--<br>
+                      <h4 class="card-title">Datos de tarjeta</h4>-->
+                      <div class="row mb-3">
+                        <label for="doc" class="col-md-4 col-lg-3 col-form-label">Nombre <span class="camposObligatorios">*</span></label>
+                        <div class="col-md-8 col-lg-9">
+                          <input id="form-checkout__cardholderName" name="cardholderName" type="text" class="form-control"/>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="doc" class="col-md-4 col-lg-3 col-form-label">Fecha y año de vencimiento <span class="camposObligatorios">*</span></label>
+                        <div class="col-md-8 col-lg-9">
+                          <div class="input-group expiration-date">
+                            <div id="form-checkout__cardExpirationMonth" name="cardExpirationMonth" type="text" class="form-control"></div>
+                            <div class="input-group-text" style="border:none; font-weight: bold; padding: 0 10px;">/</div>
+                            <div id="form-checkout__cardExpirationYear" name="cardExpirationYear" type="text" class="form-control"> </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!--<input id="form-checkout__expirationDate" name="cardExpirationDate" type="hidden" class="form-control"/>-->                                    
+                      <div class="row mb-3">
+                          <label for="cardNumber" class="col-md-4 col-lg-3 col-form-label">Número de tarjeta <span class="camposObligatorios">*</span></label>
+                          <div class="col-md-8 col-lg-9">
+                            <div class="input-group">
+                              <div id="form-checkout__cardNumber" name="cardNumber" type="text" class="form-control"> </div>
+                            </div>
+                          </div>  
+                      </div>
+                      <div class="row mb-3">
+                        <label for="doc" class="col-md-4 col-lg-3 col-form-label">Código de seguridad <span class="camposObligatorios">*</span></label>
+                        <div class="col-md-8 col-lg-9">
+                          <div class="input-group">
+                            <div id="form-checkout__securityCode" name="securityCode" type="text" class="form-control"> </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-3 hidden" id="issuerInput">
+                        <label for="doc" class="col-md-4 col-lg-3 col-form-label">Banco <span class="camposObligatorios">*</span></label>
+                        <div class="col-md-8 col-lg-9">
+                          <select id="form-checkout__issuer" name="issuer" class="form-control"></select>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="doc" class="col-md-4 col-lg-3 col-form-label">Cuotas <span class="camposObligatorios">*</span></label>
+                        <div class="col-md-8 col-lg-9">
+                          <select id="form-checkout__installments" name="installments" type="text" class="form-control"></select>
+                        </div>
+                      </div>
+                    </div>
+                    <!--
                     <div id="form-checkout__cardNumber" class="container"></div>
                     <div id="form-checkout__expirationDate" class="container"></div>
                     <div id="form-checkout__securityCode" class="container"></div>
@@ -200,25 +228,25 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
                     <div class="row mb-3">
                       <label for="imgLogo" class="col-md-4 col-lg-3 col-form-label">Imagen de perfil <span class="camposObligatorios">*</span></label>
                       <div class="col-md-8 col-lg-9 imgFotoPerfil">
-                          <img id="imgLogo" src="assets/img/profile-img.jpg" alt="Profile">
-                          <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg">
-                        </div>
+                        <img id="imgLogo" src="assets/img/profile-img.jpg" alt="Profile">
+                        <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg">
+                      </div>
                     </div>
 
                     <div class="col-12">
                       <div class="form-check">
                         <input class="form-check-input" name="terms" type="checkbox" value="terms" id="acceptTerms" required>
                         <label class="form-check-label" for="acceptTerms">Estoy de acuerdo y acepto los 
-                          <a href="avisoLegal.php" target="blank">Términos y condiciones</a></label>
+                        <a href="avisoLegal.php" target="blank">Términos y condiciones</a></label>
                         <div class="invalid-feedback">Debe estar de acuerdo antes de enviar.</div>
                       </div>
                     </div>
 
                     <div class="col-12">
-                      <!--<p id="btn_crearCuenta" class="btn btn-secondary w-100">Crear una cuenta</p>-->
-                      <button type="submit" id="form-checkout__submit">Pagar</button>
-                      <button type="submit" id="form-checkout__submit1">Enviarform</button>
-                      <progress value="0" class="progress-bar">Cargando...</progress>
+                      <p id="btn_crearCuenta" class="btn btn-secondary w-100">Crear cuenta</p>
+                      <button type="submit" id="form-checkout__submit" class="btn btn-secondary w-100">Crear cuenta</button>
+                      <!--<button type="submit" id="form-checkout__submit1">Enviarform</button> 
+                      <progress value="0" class="progress-bar">Cargando...</progress>-->
                     </div>
                   </form>
 
@@ -287,11 +315,9 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
   <!-- <script src="assets/js/horarios.js"></script> -->
   <script src="assets/js/main.js"></script>
   <script src="assets/js/validation.js"></script>
+  <script src="assets/js/validacionCambioPlan.js"></script>
   <script>
-  
-</script>
-  <script>
-    /*const form = document.querySelector("#form-checkout");
+    const form = document.querySelector("#form-checkout");
     form.addEventListener("submit",()=>{
       if(!passwordValid()){
         document.querySelector("#newPassword").style.backgroundColor = "pink";
@@ -300,13 +326,13 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
       }
     })
 
-    document.querySelector("#btn_crearCuenta").addEventListener('click',() => {
+   document.querySelector("#btn_crearCuenta").addEventListener('click',() => {
 
       let isCamposLlenos = true;
 
       for (let i = 0; i < form.elements.length; i++) {
         let element = form.elements[i];
-        if (element.value === '') {
+        if (element.value === '' && element.hasAttribute('required')) {
           isCamposLlenos = false;
           break;
         }
@@ -328,8 +354,15 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
           contentType: false,
           success: function(result) {
             if(result === '1'){
-              alertSwal('success',result);
-              location.replace('./admin/newService.php');
+              Swal.fire({
+                  icon: 'success',
+                  title: 'Bienvenido!',
+                  text: 'Te suscribiste correctamente.',
+                  timer: 2000,
+                  showConfirmButton: false
+              }).then(() => {
+                  location.replace('./admin/newService.php');
+              });
             }else{
               alertSwal('error',result);
             }
@@ -340,8 +373,8 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
           }
         });
       }
-    });
-    */
+    }); 
+
   </script>
   <script> 
     const mp = new MercadoPago("<?= $public_key ?>");

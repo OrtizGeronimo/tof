@@ -44,14 +44,15 @@
                                             "$dir_img".($dir_img!="--")? "/$name_img.webp" : "",
                                             "--",
                                             $newUser["telefono"],
-                                            $newUser["nombre"].' '.$newUser["apellido"]);  
+                                            $newUser["nombre"].' '.$newUser["apellido"],
+                                            $newUser["plan"]);  
             if($user){
                 $lastUser = Usuario::getLastUsuario();
                 $lastUser = mysqli_fetch_array($lastUser);
                 $_SESSION["s_id_usuario"] = $lastUser["idUsuario"];
                 $_SESSION["s_nombre"]     = $newUser["nombre"];
                 $_SESSION["s_nombre_usuario"] = $newUser["nombreUsuario"];
-                $_SESSION["s_rol"]     = $lastUser["rol"];
+                $_SESSION["s_rol"]     = $newUser["plan"];
                 $_SESSION["s_img_perfil"] = ($dir_img!="--")? 'archivos/user_'.$newUser["nombreUsuario"].'/user_profile.webp' : "";
                 
                 echo '1';
