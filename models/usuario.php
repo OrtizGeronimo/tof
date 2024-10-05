@@ -65,6 +65,11 @@ class Usuario{
                                         WHERE idUsuario IN (SELECT MAX(idUsuario) FROM usuario);");
     }
 
+    public static function getLastUsuarioAccurate($email){
+        return BaseDeDatos::consulta("SELECT * FROM usuario u
+                                        WHERE user_email = '$email';");
+    }
+
     public static function updateUsuario($nomUsuario,$password,$email,$imgLogoRuta,$telefono,$nombreApellido,$usuarioModificacion,$idUsuario){
 
         if($password == ""){

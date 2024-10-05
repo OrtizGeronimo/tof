@@ -123,9 +123,10 @@ const cardForm = mp.cardForm({
                     contentType: false
                 });
     
-                if (userCreationResult !== '1') {
+                if (userCreationResult.status !== 'success') {
                     // User creation failed
-                    alertSwal('error', userCreationResult);
+                    alertSwal('error', userCreationResult.message);
+                    console.log("error", userCreationResult.user);
                     return;
                 }
     
@@ -156,9 +157,32 @@ const cardForm = mp.cardForm({
     
                 console.log(paymentResult);
 
-                Swal.close();  // Close the loading spinner
+                id = paymentResult.id;
+                idUsuario = userCreationResult.idUsuario;
 
-                // 3. Handle the payment response
+                //se crea la suscripcion
+
+                const suscriptionResponse = await fetch("./controller/suscription.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        idUsuario: idUsuario,
+                    }),
+                });
+
+                
+
+                Swal.close();  // Cerramos spinner
+
+                if (suscriptionResponse.status !== 'success') {
+                  alertSwal('error', "Error al crear la suscripción");
+                  return;
+              }
+
+                // Response de payment
                 if (paymentResult.status === 'approved' || paymentResult.status === 'authorized') {
                   Swal.fire({
                     icon: 'success',
