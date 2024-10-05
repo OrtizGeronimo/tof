@@ -55,10 +55,13 @@
                 $_SESSION["s_rol"]     = $newUser["plan"];
                 $_SESSION["s_img_perfil"] = ($dir_img!="--")? 'archivos/user_'.$newUser["nombreUsuario"].'/user_profile.webp' : "";
                 
+                
+                
+
                 header("Content-Type: application/json");
                 
 
-                $newUserAccurate = Usuario::getLastUsuarioAccurate($newUser["email"]);
+                $newUserAccurate = mysqli_fetch_array(Usuario::getLastUsuarioAccurate($newUser["email"])); 
                 $data = [
                     "status" => "success",
                     "message" => "El usuario se creó correctamente",
@@ -85,7 +88,7 @@
         } catch (\Throwable $th) {
             $data = [
                 "status" => "error",
-                "message" => "Hubo un error registrando al usuario",
+                "message" => "Exception: Hubo un error registrando al usuario",
                 "user" => $th
             ];
             
