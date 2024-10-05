@@ -137,6 +137,7 @@ const cardForm = mp.cardForm({
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
+                        plan: dataForm.get("plan"),
                         token,
                         issuer_id,
                         payment_method_id,
@@ -162,7 +163,7 @@ const cardForm = mp.cardForm({
 
                 //se crea la suscripcion
 
-                const suscriptionResponse = await fetch("./controller/suscription.php", {
+                const suscriptionResult = await fetch("./controller/suscription.php", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -170,14 +171,18 @@ const cardForm = mp.cardForm({
                     body: JSON.stringify({
                         id: id,
                         idUsuario: idUsuario,
+                        estado_mp: paymentResult.status,
                     }),
                 });
 
                 
-
+                
                 Swal.close();  // Cerramos spinner
 
-                if (suscriptionResponse.status !== 'success') {
+
+                suscriptionResponse = await suscriptionResult.json();
+
+                if (suscriptionResponse.status !== "success") {
                   alertSwal('error', "Error al crear la suscripción");
                   return;
               }
@@ -220,7 +225,7 @@ const cardForm = mp.cardForm({
         }
     }
     ,
-      onFetching: (resource) => {        
+      onFetching: (resource) => {
       }
     },
   });
