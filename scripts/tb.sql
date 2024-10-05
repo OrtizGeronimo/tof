@@ -15,8 +15,9 @@ CREATE TABLE IF NOT EXISTS suscripcion (
     id INT AUTO_INCREMENT PRIMARY KEY,
     FK_idUsuario INT,
     estado VARCHAR(255),
+    estado_mp VARCHAR(255),
     id_suscripcion VARCHAR(255),
     fec_suscripcion datetime NOT NULL,
     fec_vencimiento datetime NOT NULL,
-    FOREIGN KEY (FK_idUsuario) REFERENCES servicio(idServicio)
+    FOREIGN KEY (FK_idUsuario) REFERENCES usuario(idUsuario)
 );

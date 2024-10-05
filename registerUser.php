@@ -353,7 +353,7 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
           processData: false,
           contentType: false,
           success: function(result) {
-            if(result === '1'){
+            if(result.status === 'success'){
               Swal.fire({
                   icon: 'success',
                   title: 'Bienvenido!',

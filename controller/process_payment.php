@@ -16,8 +16,8 @@ $access_token = $_ENV['ACCESS_TOKEN'] ?? null;
 MercadoPagoConfig::setAccessToken($access_token);
 
 $client = new PaymentClient();
-$request_options = new RequestOptions();
-$request_options->setCustomHeaders(["X-Idempotency-Key: <SOME_UNIQUE_VALUE>"]);
+//$request_options = new RequestOptions();
+//$request_options->setCustomHeaders(["X-Idempotency-Key: <SOME_UNIQUE_VALUE>"]);
 
 $input = file_get_contents('php://input');  // Get the raw POST data
 $data = json_decode($input, true);  
@@ -43,7 +43,7 @@ try {
   $preapproval_plan = new PreApprovalClient();
 
 
-if  ($data['plan'] == "basico") {
+if  ($data['plan'] === "basico") {
   $preapproval = $preapproval_plan->create([
     "preapproval_plan_id" => "2c93808491eb5f1c01920c31b87f0a74",
     "back_url" => "https://www.todooficio.com/admin/newService.php",
@@ -59,7 +59,7 @@ if  ($data['plan'] == "basico") {
       "currency_id" => "ARS"
     ]
   ]);
-} else if ($data['plan'] == "pro") {
+} else if ($data['plan'] === "pro") {
 
   $preapproval = $preapproval_plan->create([
     "preapproval_plan_id" => "2c93808491eb5f1c01920c31b9ae0a75",
@@ -76,7 +76,6 @@ if  ($data['plan'] == "basico") {
       "currency_id" => "ARS"
     ]
   ]);
-} else {
 }
   
 echo json_encode($preapproval); 

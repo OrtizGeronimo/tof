@@ -1,10 +1,10 @@
 <?php
-require('./../models/usuario.php');
+require('./../models/suscripcionServicio.php');
 //obtenemos data de la peticion
     $input = file_get_contents('php://input'); 
     $data = json_decode($input, true);  
 
-    SuscripcionServicio::crearSuscripcion($data['idUsuario'], $data['idSuscripcion']);
+    SuscripcionServicio::crearSuscripcion($data['idUsuario'], $data['id'], $data['estado_mp']);
     
     $response = [
         'status' => "success",
