@@ -147,7 +147,7 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
                     </div>
 
                     <!-- MERCADO PAGO FORM -->
-                    <div id="payment-form" style="margin-right: 50px;">
+                    <div id="payment-form">
                       <h4 class="card-title d-flex justify-content-between align-items-center">
                         Datos de pago
                         <span class="secure-payment">

@@ -203,10 +203,10 @@
                     <h4 class="card-title">Imágenes y archivos</h4>
 
                     <div class="row mb-3">
-                      <label for="imgLogo" class="col-md-4 col-lg-3 col-form-label">Imagen de servicio <span class="camposObligatorios">*</span></label>
+                      <label for="imgLogo" class="col-md-4 col-lg-3 col-form-label">Imagen de servicio</label>
                       <div class="col-md-8 col-lg-9">
                           <!-- <img id="imgLogo" src="" alt="Profile"> -->
-                          <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg" required>
+                          <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg">
                         </div>
                     </div>
                     
