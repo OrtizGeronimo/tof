@@ -4,7 +4,7 @@ require('./../models/suscripcionServicio.php');
     $input = file_get_contents('php://input'); 
     $data = json_decode($input, true);  
 
-    SuscripcionServicio::crearSuscripcion($data['idUsuario'], $data['id'], $data['estado_mp']);
+    SuscripcionServicio::crearSuscripcion($data['idUsuario'], $data['id'], $data['estado']);
     
     $response = [
         'status' => "success",
