@@ -45,7 +45,7 @@
                 $fechaVtoDate = substr($fechaVto, 0, 10);
 
                 $response = "no entra ni en fecha ni en suscripcion pendiente, fecha vto: ".$fechaVtoDate. " estado suscripcion: ".$estadoSuscripcion;
-                if (date('Y-m-d') == $fechaVtoDate) {
+                if (date('Y-m-d') >= $fechaVtoDate) {
                     //se debe consultar a mp si la suscripcion sigue activa
                     $response = ValidarSuscripcion::validarEstadoSuscripcion($idUsuario);
                 } else if ($estadoSuscripcion === "pendiente") {
