@@ -15,9 +15,14 @@ CREATE TABLE IF NOT EXISTS suscripcion (
     id INT AUTO_INCREMENT PRIMARY KEY,
     FK_idUsuario INT,
     estado VARCHAR(255),
-    estado_mp VARCHAR(255),
     id_suscripcion VARCHAR(255),
     fec_suscripcion datetime NOT NULL,
     fec_vencimiento datetime NOT NULL,
+    fec_baja datetime,
     FOREIGN KEY (FK_idUsuario) REFERENCES usuario(idUsuario)
 );
+
+
+#Script para añadir columna fec_baja a tabla galeria 6/10/2024 10.41hs
+
+ALTER TABLE galeria ADD fec_baja datetime;
