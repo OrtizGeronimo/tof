@@ -171,7 +171,6 @@ const cardForm = mp.cardForm({
                     body: JSON.stringify({
                         id: id,
                         idUsuario: idUsuario,
-                        estado_mp: paymentResult.status,
                     }),
                 });
 

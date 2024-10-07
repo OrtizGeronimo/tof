@@ -140,4 +140,17 @@ class Usuario{
                                         WHERE user_login = '$userlogin'
                                         AND forgot_pass = '$forgotPassword';");
     }
+
+    public static function updateRolUsuario($idUsuario, $idRol){
+        return BaseDeDatos::consulta("UPDATE usuario
+                                      SET FK_idRol = $idRol
+                                      WHERE idUsuario = $idUsuario;");
+    }
+
+    public static function updateRolUsuarioToFree($idUsuario){
+        return BaseDeDatos::consulta("UPDATE usuario
+                                      SET FK_idRol = 6
+                                      WHERE idUsuario = $idUsuario;");
+    }
+
 }

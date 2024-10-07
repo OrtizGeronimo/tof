@@ -1,6 +1,8 @@
 <?php
     session_start();
     require('./models/usuario.php');
+    require('./models/suscripcionServicio.php');
+    require("./controller/validarSuscripcion.php");
     //recepcion ajax
     
     $user = (isset($_POST['user'])) ? $_POST['user'] : '';
@@ -28,7 +30,31 @@
             $_SESSION["s_nombre_usuario"] = $usuario;
             $_SESSION["s_rol"] = $rol;
             $_SESSION["s_img_perfil"] = 'archivos/user_'.$usuario.'/user_profile.webp';
-            echo json_encode(['success' => true]);
+
+            $response = "no entra a validar suscripcion porque es gratuito, rol: ".$rol;
+
+            if($rol !== "gratis" && $rol !== "admin"){
+                $querySuscripcion = SuscripcionServicio::getSuscripcion($idUsuario);
+
+                $suscripcion = mysqli_fetch_array($querySuscripcion);
+
+                $fechaVto = $suscripcion["fec_vencimiento"];
+
+                $estadoSuscripcion = $suscripcion["estado"];
+
+                $fechaVtoDate = substr($fechaVto, 0, 10);
+
+                $response = "no entra ni en fecha ni en suscripcion pendiente, fecha vto: ".$fechaVtoDate. " estado suscripcion: ".$estadoSuscripcion;
+                if (date('Y-m-d') == $fechaVtoDate) {
+                    //se debe consultar a mp si la suscripcion sigue activa
+                    $response = ValidarSuscripcion::validarEstadoSuscripcion($idUsuario);
+                } else if ($estadoSuscripcion === "pendiente") {
+                    //se debe consultar a mp si la suscripcion sigue activa
+                    $response = ValidarSuscripcion::validarEstadoSuscripcion($idUsuario);
+                }
+            }
+
+            echo json_encode(['success' => true, 'response' => $response]);
         }else{
             echo json_encode(['success' => false]);
         }

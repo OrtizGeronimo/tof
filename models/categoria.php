@@ -22,4 +22,40 @@ class Categoria{
         $traerCategoria = BaseDeDatos::consulta(" SELECT * FROM categoria");
         return $traerCategoria;
     }
+
+    public static function getCategoriasByUser($idUsuario){
+        $categorias = BaseDeDatos::consulta("SELECT *
+                                            FROM categoria_servicio 
+                                            WHERE FK_idUsuario = $idUsuario
+                                            AND fec_baja IS NULL;");
+        return $categorias;
+    }
+
+    public static function updateCategoriasToFree($idUsuario){
+        $firstCategory = BaseDeDatos::consulta("SELECT * from categoria_servicio WHERE FK_idUsuario = $idUsuario LIMIT 1;");
+
+        $idCategoria = mysqli_fetch_array($firstCategory)["FK_idCategoria"];
+
+        $updateCategorias = BaseDeDatos::consulta("UPDATE categoria_servicio SET fec_baja = NOW() WHERE FK_idUsuario = $idUsuario AND FK_idCategoria != $idCategoria;");
+
+        return $updateCategorias;
+    }
+
+    public static function downgradeCategoriasToBasic($idUsuario){
+        $firstThreeCategories = BaseDeDatos::consulta("SELECT * from categoria_servicio WHERE FK_idUsuario = $idUsuario LIMIT 2;");
+
+        $idsCategoria = [];
+        while ($row = mysqli_fetch_array($firstThreeCategories)) {
+            $idsCategoria[] = $row["FK_idCategoria"];
+        }
+
+        if (count($idsCategoria) > 0) {
+            $idsCategoriaStr = implode(',', $idsCategoria);
+            $updateCategorias = BaseDeDatos::consulta("UPDATE categoria_servicio SET fec_baja = NOW() WHERE FK_idUsuario = $idUsuario AND FK_idCategoria NOT IN ($idsCategoriaStr);");
+        } else {
+            $updateCategorias = false;
+        }
+
+        return $updateCategorias;
+    }
 }
