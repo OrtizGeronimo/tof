@@ -67,7 +67,7 @@ public static function validarEstadoSuscripcion($idUsuario, $checkDate){
         }
     }  else if ($status === "green") {
         $dateTime = new DateTime($responseArray['next_payment_date']);
-
+        $dateTime = $dateTime->modify('+1 day');
         // Format the DateTime object to match MySQL's DATETIME format (Y-m-d H:i:s)
         $mysqlFormattedDate = $dateTime->format('Y-m-d H:i:s');
         SuscripcionServicio::updateEstadoSuscripcion($idUsuario, "activa");
