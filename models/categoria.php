@@ -23,26 +23,26 @@ class Categoria{
         return $traerCategoria;
     }
 
-    public static function getCategoriasByUser($idUsuario){
+    public static function getCategoriasByUser($idServicio){
         $categorias = BaseDeDatos::consulta("SELECT *
                                             FROM categoria_servicio 
-                                            WHERE FK_idUsuario = $idUsuario
+                                            WHERE FK_idServicio = $idServicio
                                             AND fec_baja IS NULL;");
         return $categorias;
     }
 
-    public static function updateCategoriasToFree($idUsuario){
-        $firstCategory = BaseDeDatos::consulta("SELECT * from categoria_servicio WHERE FK_idUsuario = $idUsuario LIMIT 1;");
+    public static function updateCategoriasToFree($idServicio){
+        $firstCategory = BaseDeDatos::consulta("SELECT * from categoria_servicio WHERE FK_idServicio = $idServicio LIMIT 1;");
 
         $idCategoria = mysqli_fetch_array($firstCategory)["FK_idCategoria"];
 
-        $updateCategorias = BaseDeDatos::consulta("UPDATE categoria_servicio SET fec_baja = NOW() WHERE FK_idUsuario = $idUsuario AND FK_idCategoria != $idCategoria;");
+        $updateCategorias = BaseDeDatos::consulta("UPDATE categoria_servicio SET fec_baja = NOW() WHERE FK_idServicio = $idServicio AND FK_idCategoria != $idCategoria;");
 
         return $updateCategorias;
     }
 
-    public static function downgradeCategoriasToBasic($idUsuario){
-        $firstThreeCategories = BaseDeDatos::consulta("SELECT * from categoria_servicio WHERE FK_idUsuario = $idUsuario LIMIT 2;");
+    public static function downgradeCategoriasToBasic($idServicio){
+        $firstThreeCategories = BaseDeDatos::consulta("SELECT * from categoria_servicio WHERE FK_idServicio = $idServicio LIMIT 2;");
 
         $idsCategoria = [];
         while ($row = mysqli_fetch_array($firstThreeCategories)) {
@@ -51,7 +51,7 @@ class Categoria{
 
         if (count($idsCategoria) > 0) {
             $idsCategoriaStr = implode(',', $idsCategoria);
-            $updateCategorias = BaseDeDatos::consulta("UPDATE categoria_servicio SET fec_baja = NOW() WHERE FK_idUsuario = $idUsuario AND FK_idCategoria NOT IN ($idsCategoriaStr);");
+            $updateCategorias = BaseDeDatos::consulta("UPDATE categoria_servicio SET fec_baja = NOW() WHERE FK_idServicio = $idServicio AND FK_idCategoria NOT IN ($idsCategoriaStr);");
         } else {
             $updateCategorias = false;
         }

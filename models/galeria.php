@@ -72,8 +72,8 @@ class Galeria{
     }
     
     public static function downgradeToFreePlan($idUsuario){
-        $galeria = BaseDeDatos::consulta("SELECT g.* FROM galeria g JOIN servicio s ON g.FK_idServicio = s.idServicio JOIN usuario u ON s.FK_idUsuario = u.idUsuario  
-                                            WHERE FK_idUsuario = $idUsuario ORDER BY id DESC LIMIT 1");
+        $galeria = BaseDeDatos::consulta("SELECT g.* FROM galeria g JOIN servicio s ON g.FK_idServicio = s.idServicio
+                                            WHERE s.FK_idUsuario = $idUsuario ORDER BY id DESC LIMIT 1");
 
         $galeriaId = mysqli_fetch_array($galeria)["id"];
         $updateGaleria = BaseDeDatos::consulta("UPDATE galeria SET fec_baja = NOW() WHERE id != $galeriaId;");
@@ -81,8 +81,8 @@ class Galeria{
     }
 
     public static function downgradeToBasicPlan($idUsuario){
-        $galeria = BaseDeDatos::consulta("SELECT g.* FROM galeria g JOIN servicio s ON g.FK_idServicio = s.idServicio JOIN usuario u ON s.FK_idUsuario = u.idUsuario  
-                                            WHERE FK_idUsuario = $idUsuario ORDER BY id DESC LIMIT 3");
+        $galeria = BaseDeDatos::consulta("SELECT g.* FROM galeria g JOIN servicio s ON g.FK_idServicio = s.idServicio
+                                            WHERE s.FK_idUsuario = $idUsuario ORDER BY id DESC LIMIT 3");
 
         $galeriaIds = [];
         while ($row = mysqli_fetch_array($galeria)) {

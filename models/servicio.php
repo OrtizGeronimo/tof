@@ -149,6 +149,12 @@ class Servicio{
                                       WHERE   s.idServicio =  $idServicio");
     }
 
+    public static function getServicioByUsuarioId($idUsuario){
+        return BaseDeDatos::consulta("SELECT * 
+                                      FROM servicio  s
+                                      WHERE   s.FK_idUsuario =  $idUsuario");
+    }
+
     public static function getHorariosServicio($idServicio){
         return BaseDeDatos::consulta("SELECT sh.idServicio_horario,
                                              d.dia,
@@ -317,9 +323,9 @@ class Servicio{
     }
 
     
-    public static function downgradeToFree($idUsuario){
+    public static function downgradeToFree($idUsuario, $idServicio){
         //se supone que a la hora de ejecutar este metodo, el usuario ya fue modificado al plan gratuito y ya tiene solo una categoria activa
-        $categoria = Categoria::getCategoriasByUser($idUsuario);
+        $categoria = Categoria::getCategoriasByUser($idServicio);
 
         $idCategoria = mysqli_fetch_array($categoria)["FK_idCategoria"];
 
