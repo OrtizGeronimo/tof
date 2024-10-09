@@ -1,5 +1,17 @@
 # PHPMailer Change Log
 
+## Version 6.9.2 (October 9th, 2024)
+* Escape dots in SMTP transaction ID patterns
+* Add link to [aboutmy.email](https://aboutmy.email) testing service in docs
+* Add a more comprehensive example for using XOAUTH2 with gmail and Azure, thanks to @decomplexity
+* Update Turkish, Spanish, Japanese, Russian, French translations
+* Add Urdu & Kurdish (Sorani) translations
+* Fix broken links in docs and comments, avoid http links, correct link to LGPL 2.1 license file
+* Cleaner PSR-3 SMTP debug logging
+* Bump GitHub action versions
+* Fix error handler scope issue in POP3 and SMTP classes
+* Numerous test improvements by @jrfnl
+
 ## Version 6.9.1 (November 25th, 2023)
 * Finalise SendOauth2 example
 
@@ -880,7 +892,7 @@ NOTE: will NOT work with PHP5 in E_STRICT error mode
 ## Version 1.73 (Sun, Jun 10 2005)
 * Fixed denial of service bug: http://www.cybsec.com/vuln/PHPMailer-DOS.pdf
 * Now has a total of 20 translations
-* Fixed alt attachments bug: http://tinyurl.com/98u9k
+* Fixed alt attachments bug: https://sourceforge.net/p/phpmailer/bugs/120/
 
 ## Version 1.72 (Wed, May 25 2004)
 * Added Dutch, Swedish, Czech, Norwegian, and Turkish translations.
@@ -997,7 +1009,7 @@ NOTE: will NOT work with PHP5 in E_STRICT error mode
 ## Version 1.19 (Thu, Jun 21 2001)
 * Fixed MS Mail header bug
 * Added fix for Bcc problem with mail(). *Does not work on Win32*
-  (See PHP bug report: http://www.php.net/bugs.php?id=11616)
+  (See PHP bug report: https://bugs.php.net/bug.php?id=11616
 * mail() no longer passes a fifth parameter when not needed
 
 ## Version 1.15 (Fri, Jun 15 2001)

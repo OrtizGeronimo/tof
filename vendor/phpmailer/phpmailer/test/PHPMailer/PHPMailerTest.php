@@ -8,7 +8,7 @@
  * @author    Andy Prevost
  * @copyright 2012 - 2020 Marcus Bointon
  * @copyright 2004 - 2009 Andy Prevost
- * @license   http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
+ * @license   https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html GNU Lesser General Public License
  */
 
 namespace PHPMailer\Test\PHPMailer;
@@ -472,7 +472,7 @@ EOT;
         //Make sure phar paths are rejected
         self::assertFalse($this->Mail->addAttachment('phar://pharfile.php', 'pharfile.php'));
         //Make sure any path that looks URLish is rejected
-        self::assertFalse($this->Mail->addAttachment('http://example.com/test.php', 'test.php'));
+        self::assertFalse($this->Mail->addAttachment('https://example.com/test.php', 'test.php'));
         self::assertFalse(
             $this->Mail->addAttachment(
                 'ssh2.sftp://user:pass@attacker-controlled.example.com:22/tmp/payload.phar',
@@ -1258,13 +1258,12 @@ EOT;
         $this->Mail->smtpClose();
     }
 
+    /**
+     * @requires extension mbstring
+     * @requires function idn_to_ascii
+     */
     public function testGivenIdnAddress_addAddress_returns_true()
     {
-        if (file_exists(\PHPMAILER_INCLUDE_DIR . '/test/fakefunctions.php') === false) {
-            $this->markTestSkipped('/test/fakefunctions.php file not found');
-        }
-
-        include \PHPMAILER_INCLUDE_DIR . '/test/fakefunctions.php';
         $this->assertTrue($this->Mail->addAddress('test@françois.ch'));
     }
 
