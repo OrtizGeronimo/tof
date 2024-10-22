@@ -1,8 +1,24 @@
 
+let times = 0;
+  // Update the amount based on plan selection
+document.getElementById("plan").addEventListener("change", function() {
+  let selectedPlan = this.value;
+  let newAmount = "0"; // Default to 0
+
+  if (selectedPlan === "basico") {
+      newAmount = "300";
+  } else if (selectedPlan === "pro") {
+      newAmount = "500";
+  }
 
 
-const cardForm = mp.cardForm({
-    amount: "100.5",
+  // Destroy the current cardForm (if necessary)
+  if (times > 0 && cardForm) {
+      cardForm.unmount();
+  }
+
+  let = cardForm = mp.cardForm({
+    amount: newAmount,
     iframe: true,
     form: {
       id: "form-checkout",
@@ -48,6 +64,15 @@ const cardForm = mp.cardForm({
       },
     },
     callbacks: {
+      onError: (error) => {
+        console.error("Error during card form process: ", error);
+
+        if (error.cause && error.cause.length) {
+            error.cause.forEach(cause => {
+                console.log("Cause of error: ", cause);
+            });
+        }
+      },
       onFormMounted: error => {
         if (error) return console.warn("Form Mounted handling error: ", error);
         console.log("Form mounted");
@@ -227,6 +252,8 @@ const cardForm = mp.cardForm({
       onFetching: (resource) => {
       }
     },
-  });
+  });  
+  times++;
+});
   
 
