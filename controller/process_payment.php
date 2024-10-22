@@ -83,7 +83,7 @@ echo json_encode($preapproval);
 //$payment_json = json_encode($payment);
 //echo ($payment_json);
 } catch (MPApiException $e) {
-    echo $e->getMessage();
+    echo json_encode($e->getApiResponse()->getContent());
 }
 
 ?>
