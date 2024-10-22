@@ -4,7 +4,7 @@
 
 class Galeria{
     public static function getGaleria($idServicio){
-        $getGaleria = BaseDeDatos::consulta("SELECT * FROM galeria WHERE FK_idServicio = $idServicio");
+        $getGaleria = BaseDeDatos::consulta("SELECT * FROM galeria WHERE FK_idServicio = $idServicio AND fec_baja IS NULL");
 
         return $getGaleria;                                                  
     }
@@ -69,6 +69,33 @@ class Galeria{
         $projectName = $segments[0];
         $dir = $_SERVER['DOCUMENT_ROOT']."/".$projectName.'/archivos/user_'.($usr).'/galeria/';
         return $dir;   
+    }
+    
+    public static function downgradeToFreePlan($idUsuario){
+        $galeria = BaseDeDatos::consulta("SELECT g.* FROM galeria g JOIN servicio s ON g.FK_idServicio = s.idServicio
+                                            WHERE s.FK_idUsuario = $idUsuario ORDER BY id DESC LIMIT 1");
+
+        $galeriaId = mysqli_fetch_array($galeria)["id"];
+        $updateGaleria = BaseDeDatos::consulta("UPDATE galeria SET fec_baja = NOW() WHERE id != $galeriaId;");
+        return $updateGaleria;
+    }
+
+    public static function downgradeToBasicPlan($idUsuario){
+        $galeria = BaseDeDatos::consulta("SELECT g.* FROM galeria g JOIN servicio s ON g.FK_idServicio = s.idServicio
+                                            WHERE s.FK_idUsuario = $idUsuario ORDER BY id DESC LIMIT 3");
+
+        $galeriaIds = [];
+        while ($row = mysqli_fetch_array($galeria)) {
+            $galeriaIds[] = $row["id"];
+        }
+
+        if (count($galeriaIds) > 0) {
+            $idsToExclude = implode(',', $galeriaIds);
+            $updateGaleria = BaseDeDatos::consulta("UPDATE galeria SET fec_baja = NOW() WHERE id NOT IN ($idsToExclude);");
+            return $updateGaleria;
+        }
+
+        return false;
     }
 }
 

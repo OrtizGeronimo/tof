@@ -27,7 +27,16 @@
     $categoriaServicio = array();
     $galeriaImgs = Galeria::getGaleria($_GET["idServicio"]);
     while($row = mysqli_fetch_array($categoriaServicioAux))
-      array_push($categoriaServicio,["id" => $row["idCategoria"],"tipo"=>$row["tipo"]]);    
+      array_push($categoriaServicio,["id" => $row["idCategoria"],"tipo"=>$row["tipo"]]); 
+    $categoriaServicioIds = array_column($categoriaServicio, 'id');   
+
+    // Concatenar los tipos en un string
+    $tipos = array_map(function($categoria) {
+      return $categoria["tipo"];
+    }, $categoriaServicio);
+
+    // Unir los tipos con una coma y un espacio, y agregar una coma al final
+    $resultado = implode(", ", $tipos) . ", ";
     
     $horariosServicioAux = Servicio::getHorariosServicio($_GET["idServicio"]);
     $horariosServicio = array();
@@ -194,10 +203,10 @@
                     <h4 class="card-title">Imágenes y archivos</h4>
 
                     <div class="row mb-3">
-                      <label for="imgLogo" class="col-md-4 col-lg-3 col-form-label">Imagen de servicio <span class="camposObligatorios">*</span></label>
+                      <label for="imgLogo" class="col-md-4 col-lg-3 col-form-label">Imagen de servicio</label>
                       <div class="col-md-8 col-lg-9">
                           <!-- <img id="imgLogo" src="" alt="Profile"> -->
-                          <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg" required>
+                          <input name="imgLogo" class="form-control" type="file" id="btnSubirImgLogo" accept="image/png, .jpeg, .jpg">
                         </div>
                     </div>
                     
@@ -311,15 +320,19 @@
                       <div class="col-md-8 col-lg-9">
                         <p class="col-12 mt-3"><span class="camposObligatorios">Para seleccionar varias categorias mantenga la tecla CTRL o COMMAND apretada</span></p>
                         <select name="categoria[]" id="categoria" class="form-select" aria-label="Default select example" required multiple size="8">
-                          <option value = "">Seleccione una o mas categorias</option>
+                          <option value = "" disabled>Seleccione una o mas categorias</option>
                           <?php  
                             while($row=mysqli_fetch_array($categorias)) { 
-                              ?> <option id="categoria_option_<?php echo $row['idCategoria'] ?>" value="<?php echo $row['idCategoria'] ?>" > <?php echo $row['tipo'] ?> </option> <?php
+                              $selected = in_array($row['idCategoria'], $categoriaServicioIds) ? 'selected' : '';?> 
+                              <option id="categoria_option_<?php echo $row['idCategoria'] ?>" value="<?php echo $row['idCategoria'] ?>" <?php echo $selected; ?>>
+                                <?php echo $row['tipo'] ?> 
+                              </option> 
+                              <?php
                             }
                           ?>
                         </select>
                       </div>
-                      <p id="categorias-seleccionadas" class="col-12 mt-3">Categorias Seleccionadas:</p>
+                      <p id="categorias-seleccionadas" class="col-12 mt-3">Categorias Seleccionadas: <?php echo htmlspecialchars($resultado)?></p>
                     </div>
 
                     <!-- <div class="row mb-3">
@@ -878,7 +891,6 @@
   <script src="../assets/js/selectCategorias.js"></script>  
   <script>
       setHorarios(<?php echo json_encode($horariosServicio)?>);
-      selectCategorias(<?php echo json_encode($categoriaServicio)?>);
   </script>
 </body>
 

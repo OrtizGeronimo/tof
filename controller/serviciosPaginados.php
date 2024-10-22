@@ -29,7 +29,15 @@
         <div class="servicio-item ">
             <a href="./userProfile.php?idServicio=<?=($row["idServicio"])?>">
                 <div class="d-flex">
-                    <img src="./archivos/user_<?=($row["user_login"]).'/'.($row["servicio_imagen"])?>" class="servicio-img flex-shrink-0" alt="">
+                    <?php $user = Servicio::getServicio($row["idServicio"]);
+                        $user = mysqli_fetch_array($user);
+                        $rol = $user["FK_idRol"];
+                        if ($rol == 6){
+                    ?>    
+                        <img src="./assets/img/<?=($row["servicio_imagen"])?>" class="servicio-img flex-shrink-0" alt="">
+                    <?php } else { ?>
+                            <img src="./archivos/user_<?=($row["user_login"]).'/'.($row["servicio_imagen"])?>" class="servicio-img flex-shrink-0" alt="">
+                        <?php } ?>
                     <div>
                         <h3><?=($row["servicio_nombre"])?></h3>
                         <h4><?=($row["user_nombre"])?></h4>

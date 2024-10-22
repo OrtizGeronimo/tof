@@ -149,6 +149,12 @@ class Servicio{
                                       WHERE   s.idServicio =  $idServicio");
     }
 
+    public static function getServicioByUsuarioId($idUsuario){
+        return BaseDeDatos::consulta("SELECT * 
+                                      FROM servicio  s
+                                      WHERE   s.FK_idUsuario =  $idUsuario");
+    }
+
     public static function getHorariosServicio($idServicio){
         return BaseDeDatos::consulta("SELECT sh.idServicio_horario,
                                              d.dia,
@@ -314,5 +320,20 @@ class Servicio{
             }            
             return $edit;
         } 
+    }
+
+    
+    public static function downgradeToFree($idUsuario, $idServicio){
+        //se supone que a la hora de ejecutar este metodo, el usuario ya fue modificado al plan gratuito y ya tiene solo una categoria activa
+        $categoria = Categoria::getCategoriasByUser($idServicio);
+
+        $idCategoria = mysqli_fetch_array($categoria)["FK_idCategoria"];
+
+        $nombreImgPerfil = "category_".$idCategoria.".webp";
+
+        //esta consulta deberia modificar la imagen del servicio a la generica
+        return BaseDeDatos::consulta("UPDATE servicio
+                                      SET servicio_imagen = '$nombreImgPerfil', servicio_banner = ''
+                                      WHERE FK_idUsuario = $idUsuario;");
     }
 }

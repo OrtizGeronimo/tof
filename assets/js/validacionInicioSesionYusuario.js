@@ -41,9 +41,9 @@ function validacionInicioSesionYusuario(){
                 try{
                     var jsonResponse = JSON.parse(response);
 
-                    console.log(response);
+                    console.log("RESPONSE A CHEQUEAR:", response);
                     if(jsonResponse.success){
-                        console.log(response)
+                        
                         Swal.fire({
                             icon: 'success',
                             title: 'Bienvenido!',

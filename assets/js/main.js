@@ -7,6 +7,10 @@
 document.addEventListener('DOMContentLoaded', () => {
   "use strict";
 
+  const header = document.querySelector('.header');
+  const main = document.getElementById('main');
+  main.style.marginTop = header.offsetHeight + 'px';
+
   /**
    * Preloader
    */

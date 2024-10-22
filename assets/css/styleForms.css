@@ -1025,8 +1025,82 @@ h6 {
   color: var(--red);
 }
 
+.date-separator {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%; /* Asegúrate de que todos los inputs tengan este ancho */
+  padding: 0.375rem 0.75rem; /* Ajusta el padding según sea necesario */
+  margin: 0; /* Elimina margenes no deseados */
+}
+
+.input-group {
+  display: flex; /* Asegúrate de que el grupo de inputs use flex */
+  justify-content: flex-start; /* Alineación adecuada */
+}
+
+.secure-payment {
+  display: flex;
+  align-items: center;
+  font-size: 14px; /* Ajusta el tamaño de la fuente según lo necesites */
+  color: lightskyblue; /* Cambia el color si lo deseas */
+}
+.secure-payment img {
+  margin-right: 5px; /* Espacio entre el icono y el texto */
+}
+
+#payment-form {
+  display: flex;
+  flex-direction: column; /* Para que los elementos se apilen */
+  align-items: flex-end; /* Alineación a la derecha */
+  padding-right: 12px;
+}
+
 
 #rolValidation{
   color: red;
   font-size: 15px;
+}
+
+#form-checkout__cardExpirationMonth,
+#form-checkout__cardExpirationYear {
+  width: 30%; /* Ajusta el ancho según lo necesites */
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  max-height: 38px;
+}
+
+#form-checkout__cardNumber,
+#form-checkout__securityCode {
+  width: 100%; /* Ajusta el ancho según lo necesites */
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  max-height: 38px;
+}
+
+.custom-input {
+  border: 1px solid #ced4da; /* Borde como un input */
+  border-radius: 0.25rem; /* Bordes redondeados */
+  padding: 0.375rem 0.75rem; /* Espaciado interno */
+  width: 100%; /* Ancho completo */
+  font-size: 1rem; /* Tamaño de fuente */
+  transition: border-color 0.15s ease-in-out; /* Transición suave */
+}
+
+.custom-input:focus {
+  outline: none; /* Elimina el contorno por defecto */
+  border-color: #80bdff; /* Color del borde al enfocar */
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); /* Sombra para enfoque */
+}
+
+.custom-input[contenteditable="true"]:empty:before {
+  content: attr(data-placeholder); /* Placeholder cuando está vacío */
+  color: #999; /* Color del placeholder */
+  font-style: italic; /* Estilo del placeholder */
 }

@@ -44,25 +44,55 @@
                                             "$dir_img".($dir_img!="--")? "/$name_img.webp" : "",
                                             "--",
                                             $newUser["telefono"],
-                                            $newUser["nombre"].' '.$newUser["apellido"]);  
+                                            $newUser["nombre"].' '.$newUser["apellido"],
+                                            $newUser["plan"]);  
             if($user){
                 $lastUser = Usuario::getLastUsuario();
                 $lastUser = mysqli_fetch_array($lastUser);
                 $_SESSION["s_id_usuario"] = $lastUser["idUsuario"];
                 $_SESSION["s_nombre"]     = $newUser["nombre"];
                 $_SESSION["s_nombre_usuario"] = $newUser["nombreUsuario"];
-                $_SESSION["s_rol"]     = $lastUser["rol"];
+                $_SESSION["s_rol"]     = $newUser["plan"];
                 $_SESSION["s_img_perfil"] = ($dir_img!="--")? 'archivos/user_'.$newUser["nombreUsuario"].'/user_profile.webp' : "";
                 
-                echo '1';
+                
+                
+
+                header("Content-Type: application/json");
+                
+
+                $newUserAccurate = mysqli_fetch_array(Usuario::getLastUsuarioAccurate($newUser["email"])); 
+                $data = [
+                    "status" => "success",
+                    "message" => "El usuario se creó correctamente",
+                    "idUsuario" => $newUserAccurate["idUsuario"]
+                ];
+                
+                
+                echo json_encode($data);
+
+                //echo '1';
                 // header("Location: ./../admin/newService.php");
                 
             }else{
-                echo 'No se pudo crear el usuario';
-                exit();
+                $data = [
+                    "status" => "error",
+                    "message" => "Hubo un error registrando al usuario",
+                    "user" => $user
+                ];
+                
+                
+                echo json_encode($data);
+                
             }
         } catch (\Throwable $th) {
-            echo '<p>Hubo un problema con la registracion del usuario<p>';
+            $data = [
+                "status" => "error",
+                "message" => "Exception: Hubo un error registrando al usuario",
+                "user" => $th
+            ];
+            
+            echo json_encode($data);
             // header("Location: ./../registerUser.php");
         }   
     }

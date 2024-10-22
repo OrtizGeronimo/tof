@@ -65,8 +65,23 @@
 
                 <form id="registerUser" class="row g-3 needs-validation" validate action="./controller/editUser.php" method="post" enctype="multipart/form-data">
                     
-                    <h4 class="card-title">General</h4>
-                              
+                <div class="d-flex justify-content-between align-items-center">
+                  <h4 class="card-title">General</h4>
+
+                  <!-- Estado suscripcion -->
+                  <span>
+                      <?php
+                      if ($user["FK_idRol"] == 6) {
+                          echo '<strong>Plan Gratuito</strong>';
+                      } elseif ($user["FK_idRol"] == 4) {
+                          echo '<strong>Plan Básico</strong> <span style="color: green;">Suscripción activa</span>';
+                      } elseif ($user["FK_idRol"] == 5) {
+                          echo '<strong>Plan Pro</strong> <span style="color: green;">Suscripción activa</span>';
+                      }
+                      ?>
+                  </span>
+                </div>
+
                     <?php
                       $nombreCompleto = explode(" ",$user["user_nombre"]) ;
                       $nombre = $nombreCompleto[0];
