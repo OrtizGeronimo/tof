@@ -1104,3 +1104,277 @@ h6 {
   color: #999; /* Color del placeholder */
   font-style: italic; /* Estilo del placeholder */
 }
+
+/*
+  PLAN
+*/
+
+/*--------------------------------------------------------------
+# Planes en form
+--------------------------------------------------------------*/
+.plan-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.5s ease; /* Fade-in effect */
+}
+
+.plan-modal.show {
+  opacity: 1;
+}
+
+/* Modal content */
+.modal-content {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease;
+}
+
+.plan-modal.show .modal-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Base styling for each plan box */
+.plan-option {
+  cursor: pointer;
+}
+
+.plan-option:hover {
+  
+  transition: all 0.3s;
+}
+
+.plan-modal .pricing-item {
+  padding: 60px 40px;
+  box-shadow: 0 3px 20px -2px rgba(108, 117, 125, 0.15);
+  background: var(--white);
+  height: 100%;
+  position: relative;
+  border-radius: 15px;
+  z-index: 1; /* Set base z-index for layering */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Default z-index setup for stacking order */
+.pricing .pricing-item {
+  z-index: 1; /* Lowest z-index initially */
+}
+
+.pricing .featured {
+  z-index: 2; /* Featured item starts slightly higher */
+}
+
+/* Ensure each plan goes above others when hovered */
+.pricing .pricing-item:hover {
+  z-index: 10; /* Bring to front */
+  transform: scale(1.1); /* Slight scale on hover */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Featured plan hover effect */
+.pricing .featured:hover {
+  z-index: 11; /* Ensure featured is above others on hover */
+  transform: scale(1.05); /* Larger scale for featured */
+}
+
+/* The container that wraps the plans */
+.plan-modal .modal-content {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  opacity: 0; /* Start invisible for fade-in effect */
+  visibility: hidden;
+  transition: opacity 0.5s ease; /* Smooth transition */
+}
+
+
+#selected-plan-display {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  text-align: center;
+  background-color: #F2C94C;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: 0.4s;
+}
+
+#selected-plan-display:hover {
+  background-color: black;
+  transition: 0.4s;
+  color: white;
+  border: 2px solid var(--color-primary);
+}
+
+
+/* Continue the rest of the CSS rules under .plan-modal instead of .pricing */
+.plan-modal h3 {
+  font-weight: 600;
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: var(--dark-gray);
+  text-align: center;
+}
+
+.plan-modal .icon {
+  margin: 30px auto 30px auto;
+  width: 70px;
+  height: 70px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+  transform-style: preserve-3d;
+}
+
+.pricing .pricing-item:hover {
+  z-index: 3;
+  transform: scale(1.1); /* Scale up slightly for emphasis */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Shadow to enhance focus */
+}
+
+/* Hover effect for featured plan to grow even more */
+.pricing .featured:hover {
+  z-index: 4; /* Keep this higher to ensure it goes above the rest when hovered */
+  transform: scale(1.15); /* Slightly larger scale for featured */
+}
+
+.plan-modal h3 {
+  font-weight: 600;
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: var(--dark-gray);
+  text-align: center;
+}
+
+.plan-modal .icon {
+  margin: 30px auto;
+  width: 70px;
+  height: 70px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+  transform-style: preserve-3d;
+}
+
+/* Remove any background from the pricing section itself */
+#pricing.sections-bg {
+  background-color: transparent !important; /* Remove any remaining background */
+  box-shadow: none;
+}
+
+/* Close button styling */
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  z-index: 10000; /* Ensure it's above other modal content */
+  transition: color 0.3s ease;
+}
+
+.close-button:hover {
+  color: #ff6b6b; /* Change color on hover */
+}
+
+.buy-btn {
+  display: inline-block;
+  padding: 10px 40px;
+  border-radius: 50px;
+  color: var(--color-primary);
+  border: 1px solid rgba(0, 131, 116, 0.2);
+  transition: none;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: var(--font-primary);
+  transition: 0.3s;
+}
+
+.buy-btn:hover {
+  background: var(--color-primary);
+  color: var(--white);
+}
+
+.btn-plan {
+  background: var(--color-primary);
+  color: var(--white) !important;
+}
+
+.pricing ul li {
+  padding: 5px 0;
+  display: flex;
+  align-items: center;
+}
+
+/* mobile*/
+
+.vertical-plan-boxes {
+  display: none; /* Hidden by default */
+}
+
+@media (max-width: 992px) {
+  .plan-boxes {
+    display: none; /* Hide the original boxes */
+  }
+  .vertical-plan-boxes {
+    display: block;
+  }
+
+  .plan-box {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    box-shadow: 0 3px 20px -2px rgba(108, 117, 125, 0.15);
+  }
+
+  .plan-box h3 {
+    margin: 0;
+    text-align: center;
+    color: var(--dark-gray);
+    font-size: 20px;
+  }
+
+  /* Hidden by default */
+  .plan-benefits {
+    max-height: 0;               /* Initially collapsed */
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease; /* Smooth transition */
+    padding: 0;                  /* No padding initially */
+    margin-top: 10px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+  }
+
+  /* Expanded state */
+  .plan-box.open .plan-benefits {
+    max-height: 500px;           /* Sufficient max-height for content */
+    padding: 10px;               /* Reapply padding */
+  }
+
+  
+}

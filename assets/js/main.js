@@ -294,3 +294,87 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById('planModal');
+  modal.style.display = 'none'; // Hide the modal by default
+  document.getElementById('selected-plan-display').addEventListener('click', function() {
+    
+    modal.style.display = 'flex';
+    setTimeout(() => {
+      modal.classList.add('show'); // Add class to trigger fade-in effect
+    }, 10); // Small delay to trigger the transition smoothly
+  });
+});
+
+
+// Close the modal and set the plan value when clicking on a plan
+const planOptions = document.querySelectorAll('.plan-option');
+planOptions.forEach(function(option) {
+  option.addEventListener('click', function() {
+    const planValue = this.getAttribute('data-value');
+    const planName = this.querySelector('h3').innerHTML;
+    
+    // Update the hidden input value
+    document.getElementById('plan').value = planValue;
+    document.getElementById('plan').dispatchEvent(new Event('change'));
+    
+    // Update the displayed plan name
+    document.getElementById('selected-plan-display').innerHTML = planName;
+    
+    // Hide the modal
+    const modal = document.getElementById('planModal');
+    modal.classList.remove('show');
+    setTimeout(() => {
+      modal.style.display = 'none';
+    }, 500); // Delay to allow fade-out
+  });
+});
+
+function closeModal() {
+  document.getElementById("planModal").classList.remove("show");
+  document.getElementById('planModal').style.display = 'none';
+}
+// Hide the modal when clicking outside of it
+window.onclick = function(event) {
+  const modal = document.getElementById('planModal');
+  if (event.target === modal) {
+    modal.classList.remove('show');
+    setTimeout(() => {
+      modal.style.display = 'none';
+    }, 500); // Delay to allow fade-out
+  }
+};
+function toggleBenefits(plan) {
+  // Get the selected benefits container
+  const selectedBenefits = document.getElementById(`benefits-${plan}`);
+  
+  // booleano para ver si esta open
+  const isOpen = selectedBenefits.parentElement.classList.contains('open');
+
+  // cerramos todas
+  document.querySelectorAll('.plan-benefits').forEach(function (benefit) {
+    benefit.parentElement.classList.remove('open');
+  });
+
+  // si esta open no hacemos nada, por lo que se cerrarian todos, si no entonces abrimos el seleccionado
+  if (!isOpen) {
+    selectedBenefits.parentElement.classList.add('open');
+  }
+}
+
+// Se cambia el selector de plan
+document.querySelectorAll('.btn-plan').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    const plan = this.closest('.plan-benefits').getAttribute('data-value');
+    
+    document.getElementById('plan').value = plan;
+    document.getElementById('plan').dispatchEvent(new Event('change'));
+
+    const planName = this.closest('.plan-box').querySelector('h3').innerHTML;
+    document.getElementById('selected-plan-display').innerHTML = planName;
+    closeModal();
+  });
+});
+
+
