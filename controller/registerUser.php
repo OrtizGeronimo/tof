@@ -10,12 +10,26 @@
     
     if(mysqli_num_rows($existUser) > 0)
     {
-        echo 'Este nombre de usuario ya esta utilizado. Por favor use otro';
+        $data = [
+            "status" => "error",
+            "message" => "Este nombre de usuario ya esta siendo utilizado. Por favor use otro",
+            "user" => $user
+        ];
+        
+        
+        echo json_encode($data);
         exit();
     }
     else if(mysqli_num_rows($existMail) > 0)
     {
-        echo 'Este mail ya esta siendo utilizado. Por favor use otro';
+        $data = [
+            "status" => "error",
+            "message" => "Este mail ya esta siendo utilizado. Por favor use otro",
+            "user" => $user
+        ];
+        
+        
+        echo json_encode($data);
         exit();
     }
     

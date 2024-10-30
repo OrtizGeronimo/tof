@@ -126,25 +126,146 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
                       <div class="col-md-8 col-lg-9">
                         <div class="input-group">
                           <span class="input-group-text" id="basic-addon1">+54</span>
-                          <input name="telefono" id="telefono" type="tel" class="form-control" size="10" maxlength="10" placeholder="2611234567" pattern="[0-6]{3}[0-9]{3}[0-9]{4}" value="" aria-label="Username"
+                          <input name="telefono" id="telefono" type="tel" class="form-control" size="10" maxlength="10" placeholder="" pattern="[0-6]{3}[0-9]{3}[0-9]{4}" value="" aria-label="Username"
                           aria-describedby="basic-addon1" required>
                         </div>
                       </div>
                     </div>
 
                     <!-- Selección del plan -->
+                    <!-- Plan Selector (Hidden Select) -->
+                    <input type="hidden" id="plan" name="plan" required>
+
+                    <!-- Displayed Select Replacement -->
                     <div class="row mb-3">
                       <label for="plan" class="col-md-4 col-lg-3 col-form-label">Plan <span class="camposObligatorios">*</span></label>
                       <div class="col-md-8 col-lg-9">
                         <div class="input-group">
-                          <select id="plan" name="plan" class="form-control" required>
-                            <option value="gratis">Plan Gratuito</option>
-                            <option value="basico">Plan Básico</option>
-                            <option value="pro">Plan Pro</option>
-                          </select>
+                          <div class="selected-plan-display" id="selected-plan-display">Seleccionar plan</div>
                         </div>
                       </div>
                     </div>
+                    <!-- Modal for Plans -->
+                    <div id="planModal" class="plan-modal">
+                    <button type="button" class="close-button" onclick="closeModal()">×</button>
+                      <div class="modal-content">
+                        <section id="pricing" class="pricing sections-bg">
+                        <!-- Vertically aligned plan boxes with collapsible benefits -->
+                        <div class="vertical-plan-boxes">
+                            <div class="plan-box" onclick="toggleBenefits('gratis')">
+                              <h3>Gratis</h3>
+                              <div class="plan-benefits" id="benefits-gratis" data-value="gratis">
+                                <ul>
+                                    <li><i class="bi bi-check"></i> Publica tu negocio </li>
+                                    <li><i class="bi bi-check"></i> 1 foto de perfil genérica </li>     
+                                    <li><i class="bi bi-check"></i> 1 Imagen en la galeria </li>
+                                    <li><i class="bi bi-check"></i> 1 Categoría disponible </li>
+                                    <li><i class="bi bi-check"></i> <span>Edicion de tu perfil 1 vez por mes</span></li>
+                                    <li><i class="bi bi-check"></i> Sin comisión por venta!</li>   
+                                </ul>
+                                <div class="text-center "><a class="buy-btn btn-plan">Seleccionar</a></div>
+                              </div>
+                            </div>
+                            <div class="plan-box" onclick="toggleBenefits('basico')">
+                              <h3>Básico</h3>
+                              <div class="plan-benefits" id="benefits-basico" data-value="basico">
+                                <ul>
+                                    <li><i class="bi bi-check"></i> Publica tu negocio </li>
+                                    <li><i class="bi bi-check"></i> 1 foto de perfil y de portada </li>     
+                                    <li><i class="bi bi-check"></i> 3 Imagenes en la galeria </li>
+                                    <li><i class="bi bi-check"></i> 2 Categorías disponibles </li>
+                                    <li><i class="bi bi-check"></i> <span>Edicion de tu perfil 1 vez por semana</span></li>
+                                    <li><i class="bi bi-check"></i> Destaque en los buscadores de su categoria</li>
+                                    <li><i class="bi bi-check"></i> Sin comisión por venta!</li>   
+                                </ul>
+                                <div class="text-center "><a class="buy-btn btn-plan">Seleccionar</a></div>
+                              </div>
+                            </div>
+                            <div class="plan-box" onclick="toggleBenefits('pro')">
+                              <h3>Pro</h3>
+                              <div class="plan-benefits" id="benefits-pro" data-value="pro">
+                                <ul>
+                                    <li><i class="bi bi-check"></i> Publica tu negocio </li>
+                                    <li><i class="bi bi-check"></i> 1 foto de perfil y de portada </li>     
+                                    <li><i class="bi bi-check"></i> +10 Imagenes en la galeria </li>
+                                    <li><i class="bi bi-check"></i> Categorías ilimitadas </li>
+                                    <li><i class="bi bi-check"></i> <span>Edicion de tu perfil en tiempo real</span></li>
+                                    <li><i class="bi bi-check"></i> Destaque en los buscadores de su categoria</li>
+                                    <li><i class="bi bi-check"></i> Destaque en el inicio de la web</li>
+                                    <li><i class="bi bi-check"></i> Desbloqueo de pauta/banner publicitario dentro de la web</li>
+                                    <li><i class="bi bi-check"></i> Atención al cliente 24/7</li> 
+                                    <li><i class="bi bi-check"></i> Sin comisión por venta!</li>
+                                </ul>
+                                <div class="text-center "><a class="buy-btn btn-plan">Seleccionar</a></div>
+                              </div>
+                            </div>
+                          </div>
+                        <div class="container plan-boxes" data-aos="fade-up">
+                            
+                      
+                            <div class="row g-4 py-lg-5" data-aos="zoom-out" data-aos-delay="100">
+                              <!-- Gratis Plan -->
+                              <div class="col-lg-4 plan-option" data-value="gratis">
+                                <div class="pricing-item">
+                                  <h3>Gratis</h3>
+                                  <div class="icon"><i class="bi bi-box"></i></div>
+                                  <h4><sup>$</sup>0<span> / mes</span></h4>
+                                  <ul>
+                                    <li><i class="bi bi-check"></i> Publica tu negocio </li>
+                                    <li><i class="bi bi-check"></i> 1 foto de perfil genérica </li>     
+                                    <li><i class="bi bi-check"></i> 1 Imagen en la galeria </li>
+                                    <li><i class="bi bi-check"></i> 1 Categoría disponible </li>
+                                    <li><i class="bi bi-check"></i> <span>Edicion de tu perfil 1 vez por mes</span></li>
+                                    <li><i class="bi bi-check"></i> Sin comisión por venta!</li>   
+                                  </ul>
+                                  <div class="text-center "><a class="buy-btn">Seleccionar</a></div>
+                                </div>
+                              </div>
+                              <!-- Basico Plan -->
+                              <div class="col-lg-4 plan-option" data-value="basico">
+                                <div class="pricing-item featured">
+                                  <h3>Básico</h3>
+                                  <div class="icon"><i class="bi bi-airplane"></i></div>
+                                  <h4><sup>$</sup>3400<span> / mes</span></h4>
+                                  <ul>
+                                    <li><i class="bi bi-check"></i> Publica tu negocio </li>
+                                    <li><i class="bi bi-check"></i> 1 foto de perfil y de portada </li>     
+                                    <li><i class="bi bi-check"></i> 3 Imagenes en la galeria </li>
+                                    <li><i class="bi bi-check"></i> 2 Categorías disponibles </li>
+                                    <li><i class="bi bi-check"></i> <span>Edicion de tu perfil 1 vez por semana</span></li>
+                                    <li><i class="bi bi-check"></i> Destaque en los buscadores de su categoria</li>
+                                    <li><i class="bi bi-check"></i> Sin comisión por venta!</li>   
+                                  </ul>
+                                  <div class="text-center "><a class="buy-btn">Seleccionar</a></div>
+                                </div>
+                              </div>
+                              <!-- Pro Plan -->
+                              <div class="col-lg-4 plan-option" data-value="pro">
+                                <div class="pricing-item">
+                                  <h3>Pro</h3>
+                                  <div class="icon"><i class="bi bi-send"></i></div>
+                                  <h4><sup>$</sup>4900<span> / mes</span></h4>
+                                  <ul>
+                                    <li><i class="bi bi-check"></i> Publica tu negocio </li>
+                                    <li><i class="bi bi-check"></i> 1 foto de perfil y de portada </li>     
+                                    <li><i class="bi bi-check"></i> +10 Imagenes en la galeria </li>
+                                    <li><i class="bi bi-check"></i> Categorías ilimitadas </li>
+                                    <li><i class="bi bi-check"></i> <span>Edicion de tu perfil en tiempo real</span></li>
+                                    <li><i class="bi bi-check"></i> Destaque en los buscadores de su categoria</li>
+                                    <li><i class="bi bi-check"></i> Destaque en el inicio de la web</li>
+                                    <li><i class="bi bi-check"></i> Desbloqueo de pauta/banner publicitario dentro de la web</li>
+                                    <li><i class="bi bi-check"></i> Atención al cliente 24/7</li> 
+                                    <li><i class="bi bi-check"></i> Sin comisión por venta!</li>   
+                                  </ul>
+                                  <div class="text-center "><a class="buy-btn">Seleccionar</a></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+                      </div>
+                    </div>
+                    
 
                     <!-- MERCADO PAGO FORM -->
                     <div id="payment-form">
