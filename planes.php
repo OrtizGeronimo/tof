@@ -75,7 +75,7 @@
                 <i class="bi bi-airplane"></i>
               </div>
 
-              <h4><sup>$</sup>750<span> / mes</span></h4>
+              <h4><sup>$</sup>3400<span> / mes</span></h4>
               <ul>
                 <li><i class="bi bi-check"></i> Publica tu negocio </li>
                 <li><i class="bi bi-check"></i> 1 foto de perfil y de portada </li>     
@@ -85,7 +85,7 @@
                 <li><i class="bi bi-check"></i> Destaque en los buscadores de su categoria</li>
                 <li><i class="bi bi-check"></i> Sin comisión por venta!</li>   
               </ul>
-              <div class="text-center"><a href="#" class="buy-btn">Disponible proximamente</a></div>
+              <div class="text-center"><a href="./registerUser.php" class="buy-btn">Obtener</a></div>
             </div>
           </div><!-- End Pricing Item -->
 
@@ -95,7 +95,7 @@
               <div class="icon">
                 <i class="bi bi-send"></i>
               </div>
-              <h4><sup>$</sup>1500<span> / mes</span></h4>
+              <h4><sup>$</sup>4900<span> / mes</span></h4>
               <ul>
                 <li><i class="bi bi-check"></i> Publica tu negocio </li>
                 <li><i class="bi bi-check"></i> 1 foto de perfil y de portada </li>     
@@ -108,7 +108,7 @@
                 <li><i class="bi bi-check"></i> Atención al cliente 24/7</li> 
                 <li><i class="bi bi-check"></i> Sin comisión por venta!</li>   
               </ul>
-              <div class="text-center"><a href="#" class="buy-btn">Disponible proximamente</a></div>
+              <div class="text-center"><a href="./registerUser.php" class="buy-btn">Obtener</a></div>
             </div>
           </div><!-- End Pricing Item -->
 

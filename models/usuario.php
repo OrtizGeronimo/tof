@@ -5,21 +5,16 @@ include 'logConfig.php';
 (file_exists("./../config/conexion.php"))? require_once('./../config/conexion.php') : require_once('./config/conexion.php');
 class Usuario{
     
-    public static function agregarUsuarios($nomUsuario,$password,$email,$imgLogoRuta,$imgBannerRuta,$telefono,$nombreApellido,$idRol = null){
-        if(!$idRol){
-            $respuesta = BaseDeDatos::consulta("SELECT * 
-                                                     FROM rol
-                                                     WHERE upper(rol) = 'GRATIS'");
-    
-            if($row = mysqli_fetch_array($respuesta)){
-                $idRolPredeterminado = $row["idRol"];
-                $user = BaseDeDatos::consulta("INSERT INTO usuario (user_login,user_pass,user_email,user_img_perfil,user_img_banner,user_telefono,user_nombre,usr_alta,fec_alta,FK_idRol) 
-                                               VALUES ('$nomUsuario',sha1('$password'),'$email','$imgLogoRuta','$imgBannerRuta','$telefono','$nombreApellido','DESARROLLO',now(),'$idRolPredeterminado');");
-    
-            }
-        }else{
+    public static function agregarUsuarios($nomUsuario,$password,$email,$imgLogoRuta,$imgBannerRuta,$telefono,$nombreApellido, $rol){
+        $respuesta = BaseDeDatos::consulta("SELECT * 
+                                                    FROM rol
+                                                    WHERE upper(rol) = upper('$rol')");
+
+        if($row = mysqli_fetch_array($respuesta)){
+            $idRolPredeterminado = $row["idRol"];
             $user = BaseDeDatos::consulta("INSERT INTO usuario (user_login,user_pass,user_email,user_img_perfil,user_img_banner,user_telefono,user_nombre,usr_alta,fec_alta,FK_idRol) 
-                                           VALUES ('$nomUsuario',sha1('$password'),'$email','$imgLogoRuta','$imgBannerRuta','$telefono','$nombreApellido','DESARROLLO',now(),'$idRol');");
+                                            VALUES ('$nomUsuario',sha1('$password'),'$email','$imgLogoRuta','$imgBannerRuta','$telefono','$nombreApellido','DESARROLLO',now(),'$idRolPredeterminado');");
+
         }
 
         return $user;
@@ -63,6 +58,11 @@ class Usuario{
                                         INNER JOIN rol r
                                         ON u.FK_idRol = r.idRol
                                         WHERE idUsuario IN (SELECT MAX(idUsuario) FROM usuario);");
+    }
+
+    public static function getLastUsuarioAccurate($email){
+        return BaseDeDatos::consulta("SELECT * FROM usuario u
+                                        WHERE user_email = '$email';");
     }
 
     public static function updateUsuario($nomUsuario,$password,$email,$imgLogoRuta,$telefono,$nombreApellido,$usuarioModificacion,$idUsuario){
@@ -140,4 +140,17 @@ class Usuario{
                                         WHERE user_login = '$userlogin'
                                         AND forgot_pass = '$forgotPassword';");
     }
+
+    public static function updateRolUsuario($idUsuario, $idRol){
+        return BaseDeDatos::consulta("UPDATE usuario
+                                      SET FK_idRol = $idRol
+                                      WHERE idUsuario = $idUsuario;");
+    }
+
+    public static function updateRolUsuarioToFree($idUsuario){
+        return BaseDeDatos::consulta("UPDATE usuario
+                                      SET FK_idRol = 6
+                                      WHERE idUsuario = $idUsuario;");
+    }
+
 }
