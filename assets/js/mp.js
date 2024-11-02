@@ -182,7 +182,17 @@ document.getElementById("plan").addEventListener("change", function() {
                 const paymentResult = await paymentResponse.json();
     
                 console.log(paymentResult);
-
+                
+                if (paymentResult.status !== '200') {
+                    Swal.close(); 
+                    alertSwal('error', "Error de MercadoPago al procesar el pago, por favor, intente nuevamente");
+                    await $.ajax({
+                      type: "POST",
+                      url: "./controller/deleteUser.php", // Endpoint to delete the user
+                      data: { email: emailToSend }
+                  });
+                    return;
+                }
                 id = paymentResult.id;
                 idUsuario = userCreationResult.idUsuario;
 
