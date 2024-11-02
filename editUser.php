@@ -5,6 +5,15 @@
   require('models/usuario.php');
   $categorias = Categoria::traerCategoria();
   $provincias = Provincia::traerProvincia();
+
+  require_once './vendor/autoload.php';
+
+  $dotenv = Dotenv\Dotenv::createImmutable(__DIR__."/config/");
+  $dotenv->load();
+  
+  // Access your environment variables using the $_ENV superglobal or getenv()
+  $public_key = $_ENV['PUBLIC_KEY'] ?? null;
+
 ?>
 
 <!DOCTYPE html>
@@ -13,6 +22,7 @@
 <head>
   <?php require("./assets/php/head.php");?>
   <link href="assets/css/styleForms.css" rel="stylesheet">
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
 
 <body>
@@ -141,6 +151,88 @@
                         </div>
                       </div>
                     </div>
+
+                    <!-- Selección del plan -->
+                    <div class="row mb-3">
+                      <label for="plan" class="col-md-4 col-lg-3 col-form-label">Plan <span class="camposObligatorios">*</span></label>
+                      <div class="col-md-8 col-lg-9">
+                        <div class="input-group">
+                          <select id="plan" name="plan" class="form-control" required>
+                            <option value="gratis">Plan Gratuito</option>
+                            <option value="basico">Plan Básico</option>
+                            <option value="pro">Plan Pro</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- MERCADO PAGO FORM -->
+                    <div id="payment-form">
+                      <h4 class="card-title d-flex justify-content-between align-items-center">
+                        Datos de pago
+                        <span class="secure-payment">
+                            <img src="assets/img/mpSeguro.png" alt="Check Verde" style="width: 200px; height: 80px; vertical-align: middle;"/>
+                            <span style="color: lightskyblue;">Pago seguro con Mercado Pago</span>
+                        </span>
+                      </h4>                  
+                      <div class="row mb-3">
+                        <input type="hidden" id="form-checkout__cardholderEmail" name="emailCardHolder" value="example@gmail.com"/>
+                        <label for="doc" class="col-md-4 col-lg-3 col-form-label">DNI <span class="camposObligatorios">*</span></label>
+                        <div class="col-md-8 col-lg-9">
+                          <div class="input-group">
+                            <select id="form-checkout__identificationType" name="identificationType" class="form-control" ></select>
+                            <input id="form-checkout__identificationNumber" name="docNumber" type="text" class="form-control"  />
+                          </div>
+                        </div>
+                      </div>
+                      <!--<br>
+                      <h4 class="card-title">Datos de tarjeta</h4>-->
+                      <div class="row mb-3">
+                        <label for="doc" class="col-md-4 col-lg-3 col-form-label">Nombre <span class="camposObligatorios">*</span></label>
+                        <div class="col-md-8 col-lg-9">
+                          <input id="form-checkout__cardholderName" name="cardholderName" type="text" class="form-control"/>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="doc" class="col-md-4 col-lg-3 col-form-label">Fecha y año de vencimiento <span class="camposObligatorios">*</span></label>
+                        <div class="col-md-8 col-lg-9">
+                          <div class="input-group expiration-date">
+                            <div id="form-checkout__cardExpirationMonth" name="cardExpirationMonth" type="text" class="form-control"></div>
+                            <div class="input-group-text" style="border:none; font-weight: bold; padding: 0 10px;">/</div>
+                            <div id="form-checkout__cardExpirationYear" name="cardExpirationYear" type="text" class="form-control"> </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!--<input id="form-checkout__expirationDate" name="cardExpirationDate" type="hidden" class="form-control"/>-->                                    
+                      <div class="row mb-3">
+                          <label for="cardNumber" class="col-md-4 col-lg-3 col-form-label">Número de tarjeta <span class="camposObligatorios">*</span></label>
+                          <div class="col-md-8 col-lg-9">
+                            <div class="input-group">
+                              <div id="form-checkout__cardNumber" name="cardNumber" type="text" class="form-control"> </div>
+                            </div>
+                          </div>  
+                      </div>
+                      <div class="row mb-3">
+                        <label for="doc" class="col-md-4 col-lg-3 col-form-label">Código de seguridad <span class="camposObligatorios">*</span></label>
+                        <div class="col-md-8 col-lg-9">
+                          <div class="input-group">
+                            <div id="form-checkout__securityCode" name="securityCode" type="text" class="form-control"> </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-3 hidden" id="issuerInput">
+                        <label for="doc" class="col-md-4 col-lg-3 col-form-label">Banco <span class="camposObligatorios">*</span></label>
+                        <div class="col-md-8 col-lg-9">
+                          <select id="form-checkout__issuer" name="issuer" class="form-control"></select>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="doc" class="col-md-4 col-lg-3 col-form-label">Cuotas <span class="camposObligatorios">*</span></label>
+                        <div class="col-md-8 col-lg-9">
+                          <select id="form-checkout__installments" name="installments" type="text" class="form-control"></select>
+                        </div>
+                      </div>
+                    </div>
                     
                     <!-- <h4 class="card-title">Imágenes y archivos</h4> -->
                     <div class="row mb-3">
@@ -199,6 +291,10 @@
       })
     }
   </script>
+  <script> 
+    const mp = new MercadoPago("<?= $public_key ?>");
+  </script>
+  <script src="assets/js/mp.js"></script>
 
 <?php
     if(isset($_GET["success"])){
