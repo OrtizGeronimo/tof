@@ -68,7 +68,7 @@
                 <h3 class="sidebar-title">Categorias</h3>
                 <ul id="categorias-servicios" class="mt-3">
                   <?php while($row=mysqli_fetch_array($categorias)){?>
-                          <a href="#filtros-servicios"><li class="categoria-item"><?=$row['tipo'].' ('.$row['cantidad_servicios'].')'?></li></a>
+                          <a href="#filtros-servicios"><li class="categoria-item"><?=$row['tipo']?></li></a>
                   <?php } ?>
                 </ul>
               </div><!-- End sidebar categories-->

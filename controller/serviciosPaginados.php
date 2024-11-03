@@ -25,7 +25,9 @@
 ?>
 
 <div class="row row-cols-2">
-    <?php while($row = mysqli_fetch_array($servicios)){ ?>
+    <?php while($row = mysqli_fetch_array($servicios)){ 
+        $categorias = Servicio::getCategoriasServicio($row["idServicio"]);
+        ?>
         <div class="servicio-item ">
             <a href="./userProfile.php?idServicio=<?=($row["idServicio"])?>">
                 <div class="d-flex">
@@ -34,7 +36,11 @@
                         $rol = $user["FK_idRol"];
                         if ($rol == 6){
                     ?>    
-                        <img src="./assets/img/<?=($row["servicio_imagen"])?>" class="servicio-img flex-shrink-0" alt="">
+                        <!--<img src="./assets/img/<?=($row["servicio_imagen"])?>" class="servicio-img flex-shrink-0" alt="">
+                           PLANTEAR LUEGO UNA MEJOR FORMA, ahora mismo seteamos directamente la categoría, pero podemos agregar el path en el campo de la bd
+                           en ese caso, deberíamos tambien cambiar el approach en userProfile.php, porque cuando consume en el src de img no lo hace igual-->
+                           <img src="./assets/img/category_<?=mysqli_fetch_array($categorias)["idCategoria"].'.webp'?>" class="servicio-img flex-shrink-0" alt="IMG_PROFILE ">
+            
                     <?php } else { ?>
                             <img src="./archivos/user_<?=($row["user_login"]).'/'.($row["servicio_imagen"])?>" class="servicio-img flex-shrink-0" alt="">
                         <?php } ?>

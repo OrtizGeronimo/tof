@@ -42,7 +42,7 @@
 
     <!-- ======= Breadcrumbs ======= -->
     <div class="breadcrumbs">
-      <div class="page-header d-flex align-items-center" style="background-image: assets/img/clients/client-1.png">
+      <div class="page-header d-flex align-items-center">
         <div class="container position-relative">
           <div class="row d-flex justify-content-center">
             <div class="col-lg-12 text-center">
@@ -95,11 +95,11 @@
                               if(isset($servicio["servicio_telefono"]) || $servicio["servicio_telefono"] != "--"){
                                 echo '<a href="https://api.whatsapp.com/send?phone='.$servicio["servicio_telefono"].'&text= Hola te escribo por tu servicio '.$servicio["servicio_nombre"].' publicado en Todo Oficio. 
                             
-                                                                                                                                                                                                       Servicio: https://www.todooficio/userProfile.php?idServicio='.$servicio["idServicio"].'" target="_blank" class="whatsapp"><i class="bi bi-whatsapp"></i></a>';
+                                                                                                                                                                                                       Servicio: https://www.todooficio.com/userProfile.php?idServicio='.$servicio["idServicio"].'" target="_blank" class="whatsapp"><i class="bi bi-whatsapp"></i></a>';
                               }else if(isset($servicio["user_telefono"])       && $servicio["user_telefono"]!="--"){
                                 echo '<a href="https://api.whatsapp.com/send?phone='.$servicio["user_telefono"].'&text= Hola te escribo por tu servicio '.$servicio["servicio_nombre"].' publicado en Todo Oficio. 
                             
-                                                                                                                                                                                                       Servicio: https://www.todooficio/userProfile.php?idServicio='.$servicio["idServicio"].'" target="_blank" class="whatsapp"><i class="bi bi-whatsapp"></i></a>';
+                                                                                                                                                                                                       Servicio: https://www.todooficio.com/userProfile.php?idServicio='.$servicio["idServicio"].'" target="_blank" class="whatsapp"><i class="bi bi-whatsapp"></i></a>';
                               }
                             ?>
                           </ul>
@@ -141,9 +141,9 @@
                   <li><a href="#">Acepta MercadoPago</a></li>
                 </ul>
               </div>
-              <!-- Divider 
+               Divider 
               <hr class="sidebar-divider">
-              <!-- End sidebar etiquetas-->
+               End sidebar etiquetas-->
 
               
 
