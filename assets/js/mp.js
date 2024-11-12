@@ -183,7 +183,7 @@ document.getElementById("plan").addEventListener("change", function() {
     
                 console.log(paymentResult);
                 
-                if (paymentResult.status !== '200') {
+                if (paymentResult.status === 'rejected' || paymentResult.status === 'cancelled') {
                     Swal.close(); 
                     alertSwal('error', "Error de MercadoPago al procesar el pago, por favor, intente nuevamente");
                     await $.ajax({
