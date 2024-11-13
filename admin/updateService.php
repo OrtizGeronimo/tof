@@ -18,7 +18,13 @@
     if(!isset($_SESSION["s_id_usuario"])){
       header("Location:../index.php");
     }
-    $servicio = Servicio::getServicioByUserId($_SESSION["s_id_usuario"]);
+    if (strtoupper($_SESSION["s_rol"]) == "ADMIN"){
+      $idServicio = $_GET["idServicio"];
+      $servicio = Servicio::getServicio($idServicio);
+    } else {
+      $servicio = Servicio::getServicioByUserId($_SESSION["s_id_usuario"]);
+    }
+    
     $servicio = mysqli_fetch_array($servicio);
     $idServicio = $servicio["idServicio"];
     $editService = Servicio::editServiceRolValidation($idServicio, $_SESSION["s_rol"]);
