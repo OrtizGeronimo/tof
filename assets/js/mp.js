@@ -222,7 +222,8 @@ document.getElementById("plan").addEventListener("change", async function() {
                 console.log(paymentResult);
 
                 
-                  if (paymentResult.status === 'rejected' || paymentResult.status === 'cancelled') {
+
+                if (paymentResult.status === 'rejected' || paymentResult.status === 'cancelled') {
                     Swal.close(); 
                     alertSwal('error', "Error de MercadoPago al procesar el pago, por favor, intente nuevamente");
                     if(formType === "R"){

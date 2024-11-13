@@ -19,7 +19,7 @@ class Categoria{
     }
 
     public static function traerCategoria(){
-        $traerCategoria = BaseDeDatos::consulta(" SELECT * FROM categoria");
+        $traerCategoria = BaseDeDatos::consulta(" SELECT * FROM categoria ORDER BY tipo;");
         return $traerCategoria;
     }
 
