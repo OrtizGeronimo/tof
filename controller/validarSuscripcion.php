@@ -40,7 +40,7 @@ public static function validarEstadoSuscripcion($idUsuario, $checkDate){
 
     $status = $summarized['semaphore'] === null ? "yellow" : $summarized['semaphore'];
 
-    $respuesta = "no entro a ningun if porque status: ".$status." y idSuscripcion: ".$idSuscripcion. " y summarized: ".$summarized. " y response: ".$response;
+    $respuesta = "no entro a ningun if porque status: ".$status." y idSuscripcion: ".$idSuscripcion. " y response: ".$response;
 
     if ($suscriptionStatus === "cancelled") {
         if ($checkDate || $summarized['semaphore'] === null) {
