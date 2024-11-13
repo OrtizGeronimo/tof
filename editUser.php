@@ -437,7 +437,7 @@
       alertSwal('error','Las contraseñas ingresadas no son iguales');
     }else{
       let dataForm = new FormData(form);
-      console.table(Array.from(dataForm.entries()));
+      //console.table(Array.from(dataForm.entries()));
       $.ajax({
         type: "POST",
         url: "./controller/editUser.php",
