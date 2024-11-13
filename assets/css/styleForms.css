@@ -1409,3 +1409,7 @@ h6 {
 
   
 }
+
+.form-select {
+  height: 170px;
+}
