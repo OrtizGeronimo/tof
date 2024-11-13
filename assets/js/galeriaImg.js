@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const imgPreviewContainer = document.getElementById("imgPreviewContainer");
 
   
-  console.log("userRole", userRole);
+  //console.log("userRole", userRole);
   const maxImagesAllowed = userRole == 6 ? 1 : (userRole == 4 ? 3 : 'Infinity');
 
   let i = 0;

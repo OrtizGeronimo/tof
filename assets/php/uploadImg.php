@@ -1,5 +1,5 @@
 <?php
-require('./../models/galeria.php');
+require_once('./../models/galeria.php');
 
 class Imagen {
     public static function upload($files,$nameFile,$dir){

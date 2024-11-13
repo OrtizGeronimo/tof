@@ -13,7 +13,7 @@
         $data = [
             "status" => "error",
             "message" => "Este nombre de usuario ya esta siendo utilizado. Por favor use otro",
-            "user" => $user
+            "user" => $newUser
         ];
         
         
@@ -25,7 +25,7 @@
         $data = [
             "status" => "error",
             "message" => "Este mail ya esta siendo utilizado. Por favor use otro",
-            "user" => $user
+            "user" => $newUser
         ];
         
         
@@ -47,7 +47,13 @@
                 Imagen::upload($newUserImg,$name_img,$dir_img);
             }
         } catch (\Throwable $th) {
-            //throw $th;
+            $data = [
+                "status" => "error",
+                "message" => "Exception: Hubo un error registrando al usuario",
+                "user" => $th
+            ];
+
+            echo json_encode($data);
         }
         
 
@@ -69,9 +75,6 @@
                 $_SESSION["s_rol"]     = $newUser["plan"];
                 $_SESSION["s_img_perfil"] = ($dir_img!="--")? 'archivos/user_'.$newUser["nombreUsuario"].'/user_profile.webp' : "";
                 
-                
-                
-
                 header("Content-Type: application/json");
                 
 

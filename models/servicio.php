@@ -326,14 +326,17 @@ class Servicio{
     public static function downgradeToFree($idUsuario, $idServicio){
         //se supone que a la hora de ejecutar este metodo, el usuario ya fue modificado al plan gratuito y ya tiene solo una categoria activa
         $categoria = Categoria::getCategoriasByUser($idServicio);
+        if (mysqli_num_rows($categoria) > 0) { 
+            $idCategoria = mysqli_fetch_array($categoria)["FK_idCategoria"];
 
-        $idCategoria = mysqli_fetch_array($categoria)["FK_idCategoria"];
-
-        $nombreImgPerfil = "category_".$idCategoria.".webp";
+            $nombreImgPerfil = "category_".$idCategoria.".webp";
+        }else{
+            $nombreImgPerfil = "user_profile.webp";
+        }
 
         //esta consulta deberia modificar la imagen del servicio a la generica
         return BaseDeDatos::consulta("UPDATE servicio
-                                      SET servicio_imagen = '$nombreImgPerfil', servicio_banner = ''
-                                      WHERE FK_idUsuario = $idUsuario;");
+                                    SET servicio_imagen = '$nombreImgPerfil', servicio_banner = ''
+                                    WHERE FK_idUsuario = $idUsuario;");
     }
 }

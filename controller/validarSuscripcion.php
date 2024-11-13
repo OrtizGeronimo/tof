@@ -3,7 +3,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 //require(__DIR__."/../models/usuario.php");
 require(__DIR__."/../models/categoria.php");
-require(__DIR__."/../models/galeria.php");
+require_once(__DIR__."/../models/galeria.php");
 require(__DIR__."/../models/servicio.php");
 //require(__DIR__."/../models/suscripcionServicio.php");
 

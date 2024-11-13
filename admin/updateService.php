@@ -3,7 +3,7 @@
   require('../models/categoria.php');
   require('../models/provincia.php');
   require('../models/servicio.php');
-  require('../models/galeria.php');
+  require_once('../models/galeria.php');
   $categorias = Categoria::traerCategoria();
   $provincias = Provincia::traerProvincia();
 

@@ -74,28 +74,36 @@ class Galeria{
     public static function downgradeToFreePlan($idUsuario){
         $galeria = BaseDeDatos::consulta("SELECT g.* FROM galeria g JOIN servicio s ON g.FK_idServicio = s.idServicio
                                             WHERE s.FK_idUsuario = $idUsuario ORDER BY id DESC LIMIT 1");
+        if (mysqli_num_rows($galeria) > 0) {                            
 
-        $galeriaId = mysqli_fetch_array($galeria)["id"];
-        $updateGaleria = BaseDeDatos::consulta("UPDATE galeria SET fec_baja = NOW() WHERE id != $galeriaId;");
-        return $updateGaleria;
+            $galeriaId = mysqli_fetch_array($galeria)["id"];
+            $updateGaleria = BaseDeDatos::consulta("UPDATE galeria SET fec_baja = NOW() WHERE id != $galeriaId;");
+            return $updateGaleria;
+
+        }else{
+            return true;
+        }
     }
 
     public static function downgradeToBasicPlan($idUsuario){
         $galeria = BaseDeDatos::consulta("SELECT g.* FROM galeria g JOIN servicio s ON g.FK_idServicio = s.idServicio
                                             WHERE s.FK_idUsuario = $idUsuario ORDER BY id DESC LIMIT 3");
+        if (mysqli_num_rows($galeria) > 0) { 
+            $galeriaIds = [];
+            while ($row = mysqli_fetch_array($galeria)) {
+                $galeriaIds[] = $row["id"];
+            }
 
-        $galeriaIds = [];
-        while ($row = mysqli_fetch_array($galeria)) {
-            $galeriaIds[] = $row["id"];
+            if (count($galeriaIds) > 0) {
+                $idsToExclude = implode(',', $galeriaIds);
+                $updateGaleria = BaseDeDatos::consulta("UPDATE galeria SET fec_baja = NOW() WHERE id NOT IN ($idsToExclude);");
+                return $updateGaleria;
+            }
+
+            return false;
+        }else{
+            return true;
         }
-
-        if (count($galeriaIds) > 0) {
-            $idsToExclude = implode(',', $galeriaIds);
-            $updateGaleria = BaseDeDatos::consulta("UPDATE galeria SET fec_baja = NOW() WHERE id NOT IN ($idsToExclude);");
-            return $updateGaleria;
-        }
-
-        return false;
     }
 }
 
