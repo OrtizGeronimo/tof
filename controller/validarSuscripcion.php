@@ -44,16 +44,21 @@ public static function validarEstadoSuscripcion($idUsuario, $checkDate){
 
     if ($suscriptionStatus === "cancelled") {
         if ($checkDate || $summarized['semaphore'] === null) {
-        $idServicio = mysqli_fetch_array(Servicio::getServicioByUsuarioId($idUsuario))["idServicio"];
+        $result = mysqli_fetch_array(Servicio::getServicioByUsuarioId($idUsuario));
+        $idServicio = $result ? $result["idServicio"] : null;
         
         //si el status es red, significa que no se ha hecho un pago, por lo tanto MODIFICAR EL PLAN/rol DEL USUARIO a gratis
         Usuario::updateRolUsuarioToFree($idUsuario);
+        
+        //si no tiene un servicio, no se hace nada, solo se le da de baja la suscripcion
+        if  ($idServicio !== null){
         //le damos fecha de baja a todas las categorias al plan gratuito (dejamos solo 1)
         Categoria::updateCategoriasToFree($idServicio);
         //le damos fecha de baja a todas las fotos de la galeria al plan gratuito (dejamos solo 1)
         Galeria::downgradeToFreePlan($idUsuario);
         //le modificamos la foto del servicio por la generica de su categoria y la de banner
         Servicio::downgradeToFree($idUsuario, $idServicio);
+        }
         //damos de baja la suscripcion, como esta en gratis no deberia existir mas (baja logica para no perder el dato)
         SuscripcionServicio::logicDeleteSuscripcion($idUsuario);
         //damos de baja la suscripcion en mercadopago
