@@ -1,7 +1,7 @@
 
 let times = 0;
   // Update the amount based on plan selection
-document.getElementById("plan").addEventListener("change", function() {
+document.getElementById("plan").addEventListener("change", async function() {
   let selectedPlan = this.value;
   let newAmount = "0"; // Default to 0
 
@@ -10,6 +10,10 @@ document.getElementById("plan").addEventListener("change", function() {
   } else if (selectedPlan === "pro") {
       newAmount = "500";
   }
+
+  let form = document.getElementById("form-checkout");
+  // Form type(register/edit)
+  let formType = form.querySelector('input[name="formType"]').value; 
 
 
   // Destroy the current cardForm (if necessary)
@@ -79,7 +83,7 @@ document.getElementById("plan").addEventListener("change", function() {
       },
       onSubmit: async event => {
         event.preventDefault();
-    
+
         const {
             payment_method_id,
             issuerId: issuer_id,
@@ -98,6 +102,15 @@ document.getElementById("plan").addEventListener("change", function() {
     
         for (let i = 0; i < form.elements.length; i++) {
           let element = form.elements[i];
+
+          if(formType === "E"){
+            if(element.type === 'password'){
+              continue;
+            }
+            if(element.type === 'file'){
+              continue;
+            }
+          }
     
           // Ignore hidden inputs, buttons, and submit inputs
           if (element.type === 'hidden' || element.type === 'button' || element.type === 'submit') {
@@ -124,35 +137,58 @@ document.getElementById("plan").addEventListener("change", function() {
             document.querySelector("#renewPassword").style.backgroundColor = "pink";
             alertSwal('error', 'Las contraseñas ingresadas no son iguales');
         } else {
-
-              Swal.fire({
-                title: 'Procesando pago...',
-                text: 'Por favor, espera mientras se procesa tu pago.',
-                icon: 'info',
-                allowOutsideClick: false,  // Prevent closing the alert by clicking outside
-                showConfirmButton: false,  // Hide the confirm button
-                didOpen: () => {
-                    Swal.showLoading();  // Show a loading spinner
-                }
-            });
+            Swal.fire({
+              title: 'Procesando pago...',
+              text: 'Por favor, espera mientras se procesa tu pago.',
+              icon: 'info',
+              allowOutsideClick: false,  // Prevent closing the alert by clicking outside
+              showConfirmButton: false,  // Hide the confirm button
+              didOpen: () => {
+                  Swal.showLoading();  // Show a loading spinner
+              }
+            });            
+                      
             // Form is valid, proceed with user creation and payment process
             try {
                 let dataForm = new FormData(form);
-    
-                // 1. First, create the user
-                const userCreationResult = await $.ajax({
+                let userCreationResult = null;
+                let userUpdateResult = null;
+
+                if(formType === "R"){
+                  // 1. First, create the user
+                  userCreationResult = await $.ajax({
                     type: "POST",
                     url: "./controller/registerUser.php",
                     data: dataForm,
                     processData: false,
-                    contentType: false
-                });
-    
-                if (userCreationResult.status !== 'success') {
+                    contentType: false,
+                    dataType: "json"
+                  });
+                  console.log(userCreationResult);
+                  if (userCreationResult.status !== 'success') {
                     // User creation failed
                     alertSwal('error', userCreationResult.message);
                     console.log("error", userCreationResult.user);
                     return;
+                  }
+
+                }else{
+                  // 1. First, update the user
+                  userUpdateResult = await $.ajax({
+                    type: "POST",
+                    url: "./controller/editUser.php",
+                    data: dataForm,
+                    processData: false,
+                    contentType: false,
+                    dataType: "json"
+                  });
+
+                  if (userUpdateResult.status !== 'success') {
+                    // User creation failed
+                    alertSwal('error', userUpdateResult.message);
+                    console.log("error", userUpdateResult.user);
+                    return;
+                  }
                 }
     
                 // 2. If user is created successfully, proceed with payment
@@ -163,6 +199,8 @@ document.getElementById("plan").addEventListener("change", function() {
                     },
                     body: JSON.stringify({
                         plan: dataForm.get("plan"),
+                        planActual: dataForm.get("planActual"),
+                        formType: formType,
                         token,
                         issuer_id,
                         payment_method_id,
@@ -182,21 +220,40 @@ document.getElementById("plan").addEventListener("change", function() {
                 const paymentResult = await paymentResponse.json();
     
                 console.log(paymentResult);
+
                 
+
                 if (paymentResult.status === 'rejected' || paymentResult.status === 'cancelled') {
                     Swal.close(); 
                     alertSwal('error', "Error de MercadoPago al procesar el pago, por favor, intente nuevamente");
-                    await $.ajax({
-                      type: "POST",
-                      url: "./controller/deleteUser.php", // Endpoint to delete the user
-                      data: { email: emailToSend }
-                  });
+                    if(formType === "R"){
+                      await $.ajax({
+                        type: "POST",
+                        url: "./controller/deleteUser.php", // Endpoint to delete the user
+                        data: { email: emailToSend }
+                      });
+                    }else{
+                      await $.ajax({
+                        type: "POST",
+                        url: "./controller/deleteUserPlanEdition.php", // Endpoint to delete the update
+                        data: dataForm
+                      });
+                    }
                     return;
-                }
+                  }
+
                 id = paymentResult.id;
-                idUsuario = userCreationResult.idUsuario;
+
+                console.log(userUpdateResult);
+                if(formType === "R"){                  
+                  idUsuario = userCreationResult.idUsuario;
+                }else{
+                  idUsuario = userUpdateResult.idUsuario;
+                }
 
                 //se crea la suscripcion
+
+                console.log(id + ", " + idUsuario);
 
                 const suscriptionResult = await fetch("./controller/suscription.php", {
                     method: "POST",
@@ -207,14 +264,13 @@ document.getElementById("plan").addEventListener("change", function() {
                         id: id,
                         idUsuario: idUsuario,
                     }),
-                });
-
-                
+                });                
                 
                 Swal.close();  // Cerramos spinner
 
-
                 suscriptionResponse = await suscriptionResult.json();
+
+                console.log(suscriptionResponse);
 
                 if (suscriptionResponse.status !== "success") {
                   alertSwal('error', "Error al crear la suscripción");
@@ -230,7 +286,11 @@ document.getElementById("plan").addEventListener("change", function() {
                     timer: 2000,
                     showConfirmButton: false
                 }).then(() => {
+                  if(formType === "R"){
                     location.replace('./admin/newService.php');
+                  }else{
+                    location.replace('./editUser.php');
+                  }
                 });
                 } else if (paymentResult.status === 'in_process') {
                   Swal.fire({
@@ -240,7 +300,11 @@ document.getElementById("plan").addEventListener("change", function() {
                     timer: 2000,
                     showConfirmButton: false
                 }).then(() => {
+                  if(formType === "R"){
                     location.replace('./admin/newService.php');
+                  }else{
+                    location.replace('./editUser.php');
+                  }
                 });
                 } else if (paymentResult.status === 'rejected' || paymentResult.status === 'cancelled') {
                     // Payment failed, delete the user (rollback)
@@ -254,15 +318,14 @@ document.getElementById("plan").addEventListener("change", function() {
     
             } catch (error) {
               Swal.close();
-              alertSwal('error', `Error: ${error.message}`);
+              alertSwal('error', `Error: ${error.message} `);
             }
         }
-    }
-    ,
-      onFetching: (resource) => {
       }
     },
-  });  
+    onFetching: (resource) => {
+    }
+  });
   times++;
 });
   

@@ -33,29 +33,35 @@ class Categoria{
 
     public static function updateCategoriasToFree($idServicio){
         $firstCategory = BaseDeDatos::consulta("SELECT * from categoria_servicio WHERE FK_idServicio = $idServicio LIMIT 1;");
+        if (mysqli_num_rows($firstCategory) > 0) {
+            $idCategoria = mysqli_fetch_array($firstCategory)["FK_idCategoria"];
 
-        $idCategoria = mysqli_fetch_array($firstCategory)["FK_idCategoria"];
+            $updateCategorias = BaseDeDatos::consulta("UPDATE categoria_servicio SET fec_baja = NOW() WHERE FK_idServicio = $idServicio AND FK_idCategoria != $idCategoria;");
 
-        $updateCategorias = BaseDeDatos::consulta("UPDATE categoria_servicio SET fec_baja = NOW() WHERE FK_idServicio = $idServicio AND FK_idCategoria != $idCategoria;");
-
-        return $updateCategorias;
+            return $updateCategorias;
+        }else{
+            return true;
+        }
     }
 
     public static function downgradeCategoriasToBasic($idServicio){
         $firstThreeCategories = BaseDeDatos::consulta("SELECT * from categoria_servicio WHERE FK_idServicio = $idServicio LIMIT 2;");
+        if (mysqli_num_rows($firstThreeCategories) > 0) {
+            $idsCategoria = [];
+            while ($row = mysqli_fetch_array($firstThreeCategories)) {
+                $idsCategoria[] = $row["FK_idCategoria"];
+            }
 
-        $idsCategoria = [];
-        while ($row = mysqli_fetch_array($firstThreeCategories)) {
-            $idsCategoria[] = $row["FK_idCategoria"];
+            if (count($idsCategoria) > 0) {
+                $idsCategoriaStr = implode(',', $idsCategoria);
+                $updateCategorias = BaseDeDatos::consulta("UPDATE categoria_servicio SET fec_baja = NOW() WHERE FK_idServicio = $idServicio AND FK_idCategoria NOT IN ($idsCategoriaStr);");
+            } else {
+                $updateCategorias = false;
+            }
+
+            return $updateCategorias;
+        }else{
+            return true;
         }
-
-        if (count($idsCategoria) > 0) {
-            $idsCategoriaStr = implode(',', $idsCategoria);
-            $updateCategorias = BaseDeDatos::consulta("UPDATE categoria_servicio SET fec_baja = NOW() WHERE FK_idServicio = $idServicio AND FK_idCategoria NOT IN ($idsCategoriaStr);");
-        } else {
-            $updateCategorias = false;
-        }
-
-        return $updateCategorias;
     }
 }

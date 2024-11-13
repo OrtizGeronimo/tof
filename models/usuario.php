@@ -4,19 +4,22 @@ include 'logConfig.php';
 
 (file_exists("./../config/conexion.php"))? require_once('./../config/conexion.php') : require_once('./config/conexion.php');
 class Usuario{
-    
-    public static function agregarUsuarios($nomUsuario,$password,$email,$imgLogoRuta,$imgBannerRuta,$telefono,$nombreApellido, $rol){
+
+    public static function rolByName($rol){ //recive el nombre del rol devuelve el id
         $respuesta = BaseDeDatos::consulta("SELECT * 
-                                                    FROM rol
-                                                    WHERE upper(rol) = upper('$rol')");
-
+                                            FROM rol
+                                            WHERE upper(rol) = upper('$rol')");
         if($row = mysqli_fetch_array($respuesta)){
-            $idRolPredeterminado = $row["idRol"];
-            $user = BaseDeDatos::consulta("INSERT INTO usuario (user_login,user_pass,user_email,user_img_perfil,user_img_banner,user_telefono,user_nombre,usr_alta,fec_alta,FK_idRol) 
-                                            VALUES ('$nomUsuario',sha1('$password'),'$email','$imgLogoRuta','$imgBannerRuta','$telefono','$nombreApellido','DESARROLLO',now(),'$idRolPredeterminado');");
-
+            return $row["idRol"];
         }
+    }
 
+    public static function agregarUsuarios($nomUsuario,$password,$email,$imgLogoRuta,$imgBannerRuta,$telefono,$nombreApellido, $rol){
+        $idRolPredeterminado = Usuario::rolByName($rol);
+
+        $user = BaseDeDatos::consulta("INSERT INTO usuario (user_login,user_pass,user_email,user_img_perfil,user_img_banner,user_telefono,user_nombre,usr_alta,fec_alta,FK_idRol) 
+                                        VALUES ('$nomUsuario',sha1('$password'),'$email','$imgLogoRuta','$imgBannerRuta','$telefono','$nombreApellido','DESARROLLO',now(),'$idRolPredeterminado');");
+        
         return $user;
     }
 
@@ -65,7 +68,9 @@ class Usuario{
                                         WHERE user_email = '$email';");
     }
 
-    public static function updateUsuario($nomUsuario,$password,$email,$imgLogoRuta,$telefono,$nombreApellido,$usuarioModificacion,$idUsuario){
+    public static function updateUsuario($nomUsuario,$password,$email,$imgLogoRuta,$telefono,$nombreApellido,$usuarioModificacion,$idUsuario, $rol){
+
+        $idRol = Usuario::rolByName($rol);
 
         if($password == ""){
             return BaseDeDatos::consulta("UPDATE usuario
@@ -75,7 +80,8 @@ class Usuario{
                                             user_telefono = '$telefono',
                                             user_img_perfil = '$imgLogoRuta',
                                             usr_mod = '$usuarioModificacion',
-                                            fec_mod = now()
+                                            fec_mod = now(),
+                                            FK_idRol = '$idRol'
                                         WHERE idUsuario = $idUsuario;");
         }else{
             return BaseDeDatos::consulta("UPDATE usuario
@@ -86,7 +92,8 @@ class Usuario{
                                             user_telefono = '$telefono',
                                             user_img_perfil = '$imgLogoRuta',
                                             usr_mod = '$usuarioModificacion',
-                                            fec_mod = now()
+                                            fec_mod = now(),
+                                            FK_idRol = '$idRol'
                                         WHERE idUsuario = $idUsuario;");
         }
 

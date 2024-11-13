@@ -89,6 +89,17 @@
 
                 <li>
                   <a class="dropdown-item d-flex align-items-center" href="<?=file_exists('editUser.php')?'editUser.php':'../editUser.php'?>">
+                    <i class="bi bi-key"></i>
+                    <span>Editar Plan</span>
+                  </a>
+                </li>
+
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" href="<?=file_exists('editUser.php')?'editUser.php':'../editUser.php'?>">
                     <i class="bi bi-pencil"></i>
                     <span>Editar Perfil</span>
                   </a>

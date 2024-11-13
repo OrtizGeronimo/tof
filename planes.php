@@ -64,7 +64,7 @@
                 <li><i class="bi bi-check"></i> <span>Edicion de tu perfil 1 vez por mes</span></li>
                 <li><i class="bi bi-check"></i> Sin comisión por venta!</li>   
               </ul>
-              <div class="text-center"><a href="./registerUser.php" class="buy-btn">Obtener</a></div>
+              <div class="text-center"><a href="<?php echo (empty($_SESSION["s_id_usuario"])) ? './registerUser.php' : './editUser.php'; ?>" class="buy-btn">Obtener</a></div>
             </div>
           </div><!-- End Pricing Item -->
 
@@ -85,7 +85,7 @@
                 <li><i class="bi bi-check"></i> Destaque en los buscadores de su categoria</li>
                 <li><i class="bi bi-check"></i> Sin comisión por venta!</li>   
               </ul>
-              <div class="text-center"><a href="./registerUser.php" class="buy-btn">Obtener</a></div>
+              <div class="text-center"><a href="<?php echo (empty($_SESSION["s_id_usuario"])) ? './registerUser.php' : './editUser.php'; ?>" class="buy-btn">Obtener</a></div>
             </div>
           </div><!-- End Pricing Item -->
 
@@ -108,7 +108,7 @@
                 <li><i class="bi bi-check"></i> Atención al cliente 24/7</li> 
                 <li><i class="bi bi-check"></i> Sin comisión por venta!</li>   
               </ul>
-              <div class="text-center"><a href="./registerUser.php" class="buy-btn">Obtener</a></div>
+              <div class="text-center"><a href="<?php echo (empty($_SESSION["s_id_usuario"])) ? './registerUser.php' : './editUser.php'; ?>" class="buy-btn">Obtener</a></div>
             </div>
           </div><!-- End Pricing Item -->
 

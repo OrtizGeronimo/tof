@@ -269,6 +269,7 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
 
                     <!-- MERCADO PAGO FORM -->
                     <div id="payment-form">
+                      <input type="hidden" name="formType" value="R">  <!-- Campo para identificar si es formulario de registro o edicion de usuario -->
                       <h4 class="card-title d-flex justify-content-between align-items-center">
                         Datos de pago
                         <span class="secure-payment">
@@ -473,6 +474,7 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
           data: dataForm,
           processData: false,
           contentType: false,
+          dataType: "json",
           success: function(result) {
             if(result.status === 'success'){
               Swal.fire({
