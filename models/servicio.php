@@ -149,6 +149,16 @@ class Servicio{
                                       WHERE   s.idServicio =  $idServicio");
     }
 
+    public static function getServicioByUserId($idUser){
+        return BaseDeDatos::consulta("SELECT * 
+                                      FROM usuario    u
+                                      INNER JOIN servicio   s
+                                      ON u.idUsuario = s.FK_idUsuario
+                                      LEFT JOIN red_social rs
+                                      ON s.idServicio= rs.FK_idServicio
+                                      WHERE   u.idUsuario =  $idUser");
+    }
+
     public static function getServicioByUsuarioId($idUsuario){
         return BaseDeDatos::consulta("SELECT * 
                                       FROM servicio  s
