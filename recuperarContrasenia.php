@@ -47,7 +47,7 @@
                     </div>
 
                     <div class="form-group mt-3 col-12">
-                      <button class="btn btn-secondary w-100" type="submit" id="buttonForm" onClick="return usuarioExiste()">Recuperar Contraseña</button>
+                      <button class="btn btn-secondary w-100" type="submit" id="recuperarContraseña" >Recuperar Contraseña</button>
                     </div>
                     
                   <!--</form> -->

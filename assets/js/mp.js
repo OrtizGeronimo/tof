@@ -219,9 +219,7 @@ document.getElementById("plan").addEventListener("change", async function() {
     
                 const paymentResult = await paymentResponse.json();
     
-                console.log(paymentResult);
-
-                
+                console.log(paymentResult);                
 
                 if (paymentResult.status === 'rejected' || paymentResult.status === 'cancelled') {
                     Swal.close(); 

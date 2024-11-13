@@ -70,36 +70,38 @@ const validationInputsRegister = () => {
 }
 
 const usuarioExiste = () => {
-    let email = document.querySelector('#email');
-    if(email.value == "" ){
-        email.style.backgroundColor = "pink";
-        alertSwal('error','Debe ingresar un email para recuperar la contraseña');
-    }else{
-        email.style.backgroundColor = null;
-        alertSwal('success','Aguarde un momento.....');
-        $.ajax({
-          type: "POST",
-          url: "./controller/recuperarContrasenia.php",
-          data: {"email" : email.value},
-          success: function (result){
-            if(result === 'Se envio un correo para recuperar la contraseña. Por favor revise su casilla de mensajes.'){
-              alertSwal('success',result);
-              setTimeout(() =>{
-                location.replace('./index.php');
-              },5000);
+    document.querySelector("#recuperarContraseña").addEventListener('click',() => {
+      let email = document.querySelector('#email');
+      if(email.value == "" ){
+          email.style.backgroundColor = "pink";
+          alertSwal('error','Debe ingresar un email para recuperar la contraseña');
+      }else{
+          email.style.backgroundColor = null;
+          alertSwal('success','Aguarde un momento.....');
+          $.ajax({
+            type: "POST",
+            url: "./controller/recuperarContrasenia.php",
+            data: {"email" : email.value},
+            success: function (result){
+              if(result === 'Se envio un correo para recuperar la contraseña. Por favor revise su casilla de mensajes.'){
+                alertSwal('success',result);
+                setTimeout(() =>{
+                  location.replace('./index.php');
+                },5000);
+                
+              }else{
+                console.log(result);
+                alertSwal('error',result);
+              }
               
-            }else{
-              alertSwal('error',result);
+            },
+            error: function (result){
+              console.log("Error");
+              console.log(result);
             }
-            
-          },
-          error: function (result){
-            console.log("Error");
-            console.log(result);
-          }
-        })
-    }
-
+          })
+      }
+  });
 }
 
 const reestablecerContraseña = () => {

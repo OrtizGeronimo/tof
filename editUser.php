@@ -80,15 +80,18 @@
 
                   <!-- Estado suscripcion -->
                   <span>
-                      <?php
+                    <?php
                       if ($user["FK_idRol"] == 6) {
+                          $plan = "Gratis";
                           echo '<strong>Plan Gratuito</strong>';
                       } elseif ($user["FK_idRol"] == 4) {
+                          $plan = "Básico";
                           echo '<strong>Plan Básico</strong> <span style="color: green;">Suscripción activa</span>';
                       } elseif ($user["FK_idRol"] == 5) {
+                          $plan = "Pro";
                           echo '<strong>Plan Pro</strong> <span style="color: green;">Suscripción activa</span>';
                       }
-                      ?>
+                    ?>
                   </span>
                 </div>
 
@@ -164,7 +167,7 @@
                       <label for="plan" class="col-md-4 col-lg-3 col-form-label">Plan <span class="camposObligatorios">*</span></label>
                       <div class="col-md-8 col-lg-9">
                         <div class="input-group">
-                          <div class="selected-plan-display" id="selected-plan-display"><?=$user["rol"]?></div>
+                          <div class="selected-plan-display" id="selected-plan-display"><?=$plan?></div>
                         </div>
                       </div>
                     </div>
