@@ -127,6 +127,7 @@ const reestablecerContraseña = () => {
             location.replace('./login.php');
           },5000);
         }else{
+          console.log(result);
           alertSwal('error',result);
         }
       },

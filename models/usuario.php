@@ -129,8 +129,9 @@ class Usuario{
     }
 
     public static function setForgotPasswordUser($email,$forgotPassword){
+        $hashedPassword = password_hash($forgotPassword, PASSWORD_DEFAULT);
         return BaseDeDatos::consulta("UPDATE usuario
-                                      SET forgot_pass = md5('$forgotPassword')
+                                      SET forgot_pass = '$hashedPassword'
                                       WHERE user_email = '$email';");
     }
 
