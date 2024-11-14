@@ -66,9 +66,9 @@
                     Categoria::updateCategoriasToFree($idServicio);
                     //le modificamos la foto del servicio por la generica de su categoria y la de banner
                     Servicio::downgradeToFree($idUsuario, $idServicio);
-                }
-                //le damos fecha de baja a todas las fotos de la galeria al plan gratuito (dejamos solo 1)
-                Galeria::downgradeToFreePlan($idUsuario);
+                    //le damos fecha de baja a todas las fotos de la galeria al plan gratuito (dejamos solo 1)
+                    Galeria::downgradeToFreePlan($idUsuario);
+                }                
                 
                 //damos de baja la suscripcion (baja logica para no perder el dato)
                 SuscripcionServicio::logicDeleteSuscripcion($idUsuario);
