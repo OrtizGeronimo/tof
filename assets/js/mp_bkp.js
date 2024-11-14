@@ -161,8 +161,6 @@ document.getElementById("plan").addEventListener("change", async function() {
                     text: 'Por favor ingresa el código que te hemos enviado.',
                     input: 'text',
                     showCancelButton: true,
-                    confirmButtonColor: '#F2C94C',
-                    cancelButtonColor: '#F2C94C',
                     confirmButtonText: 'Verificar',
                     cancelButtonText: 'Cancelar',
                     preConfirm: (codigoIngresado) => {   

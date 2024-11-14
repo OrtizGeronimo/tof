@@ -50,7 +50,13 @@ try {
     if($data['planActual'] === "basico" || $data['planActual'] === "pro"){
       $usuario = Usuario::getUsuariosEmail($data['payer']['email']);
       $idUsuario = mysqli_fetch_array($usuario)["idUsuario"];
-      $idServicio = mysqli_fetch_array(Servicio::getServicioByUsuarioId($idUsuario))["idServicio"];
+      //$idServicio = mysqli_fetch_array(Servicio::getServicioByUsuarioId($idUsuario))["idServicio"];
+      $Servicio = Servicio::getServicioByUsuarioId($idUsuario);                
+      if(mysqli_num_rows($Servicio) > 0){
+          $idServicio = mysqli_fetch_array($Servicio)["idServicio"];
+      }else{
+          $idServicio = null;
+      }
       $suscripcion = SuscripcionServicio::getSuscripcion($idUsuario);    
       $idSuscripcion = mysqli_fetch_array($suscripcion)["id_suscripcion"];
       $preapproval_plan = new PreApprovalClient();    
@@ -69,9 +75,11 @@ try {
         //si pasa de uno pago a otro pago se cancela la suscripcion y se crea la del nuevo plan ademas de modificar limite de beneficios si es necesario
         
         //le damos fecha de baja a todas las categorias al plan basico
-        Categoria::downgradeCategoriasToBasic($idServicio);
-        //le damos fecha de baja a todas las fotos de la galeria al plan basico
-        Galeria::downgradeToBasicPlan($idUsuario);
+        if($idServicio !== null){
+          Categoria::downgradeCategoriasToBasic($idServicio);          
+          //le damos fecha de baja a todas las fotos de la galeria al plan basico
+          Galeria::downgradeToBasicPlan($idUsuario);
+        }
         
       }
     }

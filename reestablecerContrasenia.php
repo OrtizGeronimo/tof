@@ -28,7 +28,7 @@
         <div class="container">
           <ol>
             <li><a href="index.php">Inicio</a></li>
-            <li>Reestablecer Contraseñá</li>
+            <li>Reestablecer Contrase&ntilde;a</li>
           </ol>
         </div>
       </nav>
@@ -54,7 +54,7 @@
 
                     <div class="form-group col-12 mb-3">
                       <label for="renewpassword" class="label">Contraseña</label>
-                      <input type="password" id="renewPassword" name="renewpassword" class="input" maxlength="30" pattern="[!-~]{8,30}" placeholder="Escriba su nueva contraseña." required>
+                      <input type="password" id="renewPassword" name="renewpassword" class="input" maxlength="30" pattern="[!-~]{8,30}" placeholder="Repita su nueva contraseña." required>
                     </div>
                     
                     <div class="form-group col-12">

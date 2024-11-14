@@ -438,67 +438,7 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
   <script src="assets/js/main.js"></script>
   <script src="assets/js/validation.js"></script>
   <script src="assets/js/validacionCambioPlan.js"></script>
-  <script>
-    const form = document.querySelector("#form-checkout");
-    form.addEventListener("submit",()=>{
-      if(!passwordValid()){
-        document.querySelector("#newPassword").style.backgroundColor = "pink";
-        document.querySelector("#renewPassword").style.backgroundColor = "pink";
-        alertSwal('error','Las contraseñas ingresadas no son iguales');
-      }
-    })
-
-   document.querySelector("#btn_crearCuenta").addEventListener('click',() => {
-
-      let isCamposLlenos = true;
-
-      for (let i = 0; i < form.elements.length; i++) {
-        let element = form.elements[i];
-        if (element.value === '' && element.hasAttribute('required')) {
-          isCamposLlenos = false;
-          break;
-        }
-      }
-      if(!isCamposLlenos){
-        alertSwal('error',"Complete los campos del formulario");
-      }else if(!passwordValid()){
-        document.querySelector("#newPassword").style.backgroundColor = "pink";
-        document.querySelector("#renewPassword").style.backgroundColor = "pink";
-        alertSwal('error','Las contraseñas ingresadas no son iguales');
-      }else{
-        let dataForm = new FormData(form);
-  
-        $.ajax({
-          type: "POST",
-          url: "./controller/registerUser.php",
-          data: dataForm,
-          processData: false,
-          contentType: false,
-          dataType: "json",
-          success: function(result) {
-            if(result.status === 'success'){
-              Swal.fire({
-                  icon: 'success',
-                  title: 'Bienvenido!',
-                  text: 'Te suscribiste correctamente.',
-                  timer: 2000,
-                  showConfirmButton: false
-              }).then(() => {
-                  location.replace('./admin/newService.php');
-              });
-            }else{
-              alertSwal('error',result);
-            }
-          },
-          error: function(xhr, status, error) {
-            alertSwal('error',`${status} : ${error}`);
-            // Realiza acciones adicionales en caso de error
-          }
-        });
-      }
-    }); 
-
-  </script>
+  <script src="assets/js/registerUser.js" ></script>
   <script> 
     const mp = new MercadoPago("<?= $public_key ?>");
   </script>

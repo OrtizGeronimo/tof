@@ -42,7 +42,12 @@
 
             if($newUser["plan"] === "gratis" && $newUser["plan"] !== $newUser["planActual"]){
                 $idUsuario = $newUser["idUsuario"];
-                $idServicio = mysqli_fetch_array(Servicio::getServicioByUsuarioId($idUsuario))["idServicio"];
+                $Servicio = Servicio::getServicioByUsuarioId($idUsuario);                
+                if(mysqli_num_rows($Servicio) > 0){
+                    $idServicio = mysqli_fetch_array($Servicio)["idServicio"];
+                }else{
+                    $idServicio = null;
+                }
                 $suscripcion = SuscripcionServicio::getSuscripcion($idUsuario);    
                 $idSuscripcion = mysqli_fetch_array($suscripcion)["id_suscripcion"];
                 $preapproval_plan = new PreApprovalClient();    
@@ -55,12 +60,16 @@
                 ]);
                 //si pasa de plan pago a gratuito solo se cancela la suscripcion y se limitan beneficios
                 
-                //le damos fecha de baja a todas las categorias al plan gratuito (dejamos solo 1)
-                Categoria::updateCategoriasToFree($idServicio);
+                
+                if($idServicio !== null){
+                    //le damos fecha de baja a todas las categorias al plan gratuito (dejamos solo 1)
+                    Categoria::updateCategoriasToFree($idServicio);
+                    //le modificamos la foto del servicio por la generica de su categoria y la de banner
+                    Servicio::downgradeToFree($idUsuario, $idServicio);
+                }
                 //le damos fecha de baja a todas las fotos de la galeria al plan gratuito (dejamos solo 1)
                 Galeria::downgradeToFreePlan($idUsuario);
-                //le modificamos la foto del servicio por la generica de su categoria y la de banner
-                Servicio::downgradeToFree($idUsuario, $idServicio);
+                
                 //damos de baja la suscripcion (baja logica para no perder el dato)
                 SuscripcionServicio::logicDeleteSuscripcion($idUsuario);
             }
