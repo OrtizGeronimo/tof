@@ -286,7 +286,7 @@
                       <label for="categoria" class="col-md-4 col-lg-3 col-form-label">Categoría <span class="camposObligatorios">*</span></label>
                       <div class="col-md-8 col-lg-9">
                         <p class="col-12 mt-3"><span class="camposObligatorios">Para seleccionar varias categorias mantenga la tecla CTRL o COMMAND apretada</span></p>
-                        <select name="categoria[]" id="categoria" class="form-select" aria-label="Default select example" required multiple>
+                        <select name="categoria[]" id="categoria" class="form-select form-select-cat" aria-label="Default select example" required multiple>
                           <option value = "">Seleccione una o mas categorias</option>
                           <?php  
 
