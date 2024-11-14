@@ -90,9 +90,13 @@
                             <td><?=$row["user_nombre"]?></td>
                             <td><?=$row["fec_alta"]?></td>
                             <td>
-                              <a id="" href="./updateService.php?idServicio=<?=$row["idServicio"]?>" class="btn btn-warning" type="button">Modificar</a>
-                              <input name="" id="" class="btn btn-danger" type="button" value="Eliminar" onclick="deleteSwal('Estas seguro que desea eliminar el servicio <?=$row['servicio_nombre']?> ?','./../controller/deleteService.php?idServicio=<?=$row['idServicio']?>')">
-                            </td>
+                              <?php if (strtoupper($_SESSION["s_rol"]) == "ADMIN") {?>
+                                      <a id="" href="./updateService.php?idServicio=<?=$row["idServicio"]?>" class="btn btn-warning" type="button">Modificar</a>
+                                      <input name="" id="" class="btn btn-danger" type="button" value="Eliminar" onclick="deleteSwal('Estas seguro que desea eliminar el servicio <?=$row['servicio_nombre']?> ?','./../controller/deleteService.php?idServicio=<?=$row['idServicio']?>')">
+                            <?php }else{?>
+                                      <a id="" href="./updateService.php" class="btn btn-warning" type="button">Modificar</a>
+                            <?php } ?>
+                          </td>
                           </tr>
                     <?php } ?>
                 </tbody>

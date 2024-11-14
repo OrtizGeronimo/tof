@@ -79,7 +79,7 @@
                 <li>
                   <a class="dropdown-item d-flex align-items-center" href="<?=file_exists('./admin/index.php')?'./admin/index.php':'./index.php'?>">
                     <i class="bi bi-bag"></i>
-                    <span>Mis servicios</span>
+                    <span>Mi servicio</span>
                   </a>
                 </li>
 
