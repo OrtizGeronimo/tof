@@ -438,7 +438,9 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
   <script src="assets/js/main.js"></script>
   <script src="assets/js/validation.js"></script>
   <script src="assets/js/validacionCambioPlan.js"></script>
+
   <script src="assets/js/registerUser.js" ></script>
+
   <script> 
     const mp = new MercadoPago("<?= $public_key ?>");
   </script>

@@ -72,11 +72,19 @@
           <!--Perfil-->
             <div class="col-lg-12">
               <?php 
+                if ($servicio["FK_idRol"] == 6){
+
+               ?>
+               <div class="post-author align-items-center text-center" style="background-image: url('./assets/img/hero-bg-abstract.jpg')">
+                <img src="<?= './assets/img/category_'.mysqli_fetch_array($categorias)["idCategoria"].'.webp'?>" class="rounded-circle flex-shrink-0" alt="IMG_PROFILE ">
+              </div>
+               <?php } else {
                 $img_banner = "./archivos/user_".$servicio['user_login']."/".$servicio['servicio_banner'].""; 
               ?>
               <div class="post-author align-items-center text-center" style="background-image: url('<?php echo (file_exists($img_banner))? $img_banner :'./assets/img/hero-bg-abstract.jpg'?>')">
                 <img src="<?=file_exists('./archivos/user_'.($servicio["user_login"]).'/'.($servicio["servicio_imagen"]).'')?'./archivos/user_'.($servicio["user_login"]).'/'.($servicio["servicio_imagen"]).'' : './assets/img/category_'.mysqli_fetch_array($categorias)["idCategoria"].'.webp'?>" class="rounded-circle flex-shrink-0" alt="IMG_PROFILE ">
-              </div> 
+              </div>
+              <?php } ?>
             </div>
 
             <br>
@@ -123,9 +131,13 @@
               <div class="sidebar-item categories">
                 <h3 class="sidebar-title">Categoria</h3>
                 <ul class="mt-3">
-                  <?php while($categoria = mysqli_fetch_array($categorias)){?>
-                    <li><?=($categoria["tipo"])?></li>
-                  <?php } ?>
+                  <?php 
+                    mysqli_data_seek($categorias, 0); // Reset pointer to the beginning of the result set
+
+                    while ($categoria = mysqli_fetch_array($categorias)) {
+                        echo "<li>" . $categoria["tipo"] . "</li>";
+                    }   
+                  ?>
                 </ul>
               </div><!-- End sidebar categorias-->
     

@@ -15,17 +15,24 @@
 <head>
   <?php 
     require("./../assets/php/head.php");
-    if(!isset($_SESSION["s_id_usuario"]) && !isset($_GET["idServicio"])){
+    if(!isset($_SESSION["s_id_usuario"])){
       header("Location:../index.php");
     }
-    $editService = Servicio::editServiceRolValidation($_GET["idServicio"], $_SESSION["s_rol"]);
-    $servicio = Servicio::getServicio($_GET["idServicio"]);
+    if (strtoupper($_SESSION["s_rol"]) == "ADMIN"){
+      $idServicio = $_GET["idServicio"];
+      $servicio = Servicio::getServicio($idServicio);
+    } else {
+      $servicio = Servicio::getServicioByUserId($_SESSION["s_id_usuario"]);
+    }
+    
     $servicio = mysqli_fetch_array($servicio);
-    $tipoServicio = Servicio::getTipoServicio($_GET["idServicio"]);
+    $idServicio = $servicio["idServicio"];
+    $editService = Servicio::editServiceRolValidation($idServicio, $_SESSION["s_rol"]);
+    $tipoServicio = Servicio::getTipoServicio($idServicio);
     $tipoServicio = mysqli_fetch_array($tipoServicio);
-    $categoriaServicioAux = Servicio::getCategoriasServicio($_GET["idServicio"]);
+    $categoriaServicioAux = Servicio::getCategoriasServicio($idServicio);
     $categoriaServicio = array();
-    $galeriaImgs = Galeria::getGaleria($_GET["idServicio"]);
+    $galeriaImgs = Galeria::getGaleria($idServicio);
     while($row = mysqli_fetch_array($categoriaServicioAux))
       array_push($categoriaServicio,["id" => $row["idCategoria"],"tipo"=>$row["tipo"]]); 
     $categoriaServicioIds = array_column($categoriaServicio, 'id');   
@@ -38,7 +45,7 @@
     // Unir los tipos con una coma y un espacio, y agregar una coma al final
     $resultado = implode(", ", $tipos) . ", ";
     
-    $horariosServicioAux = Servicio::getHorariosServicio($_GET["idServicio"]);
+    $horariosServicioAux = Servicio::getHorariosServicio($idServicio);
     $horariosServicio = array();
     while($row = mysqli_fetch_array($horariosServicioAux))
       array_push($horariosServicio,$row);
