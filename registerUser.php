@@ -487,7 +487,7 @@ $public_key = $_ENV['PUBLIC_KEY'] ?? null;
                   location.replace('./admin/newService.php');
               });
             }else{
-              alertSwal('error',result);
+              alertSwal('error',result.message);
             }
           },
           error: function(xhr, status, error) {
