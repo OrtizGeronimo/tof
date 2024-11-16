@@ -139,6 +139,16 @@ document.getElementById("plan").addEventListener("change", async function() {
         } else {
 
             if (formType === "R"){
+              Swal.fire({
+                title: 'Cargando...',
+                text: 'Por favor, espera un momento.',
+                icon: 'info',
+                allowOutsideClick: false,  // Prevent closing the alert by clicking outside
+                showConfirmButton: false,  // Hide the confirm button
+                didOpen: () => {
+                    Swal.showLoading();  // Show a loading spinner
+                }
+              });  
               // Realizamos la solicitud para enviar el código
               fetch('./controller/validarMail.php', {
               method: 'POST',
@@ -151,7 +161,7 @@ document.getElementById("plan").addEventListener("change", async function() {
               .then(async data => {
                 console.log(data.success);
                 if (data.success) {
-
+                  Swal.close();
                   // Guardamos el código recibido en una variable local
                   let codigoEnviado = data.codigo;
 
@@ -366,6 +376,7 @@ document.getElementById("plan").addEventListener("change", async function() {
                     }
                   });          
                 }else {
+                  Swal.close();
                   Swal.fire('Error', 'Hubo un problema al enviar el código', 'error');
                 }                    
               }).catch(error => {
