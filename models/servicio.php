@@ -2,7 +2,7 @@
 // Incluir el archivo de logging
 include 'logConfig.php';
 (file_exists('./config/conexion.php'))?include_once('./config/conexion.php'):include_once('./../config/conexion.php');
-(file_exists("./../config/conexion.php"))? require_once('./../config/conexion.php') : require_once('./config/conexion.php');
+(file_exists("./../config/conexion.php"))? require_once('./../config/conexion.php') : ((file_exists('./config/conexion.php')) ? require_once('./config/conexion.php') : require_once('../../config/conexion.php'));
 
 class Servicio{
     public static function getServiciosBasicos(){
@@ -37,7 +37,9 @@ class Servicio{
                                                   provincia_name,
                                                   departamento,
                                                   user_nombre,
+                                                  user_login,
                                                   s.fec_alta,
+                                                  s.servicio_imagen,
                                                   r.rol
                                            FROM servicio s,provincia p,departamento d, usuario u,rol r
                                             WHERE p.idProvincia = s.FK_idProvincia
@@ -348,5 +350,80 @@ class Servicio{
         return BaseDeDatos::consulta("UPDATE servicio
                                     SET servicio_imagen = '$nombreImgPerfil', servicio_banner = ''
                                     WHERE FK_idUsuario = $idUsuario;");
+    }
+
+
+    public static function filterServices($nombreServicio, $categorias, $pag){
+        $cant = 20; 
+        $offset  = ($pag-1) * $cant;
+        
+        $query = "SELECT s.*, u.*, r.*, p.*
+                    FROM servicio s
+                    INNER JOIN usuario u ON s.FK_idUsuario = u.idUsuario
+                    INNER JOIN rol r ON u.FK_idRol = r.idRol
+                    LEFT JOIN categoria_servicio cs ON s.idServicio = cs.FK_idServicio
+                    WHERE s.fec_baja IS NULL
+                    AND cs.fec_baja IS NULL
+                    AND s.servicio_nombre LIKE '%$nombreServicio%'
+                    AND cs.FK_idCategoria IN (".implode(",",$categorias).")
+                    GROUP BY s.idServicio, u.idUsuario
+                    ORDER BY CASE 
+                        WHEN rol = 'pro'    THEN 1
+                        WHEN rol = 'basico' THEN 2
+                        WHEN rol = 'gratis' THEN 3
+                        ELSE 4
+                    END ASC
+                    LIMIT $cant
+                    OFFSET $offset";
+        
+        $sv = BaseDeDatos::consulta($query);
+
+        $servicios = [];
+        while ($row = mysqli_fetch_array($sv, MYSQLI_ASSOC)) {
+            $servicios[] = $row; 
+        }
+        
+        $cantPaginas = ceil(mysqli_num_rows($sv) / $cant);
+
+        return ["servicios" => $servicios, "cantPaginas" => $cantPaginas, "pag" => $pag];
+
+    }
+
+    public static function loadServices(){
+        
+        $query = "SELECT s.*, u.*, r.*
+                    FROM servicio s
+                    INNER JOIN usuario u ON s.FK_idUsuario = u.idUsuario
+                    INNER JOIN rol r ON u.FK_idRol = r.idRol
+                    LEFT JOIN categoria_servicio cs ON s.idServicio = cs.FK_idServicio
+                    WHERE s.fec_baja IS NULL
+                    AND cs.fec_baja IS NULL
+                    GROUP BY s.idServicio, u.idUsuario
+                    ORDER BY CASE 
+                        WHEN rol = 'pro'    THEN 1
+                        WHEN rol = 'basico' THEN 2
+                        WHEN rol = 'gratis' THEN 3
+                        ELSE 4
+                    END ASC
+                    LIMIT 20
+                    OFFSET 0";
+        
+        $sv = BaseDeDatos::consulta($query);
+
+        $servicios = [];
+        while ($row = mysqli_fetch_array($sv, MYSQLI_ASSOC)) {
+            $servicios[] = $row; 
+        }
+        
+        $queryCantPaginas = "SELECT COUNT(*) AS CANTIDAD
+                                FROM servicio
+                                WHERE fec_baja IS NULL;";
+
+        $resultCantidad = BaseDeDatos::consulta($queryCantPaginas);
+        
+        $cantPaginas = ceil(mysqli_fetch_array($resultCantidad)["CANTIDAD"] / 20);
+
+        return ["servicios" => $servicios, "cantPaginas" => $cantPaginas, "pag" => '1'];
+
     }
 }
