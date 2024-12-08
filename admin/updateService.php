@@ -821,7 +821,7 @@
 
                     <div class="col-12">
                       <?php if(!$editService["canEdit"]){ ?>
-                        <h4 id="rolValidation">Ha alcanzado el límite de ediciones del servicio para su plan, espere <?php echo $editService["daysRemaining"] ?> dias o contrate uno superior</h4>
+                        <h4 id="rolValidation">Ha alcanzado el límite de ediciones del servicio para su plan, espere <?php echo $editService["daysRemaining"] ?> dias o contrate uno superior haciendo click <a href = "./../editUser.php">aquí</a></h4>
                       <?php } ?>
                       <button class="btn btn-secondary w-100" type="submit" <?php echo $editService["canEdit"] ? '' : 'disabled'; ?>>Modificar Servicio</button>
                     </div>

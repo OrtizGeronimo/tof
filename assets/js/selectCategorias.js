@@ -9,12 +9,25 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(event.target.value);
 
         if (categoriasSeleccionadasCount > limiteCategorias) {
-            alert("No puede seleccionar más categorías porque alcanzó el límite de su plan.");
-
-            let optionModificado = document.getElementById(`categoria_option_${event.target.value}`);
+            Swal.fire({
+                title: 'Desea cambiar su plan?',
+                text: 'No puede seleccionar más categorías porque alcanzó el límite de su plan.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#F2C94C',
+                cancelButtonColor: '#F2C94C',
+                cancelButtonText: 'Mantener plan',                
+                confirmButtonText: 'Cambiar Plan',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "./../editUser.php";
+                } else if (result.isDismissed) {
+                    let optionModificado = document.getElementById(`categoria_option_${event.target.value}`);
             
-            optionModificado.selected = false;
-            categoriasSeleccionadasCount--; // Reducir el contador ya que la última selección no cuenta
+                    optionModificado.selected = false;
+                    categoriasSeleccionadasCount--; // Reducir el contador ya que la última selección no cuenta
+                }
+            });
         }
 
         let categoriasSeleccionadasTexto = "Categorías Seleccionadas: ";

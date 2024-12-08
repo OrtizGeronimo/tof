@@ -157,8 +157,24 @@ document.addEventListener("DOMContentLoaded", function() {
       }
       const totalImages = existingImagesCount + archivos.length;
       if (totalImages > maxImagesAllowed) {
-          
-        alert(`Solo puedes subir ${maxImagesAllowed} `+ (maxImagesAllowed === 1 ? 'imagen' : 'imagenes')); 
+
+        Swal.fire({
+          title: 'Desea cambiar su plan?',
+          text: `Solo puedes subir ${maxImagesAllowed} `+ (maxImagesAllowed === 1 ? 'imagen' : 'imagenes con su plan actual.'),
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#F2C94C',
+          cancelButtonColor: '#F2C94C',
+          cancelButtonText: 'Mantener plan',                
+          confirmButtonText: 'Cambiar Plan',
+        }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = "./../editUser.php";
+            } else if (result.isDismissed) {
+              btnSubirImgGaleria.value = ""; // Clear the file input
+              return;
+            }
+        });
         
         btnSubirImgGaleria.value = ""; // Clear the file input
           return;
