@@ -96,7 +96,7 @@
                           <!-- Pagination links will be displayed here -->
                       </ul>
                   </nav>        
-              </div>
+                </div>
               </div>
             </div>
           </div>
@@ -272,15 +272,7 @@ function displayServices(filteredServices) {
     resultsContainer.innerHTML += serviceCard;
   });
 
-  
-  const paginacionServicio = document.getElementById('pagUl');
-  paginacionServicio.innerHTML = '';
-  for (let i = 1; i <= totalPages; i++) {
-    const li = document.createElement('li');
-    li.className = `page-item ${currentPage === i ? 'active' : ''}`;
-    li.innerHTML = `<span class="page-link" onclick="filterServices(${i})">${i}</span>`;
-    paginacionServicio.appendChild(li);
-  }
+  updatePagination(currentPage, totalPages);
   
 }
 
@@ -302,8 +294,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   await fetch('./controller/api/getServices.php').then(response => response.json())
     .then(data => {
       services = data.servicios;
-      currentPage = data.pag;
-      totalPages = data.cantPaginas;
+      currentPage = Number(data.pag);
+      totalPages = Number(data.cantPaginas);
     });
 
   await fetch('./controller/api/getCategoriesServices.php').then(response => response.json())
@@ -324,6 +316,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     e.stopPropagation();
   });
 });
+
+function updatePagination(currentPage, totalPages) {
+  const paginacionServicio = document.getElementById('pagUl');
+  paginacionServicio.innerHTML = '';
+  
+  // Always show first page
+  addPageItem(1, currentPage, paginacionServicio);
+
+  // Calculate range of pages to show
+  let startPage = Math.max(2, currentPage - 2);
+  let endPage = Math.min(totalPages - 1, currentPage + 2);
+
+  // Add ellipsis after first page if needed
+  if (startPage > 2) {
+    addEllipsis(paginacionServicio);
+  }
+
+  // Add pages in the middle
+  for (let i = startPage; i <= endPage; i++) {
+    addPageItem(i, currentPage, paginacionServicio);
+  }
+
+  // Add ellipsis before last page if needed
+  if (endPage < totalPages - 1) {
+    addEllipsis(paginacionServicio);
+  }
+
+  // Always show last page if there is more than one page
+  if (totalPages > 1) {
+    addPageItem(totalPages, currentPage, paginacionServicio);
+  }
+}
+
+function addPageItem(pageNumber, currentPage, container) {
+  const li = document.createElement('li');
+  li.className = `page-item ${currentPage === pageNumber ? 'active' : ''}`;
+  li.innerHTML = `<span class="page-link" onclick="filterServices(${pageNumber})">${pageNumber}</span>`;
+  container.appendChild(li);
+}
+
+function addEllipsis(container) {
+  const li = document.createElement('li');
+  li.className = 'page-item disabled';
+  li.innerHTML = '<span class="page-link">...</span>';
+  container.appendChild(li);
+}
 </script>
 
 </body>
