@@ -354,10 +354,10 @@ class Servicio{
 
 
     public static function filterServices($nombreServicio, $categorias, $pag){
-        $cant = 20; 
+        $cant = 21; 
         $offset  = ($pag-1) * $cant;
         
-        $query = "SELECT s.*, u.*, r.*, p.*
+        $query = "SELECT s.*, u.*, r.*
                     FROM servicio s
                     INNER JOIN usuario u ON s.FK_idUsuario = u.idUsuario
                     INNER JOIN rol r ON u.FK_idRol = r.idRol
@@ -365,7 +365,7 @@ class Servicio{
                     WHERE s.fec_baja IS NULL
                     AND cs.fec_baja IS NULL
                     AND s.servicio_nombre LIKE '%$nombreServicio%'
-                    AND cs.FK_idCategoria IN (".implode(",",$categorias).")
+                    " .($categorias != null ? "AND cs.FK_idCategoria IN (".implode(",",$categorias).")" : "")."
                     GROUP BY s.idServicio, u.idUsuario
                     ORDER BY CASE 
                         WHEN rol = 'pro'    THEN 1
@@ -383,9 +383,19 @@ class Servicio{
             $servicios[] = $row; 
         }
         
-        $cantPaginas = ceil(mysqli_num_rows($sv) / $cant);
+        $queryCantPaginas = "SELECT COUNT(*) AS CANTIDAD
+        FROM (SELECT s.idServicio FROM servicio s LEFT JOIN categoria_servicio cs ON s.idServicio = cs.FK_idServicio
+        WHERE s.fec_baja IS NULL 
+        AND cs.fec_baja IS NULL
+        AND s.servicio_nombre LIKE '%$nombreServicio%'
+        " .($categorias != null ? "AND cs.FK_idCategoria IN (".implode(",",$categorias).")" : "")."
+        GROUP BY s.idServicio) as total_services";
 
-        return ["servicios" => $servicios, "cantPaginas" => $cantPaginas, "pag" => $pag];
+        $resultCantidad = BaseDeDatos::consulta($queryCantPaginas);
+
+        $cantPaginas = ceil(mysqli_fetch_array($resultCantidad)["CANTIDAD"] / 21);
+
+        return ["servicios" => $servicios, "cantPaginas" => $cantPaginas, "pag" => $pag];  
 
     }
 
@@ -405,7 +415,7 @@ class Servicio{
                         WHEN rol = 'gratis' THEN 3
                         ELSE 4
                     END ASC
-                    LIMIT 20
+                    LIMIT 21
                     OFFSET 0";
         
         $sv = BaseDeDatos::consulta($query);
@@ -421,7 +431,7 @@ class Servicio{
 
         $resultCantidad = BaseDeDatos::consulta($queryCantPaginas);
         
-        $cantPaginas = ceil(mysqli_fetch_array($resultCantidad)["CANTIDAD"] / 20);
+        $cantPaginas = ceil(mysqli_fetch_array($resultCantidad)["CANTIDAD"] / 21);
 
         return ["servicios" => $servicios, "cantPaginas" => $cantPaginas, "pag" => '1'];
 

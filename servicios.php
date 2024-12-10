@@ -57,15 +57,19 @@
             <div class="row justify-content-center">
               <div class="col-lg-12">
                 <!-- Search Controls -->
-                <div class="d-flex gap-4 mb-4 servicios">
+                <div class="d-md-flex gap-4 mb-4 servicios sv-pag">
                   
                   <!-- Service Search Input -->
-                  <div class="flex-grow-1" style="width: 300px;">
+                  <div class="flex-grow-1 search-input" style="width: 300px;">
                     <input type="text" class="form-control" id="serviceSearch" placeholder="Buscar servicio...">
                   </div>
+
+                    
+
                   <!-- Category Dropdown with Search -->
                   <div class="dropdown flex-grow-1">
-                    <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="text-muted small mb-1">Filtro</span>  
+                  <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                       Seleccionar Categoría
                     </button>
                     <div class="dropdown-menu w-100 p-3" aria-labelledby="categoryDropdown">
@@ -75,7 +79,7 @@
                       </ul>
                     </div>
                   </div>
-                  <button type="button" class="btn btn-warning search-btn">Buscar</button>
+                  <button type="button" class="btn btn-warning search-btn" onclick="filterServices(null)">Buscar</button>
                 </div>
 
                 <!-- Results Container -->
@@ -131,6 +135,7 @@ let selectedCategory = 'all';
 let selectedCategories = new Array();
 let currentPage = 1;
 let totalPages = 1;
+let categoryChanged = 0;
 
 
 function populateCategories(cats) {
@@ -145,6 +150,9 @@ function populateCategories(cats) {
   // Add click event listeners to category items
   categoryList.querySelectorAll('.dropdown-item').forEach(item => {
     item.addEventListener('click', (e) => {
+      if (categoryChanged === 1) {
+       categoryChanged = 2; 
+      }
       e.preventDefault();
 
       const targetItem = e.currentTarget;
@@ -160,6 +168,7 @@ function populateCategories(cats) {
         document.getElementById('categoryList').querySelectorAll('.dropdown-item').forEach(item => {
           item.innerHTML = item.textContent;
         });
+        filterServices();
       } else if (!selectedCategories.includes(selectedCategory)) {
         selectedCategories.push(selectedCategory);
         const icon = '<i class="bi bi-check-circle-fill"></i>';
@@ -188,8 +197,10 @@ function filterCategories() {
   });
 }
 
-async function filterServices(page = 1) {
-  
+async function filterServices(page) {
+  if (categoryChanged === 2) {
+    page = 1;
+  }
   const searchTerm = document.getElementById('serviceSearch').value.toLowerCase();
   /*const filteredServices = global_services.filter(service => {
     const matchesSearch = service.servicio_nombre.toLowerCase().includes(searchTerm);
@@ -209,8 +220,22 @@ async function filterServices(page = 1) {
     })
   }).then(response => response.json())
     .then(data => {
-      filteredServices = data;
+      filteredServices = data.servicios;
+      currentPage = data.pag;
+      totalPages = data.cantPaginas;
     });
+    categoryChanged = 1;
+
+    await fetch('./controller/api/getCategoriesServices.php').then(response => response.json())
+    .then(categories => {
+      
+      filteredServices.forEach(service => {
+        service.categories = categories
+          .filter(category => category.FK_idServicio === service.idServicio)
+          .map(category => ({ id: category.FK_idCategoria }));
+        });
+    });
+
 
 
   displayServices(filteredServices);
@@ -261,7 +286,7 @@ function displayServices(filteredServices) {
 
 // Event listeners
 document.getElementById('categorySearch').addEventListener('input', filterCategories);
-document.getElementById('serviceSearch').addEventListener('input', filterServices);
+//document.getElementById('serviceSearch').addEventListener('input', filterServices);
 
 // Initialize the search functionality when the page loads
 document.addEventListener('DOMContentLoaded', async () => {

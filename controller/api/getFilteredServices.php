@@ -9,7 +9,7 @@ $requestData = json_decode($inputData, true);
 
 
 $searchTerm = $requestData['searchTerm'] ?? '';
-$selectedCategories = $requestData['selectedCategories'] ?? [];
+$selectedCategories = $requestData['selectedCategories'] ?? null;
 $pag = $requestData['page'] ?? 1;
 
 
