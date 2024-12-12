@@ -154,6 +154,7 @@ function populateCategories(cats) {
        categoryChanged = 2; 
       }
       e.preventDefault();
+      e.stopPropagation();
 
       const targetItem = e.currentTarget;
       selectedCategory = targetItem.dataset.category;
@@ -312,7 +313,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
 
   // Prevent dropdown from closing when clicking inside
-  document.querySelector('.dropdown-menu').addEventListener('click', (e) => {
+  document.getElementById('categoryDropdown').addEventListener('click', (e) => {
     e.stopPropagation();
   });
 });

@@ -38,6 +38,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         categoriasSeleccionadasLabel.innerHTML = categoriasSeleccionadasTexto;
+
+        // gestion de iconos
+    [...selectCategorias.options].forEach(option => {
+        if (option.selected) {
+            option.classList.add('checked');
+        } else {
+            option.classList.remove('checked');
+        }
+    });
         //validarLimiteCategorias(categoriasSeleccionadasCount);
     }
 /*
