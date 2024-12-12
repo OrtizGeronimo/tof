@@ -1,5 +1,6 @@
 <?php
-(file_exists("../config/conexion.php"))? require_once('../config/conexion.php') : require_once('./config/conexion.php');
+//(file_exists("../config/conexion.php"))? require_once('../config/conexion.php') : require_once('./config/conexion.php');
+(file_exists("./../config/conexion.php"))? require_once('./../config/conexion.php') : ((file_exists('./config/conexion.php')) ? require_once('./config/conexion.php') : require_once('../../config/conexion.php'));
 
 class Categoria{
 
@@ -11,6 +12,16 @@ class Categoria{
                                                 GROUP BY c.tipo;");
         return $categoria;
 
+    }
+
+    public static function getAllCategorias(){
+        $categoria = BaseDeDatos::consulta(" SELECT * FROM categoria ORDER BY tipo;");
+        return $categoria;
+    }
+
+    public static function getCategoriaServicio(){
+        $categoria = BaseDeDatos::consulta(" SELECT * FROM categoria_servicio WHERE fec_baja IS NULL;");
+        return $categoria;
     }
 
     public static function buscarCategoria($categoria){

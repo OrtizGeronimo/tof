@@ -16,6 +16,7 @@
 
 <head>
   <?php require("./assets/php/head.php");?>
+  <link href="./assets/css/services.css" rel="stylesheet">
 </head>
 
 <body>
@@ -51,62 +52,53 @@
       <div class="container" data-aos="fade-up">
 
         <div class="row g-5">
-          
-          <div class="col-lg-3">
+          <!-- Search Section -->
+          <div class="container mt-4">
+            <div class="row justify-content-center">
+              <div class="col-lg-12">
+                <!-- Search Controls -->
+                <div class="d-md-flex gap-4 mb-4 servicios sv-pag">
+                  
+                  <!-- Service Search Input -->
+                  <div class="flex-grow-1 search-input" style="width: 300px;">
+                    <input type="text" class="form-control" id="serviceSearch" placeholder="Buscar servicio...">
+                  </div>
 
-            <div class="sidebar">
+                    
 
-              <!--<div class="sidebar-item search-form">
-                <h3 class="sidebar-title">Buscador</h3>
-                <form action="" class="mt-3">
-                  <input type="text">
-                  <button type="submit"><i class="bi bi-search"></i></button>
-                </form>
-              </div> End sidebar search formn-->
+                  <!-- Category Dropdown with Search -->
+                  <div class="dropdown flex-grow-1">
+                  <span class="text-muted small mb-1">Filtro</span>  
+                  <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                      Seleccionar Categoría
+                    </button>
+                    <div class="dropdown-menu w-100 p-3" aria-labelledby="categoryDropdown">
+                      <input type="text" class="form-control mb-2" id="categorySearch" placeholder="Buscar categoría...">
+                      <ul class="list-unstyled mb-0" id="categoryList">
+                        <!-- Categories will be populated here -->
+                      </ul>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-warning search-btn" onclick="filterServices(null)">Buscar</button>
+                </div>
 
-              <div class="sidebar-item categories">
-                <h3 class="sidebar-title">Categorias</h3>
-                <ul id="categorias-servicios" class="mt-3">
-                  <?php while($row=mysqli_fetch_array($categorias)){?>
-                          <a href="#filtros-servicios"><li class="categoria-item"><?=$row['tipo']?></li></a>
-                  <?php } ?>
-                </ul>
-              </div><!-- End sidebar categories-->
-
-              <div class="sidebar-item categories">
-                <h3 class="sidebar-title">Provincias</h3>
-                <ul id="provincias-servicios" class="mt-3">
-                  <?php while($row=mysqli_fetch_array($provincia)){?>
-                        <li class="provincia-item">
-                          <?=$row['provincia_name'].' ('.$row['cantidad_servicios'].')'?> 
-                        </li>
-                  <?php } ?>                        
-                </ul>
-              </div><!-- End sidebar categories-->
-
-
-              
-
-              <div class="sidebar-item sidebar-item categories">
-                <h3 class="sidebar-title">Filtros</h3>
-                <ul id="filtros-servicios" class="mt-3">
-                    <li class="filtro-item">No hay filtros</li>
-                </ul>
-              </div><!-- End sidebar categories-->
-
-            </div><!-- End Blog Sidebar -->
-
-          </div>
-
-          <div class="col-lg-9">
-
-            <!-- Servicios -->
-            <section id="servicios" class="servicios">
-              <?php include_once('./controller/serviciosPaginados.php') ?> 
-            </section><!--End Servicios -->
-
-            
-            
+                <!-- Results Container -->
+                <div class="col-lg-12">
+                    <section id="servicios" class="servicios">
+                      <div id="searchResults" class="row row-cols-2">
+                        <!-- Service cards will be displayed here -->
+                      </div>
+                    </section>
+                </div>
+                <div id="paginacionServicio" class="pagination pt-5 ">
+                  <nav class="mx-auto" aria-label="...">
+                      <ul id="pagUl" class="pagination pagination-md">
+                          <!-- Pagination links will be displayed here -->
+                      </ul>
+                  </nav>        
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -135,6 +127,242 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/servicios.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+  <script>
+
+let categories = [];
+let global_services = [];
+let selectedCategory = 'all';
+let selectedCategories = new Array();
+let currentPage = 1;
+let totalPages = 1;
+let categoryChanged = 0;
+
+
+function populateCategories(cats) {
+  const categoryList = document.getElementById('categoryList');
+  categoryList.innerHTML = '<li><a class="dropdown-item" href="#" data-category="all">Todas las categorías</a></li>';
+  cats.forEach(category => {
+    const li = document.createElement('li');
+    li.innerHTML = `<a class="dropdown-item" href="#" data-category="${category.idCategoria}">${category.tipo}</a>`;
+    categoryList.appendChild(li);
+  });
+
+  // Add click event listeners to category items
+  categoryList.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      if (categoryChanged === 1) {
+       categoryChanged = 2; 
+      }
+      e.preventDefault();
+
+      const targetItem = e.currentTarget;
+      selectedCategory = targetItem.dataset.category;
+      
+      //document.getElementById('categoryDropdown').textContent = e.target.textContent;
+      
+      
+      if  (selectedCategory === 'all') {
+        //selectedCategories = ["all"];
+        //document.getElementById('categoryDropdown').textContent = 'Seleccionar Categoría';
+        selectedCategories = [];
+        document.getElementById('categoryList').querySelectorAll('.dropdown-item').forEach(item => {
+          item.innerHTML = item.textContent;
+        });
+        filterServices();
+      } else if (!selectedCategories.includes(selectedCategory)) {
+        selectedCategories.push(selectedCategory);
+        const icon = '<i class="bi bi-check-circle-fill"></i>';
+        const icon_end = '<i class="bi bi-x-lg"></i>';
+        targetItem.innerHTML = icon + targetItem.textContent + icon_end;
+      } else {
+        selectedCategories = selectedCategories.filter(category => category !== selectedCategory);
+        targetItem.innerHTML = targetItem.textContent;
+        if (selectedCategories.length === 0) {
+          selectedCategory = 'all';
+          //document.getElementById('categoryDropdown').textContent = 'Seleccionar Categoría';
+        }
+      }
+      console.log("selectedCategories", selectedCategories);
+      //filterServices();
+    });
+  });
+}
+
+function filterCategories() {
+  const searchTerm = document.getElementById('categorySearch').value.toLowerCase();
+  const categoryItems = document.querySelectorAll('#categoryList .dropdown-item');
+  categoryItems.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    item.style.display = text.includes(searchTerm) ? '' : 'none';
+  });
+}
+
+async function filterServices(page) {
+  if (categoryChanged === 2) {
+    page = 1;
+  }
+  const searchTerm = document.getElementById('serviceSearch').value.toLowerCase();
+  /*const filteredServices = global_services.filter(service => {
+    const matchesSearch = service.servicio_nombre.toLowerCase().includes(searchTerm);
+    const matchesCategory = selectedCategory === "all" || service.categories.some(category => selectedCategories.some(selectedCategory => selectedCategory === category.id));
+    return matchesSearch && matchesCategory;
+  //});*/
+  let filteredServices = null;
+  await fetch('./controller/api/getFilteredServices.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      searchTerm,
+      selectedCategories,
+      page
+    })
+  }).then(response => response.json())
+    .then(data => {
+      filteredServices = data.servicios;
+      currentPage = data.pag;
+      totalPages = data.cantPaginas;
+    });
+    categoryChanged = 1;
+
+    await fetch('./controller/api/getCategoriesServices.php').then(response => response.json())
+    .then(categories => {
+      
+      filteredServices.forEach(service => {
+        service.categories = categories
+          .filter(category => category.FK_idServicio === service.idServicio)
+          .map(category => ({ id: category.FK_idCategoria }));
+        });
+    });
+
+
+
+  displayServices(filteredServices);
+}
+
+function displayServices(filteredServices) {
+  const resultsContainer = document.getElementById('searchResults');
+  resultsContainer.innerHTML = '';
+
+  filteredServices.forEach(service => {
+  let src = "";
+  if(service.rol === "gratis"){
+    if(service.categories.length === 0){
+      src = "./assets/img/user_profile.webp";
+    } else {
+      src = "./assets/img/category_"+service.categories[0].id+".webp";
+    }
+  } else {
+    src = "./archivos/user_"+service.user_login+"/"+service.servicio_imagen;
+  }
+
+  const serviceCard = `<div class="servicio-item ">
+            <a href="./userProfile.php?idServicio=${service.idServicio}">
+                <div class="d-flex">
+                    <img src="${src}" class="servicio-img flex-shrink-0" alt="IMG_PROFILE ">
+                    <div>
+                        <h3>${service.servicio_nombre}</h3>
+                        <h4>${service.user_nombre}</h4>
+                    </div>
+                </div>
+            </a>
+        </div>`;
+
+    resultsContainer.innerHTML += serviceCard;
+  });
+
+  updatePagination(currentPage, totalPages);
+  
+}
+
+// Event listeners
+document.getElementById('categorySearch').addEventListener('input', filterCategories);
+//document.getElementById('serviceSearch').addEventListener('input', filterServices);
+
+// Initialize the search functionality when the page loads
+document.addEventListener('DOMContentLoaded', async () => {
+  // Fetch categories and services from your PHP backend
+  await fetch('./controller/api/getCategories.php')
+    .then(response => response.json())
+    .then(data => {
+      categories = data;
+      populateCategories(categories);
+    });
+
+  let services = null;
+  await fetch('./controller/api/getServices.php').then(response => response.json())
+    .then(data => {
+      services = data.servicios;
+      currentPage = Number(data.pag);
+      totalPages = Number(data.cantPaginas);
+    });
+
+  await fetch('./controller/api/getCategoriesServices.php').then(response => response.json())
+    .then(categories => {
+      
+      services.forEach(service => {
+        service.categories = categories
+          .filter(category => category.FK_idServicio === service.idServicio)
+          .map(category => ({ id: category.FK_idCategoria }));
+        });
+      global_services = services;
+      displayServices(services);
+    });
+  
+
+  // Prevent dropdown from closing when clicking inside
+  document.querySelector('.dropdown-menu').addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+});
+
+function updatePagination(currentPage, totalPages) {
+  const paginacionServicio = document.getElementById('pagUl');
+  paginacionServicio.innerHTML = '';
+  
+  // Always show first page
+  addPageItem(1, currentPage, paginacionServicio);
+
+  // Calculate range of pages to show
+  let startPage = Math.max(2, currentPage - 2);
+  let endPage = Math.min(totalPages - 1, currentPage + 2);
+
+  // Add ellipsis after first page if needed
+  if (startPage > 2) {
+    addEllipsis(paginacionServicio);
+  }
+
+  // Add pages in the middle
+  for (let i = startPage; i <= endPage; i++) {
+    addPageItem(i, currentPage, paginacionServicio);
+  }
+
+  // Add ellipsis before last page if needed
+  if (endPage < totalPages - 1) {
+    addEllipsis(paginacionServicio);
+  }
+
+  // Always show last page if there is more than one page
+  if (totalPages > 1) {
+    addPageItem(totalPages, currentPage, paginacionServicio);
+  }
+}
+
+function addPageItem(pageNumber, currentPage, container) {
+  const li = document.createElement('li');
+  li.className = `page-item ${currentPage === pageNumber ? 'active' : ''}`;
+  li.innerHTML = `<span class="page-link" onclick="filterServices(${pageNumber})">${pageNumber}</span>`;
+  container.appendChild(li);
+}
+
+function addEllipsis(container) {
+  const li = document.createElement('li');
+  li.className = 'page-item disabled';
+  li.innerHTML = '<span class="page-link">...</span>';
+  container.appendChild(li);
+}
+</script>
 
 </body>
 
