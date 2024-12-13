@@ -1329,6 +1329,28 @@ h6 {
   align-items: center;
 }
 
+
+.dropdown-item {
+  position: relative;
+  padding-left: 20px; 
+}
+
+.dropdown-item::after {
+  content: '✓';
+  color: green;
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  visibility: hidden;
+}
+
+.dropdown-item:checked::after {
+  visibility: visible;
+}
+
+
+
 /* mobile*/
 
 .vertical-plan-boxes {

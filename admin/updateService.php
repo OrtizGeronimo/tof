@@ -326,17 +326,10 @@
                       <label for="categoria" class="col-md-4 col-lg-3 col-form-label">Categoría <span class="camposObligatorios">*</span></label>
                       <div class="col-md-8 col-lg-9">
                         <p class="col-12 mt-3"><span class="camposObligatorios">Para seleccionar varias categorias mantenga la tecla CTRL o COMMAND apretada</span></p>
+                        <input type="text" class="form-control mb-2" id="categorySearch" placeholder="Buscar categoría...">
                         <select name="categoria[]" id="categoria" class="form-select" aria-label="Default select example" required multiple size="8">
                           <option value = "" disabled>Seleccione una o mas categorias</option>
-                          <?php  
-                            while($row=mysqli_fetch_array($categorias)) { 
-                              $selected = in_array($row['idCategoria'], $categoriaServicioIds) ? 'selected' : '';?> 
-                              <option id="categoria_option_<?php echo $row['idCategoria'] ?>" value="<?php echo $row['idCategoria'] ?>" <?php echo $selected; ?>>
-                                <?php echo $row['tipo'] ?> 
-                              </option> 
-                              <?php
-                            }
-                          ?>
+                        <!-- aca van a ir las cat -->
                         </select>
                       </div>
                       <p id="categorias-seleccionadas" class="col-12 mt-3">Categorias Seleccionadas: <?php echo htmlspecialchars($resultado)?></p>
@@ -898,6 +891,71 @@
   <script src="../assets/js/selectCategorias.js"></script>  
   <script>
       setHorarios(<?php echo json_encode($horariosServicio)?>);
+  </script>
+  <script>
+
+let selectedCategories = [];
+
+function populateCategories(cats) {
+  const categoryList = document.getElementById('categoria');
+
+  cats.forEach(category => {
+    
+    const opt = document.createElement('option');
+
+    
+    
+    opt.id = `categoria_option_${category.idCategoria}`;
+    opt.innerHTML = category.tipo;
+    opt.value = category.idCategoria;
+    opt.classList.add('dropdown-item');
+    if (selectedCategories.includes(category.idCategoria) ){
+      opt.classList.add("checked");
+      opt.selected = true;
+    }
+    categoryList.appendChild(opt);
+  });
+
+}
+
+function filterCategories() {
+  const searchTerm = document.getElementById('categorySearch').value.toLowerCase();
+  const categoryItems = document.querySelectorAll('#categoria .dropdown-item');
+  categoryItems.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    item.style.display = text.includes(searchTerm) ? '' : 'none';
+  });
+}
+
+
+document.getElementById('categorySearch').addEventListener('input', filterCategories);
+
+document.addEventListener('DOMContentLoaded', async () => {
+      // Fetch categories from your PHP backend
+      await fetch('.././controller/api/getCategoriesByServiceId.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        idServicio: <?= $servicio["idServicio"] ?>
+      })
+      }).then(response => response.json())
+        .then(data => {
+        data.forEach(category => {
+          selectedCategories.push(category.FK_idCategoria);
+        });
+      });
+      
+      await fetch('.././controller/api/getCategories.php')
+        .then(response => response.json())
+        .then(data => {
+          categories = data;
+          populateCategories(categories);
+        });
+
+      
+  });
   </script>
 </body>
 
