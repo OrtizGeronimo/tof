@@ -8,7 +8,7 @@
     $existUser = Usuario::getUsuarios($newUser["nombreUsuario"]);
     $existMail = Usuario::getUsuariosEmail($newUser["email"]);
     
-    if(mysqli_num_rows($existUser) > 0)
+    /*if(mysqli_num_rows($existUser) > 0)
     {
         $data = [
             "status" => "error",
@@ -31,7 +31,7 @@
         
         echo json_encode($data);
         exit();
-    }
+    }*/
     
     if($newUser["nombre"] != null && $newUser["apellido"] != null && $newUser["email"] != null && $newUser["nombreUsuario"] != null && $newUser["newpassword"] != null && $newUser["renewpassword"] != null)
     {

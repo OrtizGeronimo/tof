@@ -29,6 +29,7 @@ document.querySelector("#btn_crearCuenta").addEventListener('click',() => {
 
     event.preventDefault(); // Prevenir el envío inmediato del formulario
     let email = document.getElementById('email').value;
+    let nombreUsuario = document.getElementById('nombreUsuario').value;
     console.log(email);
     
     Swal.fire({
@@ -48,11 +49,11 @@ document.querySelector("#btn_crearCuenta").addEventListener('click',() => {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: `email=${email}`
-    })
+        body: `email=${email}&nombreUsuario=${nombreUsuario}`
+    })    
     .then(response => response.json())
     .then(data => {
-        console.log(data.success);
+        console.log(data);
         if (data.success) {
             Swal.close();
             // Guardamos el código recibido en una variable local
@@ -115,7 +116,11 @@ document.querySelector("#btn_crearCuenta").addEventListener('click',() => {
             });
         } else {
             Swal.close();
-            Swal.fire('Error', 'Hubo un problema al enviar el código', 'error');
+            if(data.message != ""){
+                Swal.fire('Error', data.message, 'error');
+            }else{
+                Swal.fire('Error', 'Hubo un problema al enviar el código', 'error');
+            }            
         }
     })
     .catch(error => {
