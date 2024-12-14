@@ -4,7 +4,7 @@
     <div class="row gy-4">
       
       <!-- Columna del logo -->
-      <div class="col-lg-4 col-md-12 footer-info d-flex justify-content-center justify-content-md-start align-items-left">
+      <div class="col-lg-4 col-md-12 footer-info d-flex justify-content-center justify-content-md-start">
         <a href="./index.php" class="logo d-flex align-items-center">
           <img src="<?=(file_exists("assets/img/logos/negroSinFondo1.png")?'assets/img/logos/negroSinFondo1.png' : '../assets/img/logos/negroSinFondo1.png')?>" alt="logo" class="img-fluid" style="max-width: 150px;">
         </a>

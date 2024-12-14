@@ -4,9 +4,35 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 require('./../vendor/autoload.php');
+require('./../models/usuario.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
-    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']) && isset($_POST['nombreUsuario'])) {
+    $email = trim($_POST['email']);
+    $nombreUsuario = trim($_POST['nombreUsuario']);
+
+    $existUser = Usuario::getUsuarios($nombreUsuario);
+    $existMail = Usuario::getUsuariosEmail($email);
+
+    if(mysqli_num_rows($existUser) > 0)
+    {
+        /*$data = [
+            "status" => "error",
+            "message" => "Este nombre de usuario ya esta siendo utilizado. Por favor use otro",
+            "user" => $newUser
+        ];*/
+        echo json_encode(['success' => false, 'message' => 'Este nombre de usuario ya esta siendo utilizado. Por favor use otro.', 'nombreUsuario' => $nombreUsuario, 'email' => $email]);
+        exit();
+    }
+    else if(mysqli_num_rows($existMail) > 0)
+    {
+        /*$data = [
+            "status" => "error",
+            "message" => "Este mail ya esta siendo utilizado. Por favor use otro",
+            "user" => $newUser
+        ];*/
+        echo json_encode(['success' => false, 'message' => 'Este mail ya esta siendo utilizado. Por favor use otro.']);
+        exit();
+    }
     
     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
         // Generar un código aleatorio
@@ -50,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
             $mail->send();
 
             // Responder al frontend con el código generado
-            echo json_encode(['success' => true, 'codigo' => $codigo]); // Aquí devolvemos el código
+            echo json_encode(['success' => true, 'codigo' => $codigo, 'nombreUsuario' => $nombreUsuario, 'email' => $email, 'existUser' => mysqli_num_rows($existUser), 'existMail' => mysqli_num_rows($existMail)]); // Aquí devolvemos el código
 
         } catch (Exception $e) {
             // Si hay un error, devolvemos un mensaje
