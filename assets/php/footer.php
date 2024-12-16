@@ -51,7 +51,7 @@
   <!-- Sección de derechos de autor -->
   <div class="container mt-4">
     <div class="copyright text-center">
-      &copy; <strong><span><?= date("Y"); ?> TODOOFICIO.COM</span></strong>. Todos los derechos reservados
+      &copy; <a href="avisoLegal.php" style="color: black"> <strong><span><?= date("Y"); ?> TODOOFICIO.COM</span></strong> </a>. Todos los derechos reservados
     </div>
   </div>
 

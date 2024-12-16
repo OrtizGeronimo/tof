@@ -13,6 +13,7 @@ foreach ($paths as $path) {
         break;
     }
 }
+
 class Servicio{
     public static function getServiciosBasicos(){
         $serviciosBasicos = BaseDeDatos::consulta("SELECT *
