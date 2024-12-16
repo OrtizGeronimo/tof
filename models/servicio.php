@@ -1,8 +1,18 @@
 <?php
 // Incluir el archivo de logging
 include 'logConfig.php';
-(file_exists('./config/conexion.php'))?include_once('./config/conexion.php'):include_once('./../config/conexion.php');
-(file_exists("./../config/conexion.php"))? require_once('./../config/conexion.php') : ((file_exists('./config/conexion.php')) ? require_once('./config/conexion.php') : require_once('../../config/conexion.php'));
+$paths = [
+    './config/conexion.php',
+    './../config/conexion.php',
+    '../../config/conexion.php',
+];
+
+foreach ($paths as $path) {
+    if (file_exists($path)) {
+        require_once $path;
+        break;
+    }
+}
 
 class Servicio{
     public static function getServiciosBasicos(){

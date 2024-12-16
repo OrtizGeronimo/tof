@@ -1,6 +1,6 @@
 <?php
-    (file_exists('./../config/conexion.php'))? include_once('./../config/conexion.php') : '';
-    (file_exists('./../models/servicio.php'))? include_once('./../models/servicio.php') : '';
+    (file_exists('C:\xampp\htdocs\Todo Oficio\config\conexion.php'))? include_once('C:\xampp\htdocs\Todo Oficio\config\conexion.php') : '';
+    (file_exists('C:\xampp\htdocs\Todo Oficio\models\servicio.php'))? include_once('C:\xampp\htdocs\Todo Oficio\models\servicio.php') : '';
     
     $cant = 20; 
     $pag  = (isset($_GET['p']))? $_GET['p'] : 1;
