@@ -839,29 +839,6 @@
   <script src="../assets/js/main.js"></script>
   <script src="../assets/js/selectCategorias.js"></script>
   
-  <div class="row mb-3">
-  <label for="categoria" class="col-md-4 col-lg-3 col-form-label">
-    Categoría <span class="camposObligatorios">*</span>
-  </label>
-  <div class="col-md-8 col-lg-9">
-    <p class="col-12 mt-3">
-      <span class="camposObligatorios">
-        Para seleccionar varias categorías mantenga la tecla CTRL o COMMAND apretada
-      </span>
-    </p>
-    <input type="text" class="form-control mb-2" id="categorySearch" placeholder="Buscar categoría...">
-    <select name="categoria[]" id="categoria" class="form-select form-select-cat" 
-            aria-label="Default select example" required multiple size="8">
-      <option value="" disabled>Seleccione una o más categorías</option>
-      <!-- aca van a ir las categorías -->
-      <option value="categoria1">Categoría 1</option>
-      <option value="categoria2">Categoría 2</option>
-      <option value="categoria3">Categoría 3</option>
-    </select>
-  </div>
-  <p id="categorias-seleccionadas" class="col-12 mt-3">Categorías Seleccionadas:</p>
-</div>
-
 <script>
   const selectElement = document.getElementById("categoria");
 

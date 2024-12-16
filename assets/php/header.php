@@ -9,32 +9,25 @@
       <div class="col">
         <nav id="navbar" class="navbar">
           <ul>
-            <?php
+          <?php
               $url= strtoupper($_SERVER["REQUEST_URI"]);
-              if ($url != '/TODOOFICIO/INDEX.PHP') {
+              
+$menu_items = [
+    '/TODOOFICIO/ADMIN/INDEX.PHP' => 'Inicio',
+    '/TODOOFICIO/SERVICIOS.PHP' => 'Servicios',
+    '/TODOOFICIO/PREGUNTASFRECUENTES.PHP' => 'Preguntas frecuentes',
+    '/TODOOFICIO/PLANES.PHP' => 'Planes',
+    '/TODOOFICIO/PRENSA.PHP' => 'Prensa'
+];
 
-                ?><li><a href="<?= ($url == '/TODOOFICIO/ADMIN/INDEX.PHP')?'../index.php' : 'index.php'?>">Inicio</a></li><?php
-              }
-            ?>
-            <?php              
-              if ($url != '/TODOOFICIO/SERVICIOS.PHP') {
-                ?><li><a href="<?=(file_exists('../servicios.php'))?'../servicios.php' : 'servicios.php'?>">Servicios</a></li><?php
-              }
-            ?>
-            <?php              
-              if ($url != '/TODOOFICIO/PREGUNTASFRECUENTES.PHP') {
-                ?><li><a href="<?= (file_exists( '../preguntasfrecuentes.php'))? '../preguntasfrecuentes.php' : 'preguntasfrecuentes.php'?>">Preguntas frecuentes</a></li><?php
-              }
-            ?>
-            <?php              
-              if ($url != '/TODOOFICIO/PLANES.PHP') {
-                ?><li><a href="<?=(file_exists('../planes.php'))?'../planes.php' : 'planes.php'?>">Planes</a></li><?php
-              }
-            ?>
-            <?php              
-              if ($url != '/TODOOFICIO/PRENSA.PHP') {
-                ?><li><a href="<?=(file_exists('../prensa.php'))?'../prensa.php' : 'prensa.php'?>">Prensa</a></li><?php
-              }
+foreach ($menu_items as $item_url => $item_name) {
+    if ($url != $item_url) {
+        $link = (strpos($url, '/ADMIN/') !== false) ? '../' : '';
+        $link .= strtolower(str_replace(['/TODOOFICIO/', '.PHP'], '', $item_url)) . '.php';
+        echo "<li><a href=\"$link\">$item_name</a></li>";
+    }
+}
+               
             ?>
             <li><a href="#footer">Contacto</a></li>
           </ul>
