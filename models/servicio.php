@@ -446,4 +446,13 @@ class Servicio{
         return ["servicios" => $servicios, "cantPaginas" => $cantPaginas, "pag" => '1'];
 
     }
+
+    public static function calcularPuntaje($servicio){
+        $puntaje = BaseDeDatos::consulta("SELECT AVG(puntaje) as puntaje FROM comentario_servicio WHERE FK_idServicio = $servicio");
+        $puntaje = mysqli_fetch_array($puntaje);
+        $puntaje = $puntaje['puntaje'];
+        $puntaje = round($puntaje, 1);
+        $updatePuntaje = BaseDeDatos::consulta("UPDATE servicio SET servicio_puntaje = $puntaje WHERE idServicio = $servicio");
+        return $updatePuntaje;
+    }
 }
