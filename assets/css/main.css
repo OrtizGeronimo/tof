@@ -2848,6 +2848,31 @@ section {
   margin-bottom: 5px;
 }
 
+/*
+  estrellas en comment
+*/
+
+.blog .comments .comment .star-rating {
+  font-size: 14px;
+  color: #FFD700;  /* Yellow color for stars */
+  margin-bottom: 5px;
+  pointer-events: none;  /* Disable any pointer events */
+}
+
+.blog .comments .comment .star-rating .far.fa-star {
+  color: #ccc;  /* Light gray color for empty stars */
+}
+
+/* Remove any existing hover styles if present */
+.blog .comments .comment .star-rating i:hover,
+.blog .comments .comment .star-rating i:hover ~ i {
+  color: #FFD700;  /* Keep the color consistent on hover */
+}
+
+/*
+  comments
+*/
+
 .blog .comments .comment.comment-reply {
   padding-left: 40px;
 }
@@ -2855,7 +2880,7 @@ section {
 .blog .comments .reply-form {
   margin-top: 30px;
   padding: 30px;
-  box-shadow: 0 0 16px var(--transpartent-black)/*rgba(0, 0, 0, 0.1)*/;
+  box-shadow: 0 0 16px var(--transpartent-black);
   border-radius: 10px;
 }
 
@@ -2876,7 +2901,7 @@ section {
 
 .blog .comments .reply-form input:focus {
   box-shadow: none;
-  border-color: var(--transparent-dark-green) /*var(--transpartent-black)/*rgba(0, 131, 116, 0.8)*/;
+  border-color: var(--transparent-dark-green);
 }
 
 .blog .comments .reply-form textarea {
@@ -2887,7 +2912,7 @@ section {
 
 .blog .comments .reply-form textarea:focus {
   box-shadow: none;
-  border-color: var(--transparent-dark-green)/*var(--transpartent-black)/*rgba(0, 131, 116, 0.8)*/;
+  border-color: var(--transparent-dark-green);
 }
 
 .blog .comments .reply-form .form-group {
@@ -2902,8 +2927,102 @@ section {
 }
 
 .blog .comments .reply-form .btn-primary:hover {
-  background-color: var(--color-primary)/*rgba(248, 90, 64, 0.8)*/;
+  background-color: var(--color-primary);
 }
+
+/*
+  ESTRELLAS en form
+*/
+
+.star-rating {
+  font-size: 24px;
+  color: #ccc;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.star-rating i {
+  padding: 0 2px;
+}
+
+.star-rating i:hover,
+.star-rating i:hover ~ i {
+  color: #ffc107;
+}
+
+.star-rating .active {
+  color: #ffc107;
+}
+
+.sidebar-item .star-rating {
+  font-size: 18px;
+  color: #FFD700;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;  /* Disable any pointer events */
+}
+
+.sidebar-item .star-rating .far.fa-star,
+.sidebar-item .star-rating .fas.fa-star,
+.sidebar-item .star-rating .fas.fa-star-half-alt {
+  margin-right: 2px;
+}
+
+.sidebar-item .star-rating i:hover,
+.sidebar-item .star-rating i:hover ~ i {
+  color: inherit;  /* Prevent color change on hover */
+}
+
+.sidebar-item .star-rating .rating-text {
+  margin-left: 5px;
+  font-size: 14px;
+  color: #666;
+}
+
+/*
+  LIMITE DE CARACTERES
+*/
+
+.char-count {
+  font-size: 0.8em;
+  color: #666;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.char-count-warning {
+  color: #ff4500;
+  font-weight: bold;
+}
+
+.btn-custom {
+  background-color: #FFF9C4; /* Light yellow background */
+  color: #5C4B00; /* Dark yellow text */
+  border: 1px solid #FFD600; /* Yellow border */
+  padding: 8px 16px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-custom:hover {
+  background-color: #FFD600; /* Darker yellow on hover */
+  color: #3E3100; /* Darker text on hover */
+}
+
+.btn-custom:focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 214, 0, 0.25); /* Yellow focus ring */
+  outline: none;
+}
+
+.hidden-comment {
+  display: none;
+}
+
+
+
 
 /*--------------------------------------------------------------
 # Footer

@@ -8,9 +8,12 @@ class Comentario{
         return $getComentario;
     }
 
-    public static function agregarComentario($comment,$servicio,$nombre,$email){
-        $agregarComentario = BaseDeDatos::consulta("INSERT INTO comentario_servicio (comentario,puntaje,FK_idServicio,user_nombre,user_email,usr_alta,fec_alta) VALUES ('$comment','5',$servicio,'$nombre','$email','DESARROLLO',now());");
+    public static function agregarComentario($comment,$servicio,$nombre,$email, $puntaje){
+        
+        $agregarComentario = BaseDeDatos::consulta("INSERT INTO comentario_servicio (comentario,puntaje,FK_idServicio,user_nombre,user_email,usr_alta,fec_alta) VALUES ('$comment','$puntaje',$servicio,'$nombre','$email','DESARROLLO',now());");
 
         return $agregarComentario;                                                  
     }
+
+    
 }
