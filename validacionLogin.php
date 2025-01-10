@@ -9,6 +9,8 @@
     $pass = (isset($_POST['pass'])) ? $_POST['pass'] : '';
     //encr pass
     $passEnc = sha1($pass);
+
+    Usuario::actualizarPlanSinSuscripcion();
  
     $consulta = Usuario::getUsuarioContraseña($user,$passEnc);
     
@@ -35,25 +37,31 @@
 
             if($rol !== "gratis" && $rol !== "admin"){
                 $querySuscripcion = SuscripcionServicio::getSuscripcion($idUsuario);
+                
+                // Si no hay suscripción, retorna éxito sin hacer ningún cambio porque se cambio por el admin
+                if (mysqli_num_rows($suscripcion) > 0) {
 
-                $suscripcion = mysqli_fetch_array($querySuscripcion);
+                    $suscripcion = mysqli_fetch_array($querySuscripcion);
 
-                $fechaVto = $suscripcion["fec_vencimiento"];
+                    $fechaVto = $suscripcion["fec_vencimiento"];
 
-                $estadoSuscripcion = $suscripcion["estado"];
+                    $estadoSuscripcion = $suscripcion["estado"];
 
-                $fechaVtoDate = substr($fechaVto, 0, 10);
+                    $fechaVtoDate = substr($fechaVto, 0, 10);
 
-                $response = "no entra ni en fecha ni en suscripcion pendiente, fecha vto: ".$fechaVtoDate. " estado suscripcion: ".$estadoSuscripcion;
-                if (date('Y-m-d') >= $fechaVtoDate) {
-                    //se debe consultar a mp si la suscripcion sigue activa
-                    $response = ValidarSuscripcion::validarEstadoSuscripcion($idUsuario, true);
-                    $response = "entra a validar suscripcion porque fecha vencida".$response;
-                } else if ($estadoSuscripcion === "pendiente") {
-                    //se debe consultar a mp si la suscripcion sigue activa
-                    $response = ValidarSuscripcion::validarEstadoSuscripcion($idUsuario, false);
-                    $response = "entra a validar suscripcion porque status pendiente".$response;
-                }
+                    $response = "no entra ni en fecha ni en suscripcion pendiente, fecha vto: ".$fechaVtoDate. " estado suscripcion: ".$estadoSuscripcion;
+                    if (date('Y-m-d') >= $fechaVtoDate) {
+                        //se debe consultar a mp si la suscripcion sigue activa
+                        $response = ValidarSuscripcion::validarEstadoSuscripcion($idUsuario, true);
+                        $response = "entra a validar suscripcion porque fecha vencida".$response;
+                    } else if ($estadoSuscripcion === "pendiente") {
+                        //se debe consultar a mp si la suscripcion sigue activa
+                        $response = ValidarSuscripcion::validarEstadoSuscripcion($idUsuario, false);
+                        $response = "entra a validar suscripcion porque status pendiente".$response;
+                    }                    
+                }else{
+                    $response = "No se valida suscripcion porque es otorgada por el admin";
+                }                
             }
 
             echo json_encode(['success' => true, 'response' => $response]);

@@ -33,8 +33,15 @@
     if(!isset($_SESSION["s_id_usuario"])){
       echo "<script> window.location.replace('index.php') </script>";
     }else{
-      $userA = Usuario::getUsuario($_SESSION["s_id_usuario"]);
-      $user = mysqli_fetch_array($userA);
+      if (strtoupper($_SESSION["s_rol"]) == "ADMIN"){
+        $idUsuario = $_GET["idUsuario"];
+        $userA = Usuario::getUsuario($idUsuario);
+        $user = mysqli_fetch_array($userA);
+      } else {
+        $idUsuario = $_SESSION["s_id_usuario"];
+        $userA = Usuario::getUsuario($idUsuario);
+        $user = mysqli_fetch_array($userA);
+      }
     }
   ?>
   <!-- End Header -->
@@ -47,8 +54,8 @@
         <div class="container position-relative">
           <div class="row d-flex justify-content-center">
             <div class="col-lg-12 text-center">
-              <h2>Crea una cuenta</h2>
-              <p>Ingrese sus datos personales para crear una cuenta</p>
+              <h2>Edición de perfil</h2>
+              <!--<p>Ingrese sus datos personales para crear una cuenta</p> -->
             </div>
           </div>
         </div>
@@ -57,7 +64,7 @@
         <div class="container">
           <ol>
             <li><a href="index.php">Inicio</a></li>
-            <li>Registrarme como proveedor</li>
+            <li>Editar perfil</li>
           </ol>
         </div>
       </nav>
@@ -100,18 +107,18 @@
                       $nombre = $nombreCompleto[0];
                       $apellido = isset($nombreCompleto[1])?$nombreCompleto[1]:'';
                     ?>
-                    <input type="hidden" name="idUsuario" value="<?= $_SESSION["s_id_usuario"] ?>">
+                    <input type="hidden" name="idUsuario" value="<?= $idUsuario ?>">
                     <div class="row mb-3" id="nombrePersona" >
                       <label for="nombre" class="col-md-4 col-lg-3 col-form-label">Nombre <span class="camposObligatorios">*</span></label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="nombre" type="text" class="form-control" id="nombre" maxlength="20" pattern="[A-Za-z]{3,20}" title="Un nombre válido consiste en una cadena con 3 a 20 caracteres. No se aceptan número, símbolos o metacaracteres." value="<?=$nombre?>">
+                        <input name="nombre" type="text" class="form-control" id="nombre" maxlength="20" pattern="[A-Za-z]{3,20}" title="Un nombre válido consiste en una cadena con 3 a 20 caracteres. No se aceptan número, símbolos o metacaracteres." value="<?=$nombre?>" required>
                       </div>
                     </div>
 
                     <div class="row mb-3" id="apellidoPersona" >
                       <label for="apellido" class="col-md-4 col-lg-3 col-form-label">Apellido <span class="camposObligatorios">*</span></label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="apellido" type="text" class="form-control" id="apellido" maxlength="20" pattern="[A-Za-z]{3,20}" title="Un apellido válido consiste en una cadena con 3 a 20 caracteres. No se aceptan número, símbolos o metacaracteres." value="<?=$apellido?>">
+                        <input name="apellido" type="text" class="form-control" id="apellido" maxlength="20" pattern="[A-Za-z]{3,20}" title="Un apellido válido consiste en una cadena con 3 a 20 caracteres. No se aceptan número, símbolos o metacaracteres." value="<?=$apellido?>" required>
                       </div>
                     </div>
 
@@ -155,12 +162,15 @@
                       </div>
                     </div>
 
+                    <!-- lo agrego para tener el rol del usuario que edita por si es el admin -->
+                    <input type="hidden" id="rolEditor" name="rolEditor" value="<?= $_SESSION["s_rol"] ?>"> 
+
                     <!-- lo agrego para tener el plan anterior al update -->
-                    <input type="hidden" id="planActual" name="planActual" value="<?=$user["rol"]?>"> 
+                    <input type="hidden" id="planActual" name="planActual" value="<?= $user["rol"] ?>"> 
 
                     <!-- Selección del plan -->
                     <!-- Plan Selector (Hidden Select) -->
-                    <input type="hidden" id="plan" name="plan" value="<?=$user["rol"]?>" required>
+                    <input type="hidden" id="plan" name="plan" value="<?= $user["rol"] ?>" required>
 
                     <!-- Displayed Select Replacement -->
                     <div class="row mb-3">

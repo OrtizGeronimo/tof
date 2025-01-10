@@ -26,3 +26,7 @@ CREATE TABLE IF NOT EXISTS suscripcion (
 #Script para añadir columna fec_baja a tabla galeria 6/10/2024 10.41hs
 
 ALTER TABLE galeria ADD fec_baja datetime;
+
+#Script para añadir columna fecha_actua_plan a tabla usuario 7/1/2024 20.15hs
+ALTER TABLE usuario
+ADD fecha_actua_plan DATE;

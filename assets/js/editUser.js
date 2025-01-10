@@ -37,6 +37,7 @@ const form = document.querySelector("#form-checkout");
         contentType: false,
         dataType: "json",
         success: function(result) {
+          console.log(result);
           if(result.status === 'success'){
             Swal.fire({
                 icon: 'success',
@@ -44,7 +45,7 @@ const form = document.querySelector("#form-checkout");
                 timer: 2000,
                 showConfirmButton: false
             }).then(() => {
-                location.replace('./editUser.php');
+                location.replace('./editUser.php?idUsuario=' + result.idUsuario);
             });
           }else{     
             console.log(result);                   

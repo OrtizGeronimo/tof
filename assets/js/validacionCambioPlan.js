@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
 const planSelect = document.getElementById("plan");
 const paymentForm = document.getElementById("payment-form");
-
+const rolEditor = document.getElementById("rolEditor");
 
 let form = document.getElementById("form-checkout");
 // Form type(register/edit)
@@ -16,15 +16,17 @@ btnSubmit.style.display = "none";
 
 // Función para mostrar/ocultar el formulario basado en el plan seleccionado
 planSelect.addEventListener("change", function() {
-    if (planSelect.value === "gratis") {
+    if (planSelect.value === "gratis" && rolEditor.value.toUpperCase() != "ADMIN") {
         paymentForm.style.display = "none";        
         btnSubmit.style.display = "none";
         btnSubmitGratuito.style.display = "block";
         
     } else {
-        paymentForm.style.display = "block";
-        btnSubmit.style.display = "block";
-        btnSubmitGratuito.style.display = "none";        
+        if(rolEditor.value.toUpperCase() != "ADMIN"){
+            paymentForm.style.display = "block";
+            btnSubmit.style.display = "block";
+            btnSubmitGratuito.style.display = "none"; 
+        }               
     }
 });
 });

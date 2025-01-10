@@ -14,8 +14,8 @@
 <body>
   <?php 
     require("./../assets/php/header.php");
-    if(isset($_SESSION["s_id_usuario"])){
-      $servicio = (strtoupper($_SESSION["s_rol"]) != "ADMIN")? Usuario::getAllServicios($_SESSION["s_id_usuario"]) : Servicio::getAllServicios();
+    if(isset($_SESSION["s_id_usuario"]) && (strtoupper($_SESSION["s_rol"]) === "ADMIN")){
+      $servicio = Servicio::getAllServicios();
     }else{
       header("Location:../index.php");
     }
@@ -30,7 +30,7 @@
         <div class="container position-relative">
           <div class="row d-flex justify-content-center">
             <div class="col-lg-6 text-center">
-              <h2>Mis servicios</h2>
+              <h2>Panel de servicios</h2>
               <!-- <p>Encontra los mejores profesionales cerca</p> -->
             </div>
           </div>

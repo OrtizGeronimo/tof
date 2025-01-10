@@ -17,7 +17,7 @@ $menu_items = [
     '/TODOOFICIO/SERVICIOS.PHP' => 'Servicios',
     '/TODOOFICIO/PREGUNTASFRECUENTES.PHP' => 'Preguntas frecuentes',
     '/TODOOFICIO/PLANES.PHP' => 'Planes',
-    '/TODOOFICIO/PRENSA.PHP' => 'Prensa'
+    '/TODOOFICIO/PRENSA.PHP' => 'Prensa',
 ];
 
 foreach ($menu_items as $item_url => $item_name) {
@@ -59,49 +59,72 @@ foreach ($menu_items as $item_url => $item_name) {
                 <li>
                   <hr class="dropdown-divider">
                 </li>
-                <li>
-                  <a class="dropdown-item d-flex align-items-center" href="<?= file_exists('preguntasFrecuentes.php')?'preguntasFrecuentes.php' : '../preguntasFrecuentes.php'?>">
-                    <i class="bi bi-question-circle"></i>
-                    <span> Necesita ayuda?</span>
-                  </a>
-                </li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-
-                <li>
-                  <a class="dropdown-item d-flex align-items-center" href="<?=file_exists('./admin/index.php')?'./admin/index.php':'./index.php'?>">
-                    <i class="bi bi-bag"></i>
-                    <span>Mi servicio</span>
-                  </a>
-                </li>
-
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-
-                <li>
-                  <a class="dropdown-item d-flex align-items-center" href="<?=file_exists('editUser.php')?'editUser.php':'../editUser.php'?>">
-                    <i class="bi bi-key"></i>
-                    <span>Editar Plan</span>
-                  </a>
-                </li>
-
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-
-                <li>
-                  <a class="dropdown-item d-flex align-items-center" href="<?=file_exists('editUser.php')?'editUser.php':'../editUser.php'?>">
-                    <i class="bi bi-pencil"></i>
-                    <span>Editar Perfil</span>
-                  </a>
-                </li>
-
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
                 
+                <?php if (strtoupper($_SESSION["s_rol"]) != "ADMIN") {?>
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center" href="<?= file_exists('preguntasFrecuentes.php')?'preguntasFrecuentes.php' : '../preguntasFrecuentes.php'?>">
+                      <i class="bi bi-question-circle"></i>
+                      <span> Necesita ayuda?</span>
+                    </a>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+
+                  <li>
+                      <a class="dropdown-item d-flex align-items-center" href="<?=file_exists('./admin/updateService.php')?'./admin/updateService.php':'./updateService.php'?>">
+                        <i class="bi bi-bag"></i>
+                        <span>Mi servicio</span>
+                      </a>
+                  </li>
+
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center" href="<?=file_exists('editUser.php')?'editUser.php':'../editUser.php'?>">
+                      <i class="bi bi-key"></i>
+                      <span>Editar Plan</span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center" href="<?=file_exists('editUser.php')?'editUser.php':'../editUser.php'?>">
+                      <i class="bi bi-pencil"></i>
+                      <span>Editar Perfil</span>
+                    </a>
+                  </li>
+                                 
+                <?php } else {?>
+                  <li>
+                      <a class="dropdown-item d-flex align-items-center" href="<?=file_exists('./admin/index.php')?'./admin/index.php':'./index.php'?>">
+                        <i class="bi bi-bag"></i>
+                        <span>Administrar Servicios</span>
+                      </a>
+                  </li>
+
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center" href="<?=file_exists('./admin/users.php')?'./admin/users.php':'./users.php'?>">
+                      <i class="bi bi-person"></i>
+                      <span>Administrar Usuarios</span>
+                    </a>
+                  </li>
+
+                <?php }?>
+
+                <li>
+                    <hr class="dropdown-divider">
+                </li> 
+
                 <li>
                   <a class="dropdown-item d-flex align-items-center" href="<?=file_exists('logout.php')?'logout.php':'../logout.php'?>">
                     <i class="bi bi-box-arrow-right"></i>
