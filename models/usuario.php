@@ -23,6 +23,18 @@ class Usuario{
         return $user;
     }
 
+    public static function getAllUsuarios(){
+        $user = BaseDeDatos::consulta("SELECT u.*, r.rol, idServicio, servicio_nombre
+                                      FROM usuario u
+                                      INNER JOIN rol r
+                                      ON u.FK_idRol = r.idRol
+                                      LEFT JOIN servicio s
+                                      ON u.idUsuario = s.FK_idUsuario
+                                      ORDER BY user_nombre ;");
+        
+        return $user;
+    }
+
     public static function getAllServicios($idUsuario){
         $servicio = BaseDeDatos::consulta(" SELECT idServicio,
                                                    servicio_nombre,
@@ -159,6 +171,33 @@ class Usuario{
         return BaseDeDatos::consulta("UPDATE usuario
                                       SET FK_idRol = 6
                                       WHERE idUsuario = $idUsuario;");
+    }
+
+    public static function deleteUsuario($idUsuario){
+        return BaseDeDatos::consulta("DELETE FROM usuario 
+                                        WHERE user_email = '$idUsuario';");
+    }
+
+    public static function actualizarPlanSinSuscripcion(){
+        return BaseDeDatos::consulta("UPDATE usuario
+                                      SET FK_idRol = 6,
+                                      fecha_actua_plan = NULL
+                                      WHERE fecha_actua_plan IS NOT NULL
+                                      AND fecha_actua_plan < CURDATE();");
+    }
+
+    public static function actualizarFechaPlan($idUsuario){
+        return BaseDeDatos::consulta("UPDATE usuario
+                                      SET fecha_actua_plan = DATE_ADD(CURDATE(), INTERVAL 15 DAY)
+                                      WHERE idUsuario = $idUsuario;");
+    }
+
+    public static function generarReporteUsuario($userIds){
+        return BaseDeDatos::consulta("SELECT user_nombre, user_email, servicio_nombre, user_telefono, rol, u.fec_alta 
+                                        FROM usuario u
+                                        INNER JOIN rol r ON r.idRol = u.FK_idRol
+                                        LEFT JOIN servicio s ON u.idUsuario = s.FK_idUsuario
+                                        WHERE u.idUsuario IN ($userIds)");
     }
 
 }

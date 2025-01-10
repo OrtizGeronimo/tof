@@ -1,19 +1,28 @@
 <?php
-(file_exists('./config/conexion.php'))?include_once('./config/conexion.php'):include_once('./../config/conexion.php');
-(file_exists("./../config/conexion.php"))? require_once('./../config/conexion.php') : require_once('./config/conexion.php');
+session_start();
+require('./../models/usuario.php');
+require('./../models/servicio.php');
 
 $email = $_POST['email'];
 
-if ($email) {
-    
-    $result = BaseDeDatos::consulta("DELETE FROM usuario WHERE user_email = '$email'");
-    
-
-    // Check if the query affected any rows
-    if ($result && mysqli_affected_rows(BaseDeDatos::getConn()) > 0) {
-        echo "User deleted successfully";
-    } else {
-        echo "Error deleting user or no rows affected";
+if(isset($email)){
+    try {
+        $user = mysqli_fetch_array(Usuario::getUsuariosEmail($email));
+        $servicioResult = Usuario::getAllServicios($user["idUsuario"]);  
+        
+        if(mysqli_num_rows($servicioResult) > 0){
+            $servicio = mysqli_fetch_array($servicioResult);
+            Servicio::deleteCategoriaServicio($servicio["idServicio"],$_SESSION["s_nombre"]);
+            Servicio::deleteServicioHorarios($servicio["idServicio"],$_SESSION["s_nombre"]);
+            Servicio::deleteServicioTipo($servicio["idServicio"],$_SESSION["s_nombre"]);
+            Servicio::deleteServicio($servicio["idServicio"],$_SESSION["s_nombre"]);            
+        }
+        Usuario::deleteUsuario($email);
+        header('Location:./../admin/users.php?deleteUser');
+    } catch (\Throwable $th) {
+        header('Location:./../admin/users.php?errorDeleteUser');
     }
+}else{
+    header('Location:./../admin/users.php');
 }
 ?>

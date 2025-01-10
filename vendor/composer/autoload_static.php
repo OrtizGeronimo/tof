@@ -13,6 +13,10 @@ class ComposerStaticInite5fde3d6885fff6c72e94e3ed516c143
     );
 
     public static $prefixLengthsPsr4 = array (
+        'Z' => 
+        array (
+            'ZipStream\\' => 10,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
@@ -21,12 +25,17 @@ class ComposerStaticInite5fde3d6885fff6c72e94e3ed516c143
         ),
         'P' => 
         array (
+            'Psr\\SimpleCache\\' => 16,
+            'Psr\\Http\\Message\\' => 17,
+            'Psr\\Http\\Client\\' => 16,
             'PhpOption\\' => 10,
+            'PhpOffice\\PhpSpreadsheet\\' => 25,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
         'M' => 
         array (
             'MercadoPago\\' => 12,
+            'Matrix\\' => 7,
         ),
         'G' => 
         array (
@@ -36,9 +45,17 @@ class ComposerStaticInite5fde3d6885fff6c72e94e3ed516c143
         array (
             'Dotenv\\' => 7,
         ),
+        'C' => 
+        array (
+            'Complex\\' => 8,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'ZipStream\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
+        ),
         'Symfony\\Polyfill\\Php80\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
@@ -51,9 +68,26 @@ class ComposerStaticInite5fde3d6885fff6c72e94e3ed516c143
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
+        'Psr\\SimpleCache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+        ),
+        'Psr\\Http\\Client\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-client/src',
+        ),
         'PhpOption\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
+        ),
+        'PhpOffice\\PhpSpreadsheet\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
         'PHPMailer\\PHPMailer\\' => 
         array (
@@ -63,6 +97,10 @@ class ComposerStaticInite5fde3d6885fff6c72e94e3ed516c143
         array (
             0 => __DIR__ . '/..' . '/mercadopago/dx-php/src/MercadoPago',
         ),
+        'Matrix\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
+        ),
         'GrahamCampbell\\ResultType\\' => 
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
@@ -70,6 +108,10 @@ class ComposerStaticInite5fde3d6885fff6c72e94e3ed516c143
         'Dotenv\\' => 
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
+        ),
+        'Complex\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
         ),
     );
 

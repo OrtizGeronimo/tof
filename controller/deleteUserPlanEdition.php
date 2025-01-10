@@ -16,7 +16,7 @@ if ($user) {
                                      WHERE idUsuario = '$idUsuario'");   
 
     // Check if the query affected any rows
-    if ($result && mysqli_affected_rows(BaseDeDatos::getConn()) > 0) {
+    if ($result /*&& mysqli_affected_rows(BaseDeDatos::getConn()) > 0*/) {
         $_SESSION["s_rol"] = $user['planActual'];
         echo "User deleted successfully";
     } else {
