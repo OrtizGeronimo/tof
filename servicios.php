@@ -246,6 +246,19 @@ function displayServices(filteredServices) {
   const resultsContainer = document.getElementById('searchResults');
   resultsContainer.innerHTML = '';
 
+  if (filteredServices.length === 0) {
+    resultsContainer.innerHTML = `
+      <div class="col-12 flex items-center justify-center h-64">
+        <div class="text-center">
+          <p class="text-3xl font-bold text-gray-800 mb-4">No se encontraron servicios</p>
+          <p class="text-lg text-gray-600">Lo sentimos, no hay servicios que coincidan con tu búsqueda.</p>
+        </div>
+      </div>
+    `;
+    updatePagination(1, 1);
+    return;
+  }
+
   filteredServices.forEach(service => {
   let src = "";
   if(service.rol === "gratis"){

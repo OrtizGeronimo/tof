@@ -20,6 +20,8 @@
         $dia = $hora["dia"];
         array_push($horarioServicio[$dia],$horaF);
       }
+      $average_rating = $servicio['servicio_puntaje'];
+      $cantidad_comentarios = $comentarios->num_rows;
     }else{
       header("Location: index.php");
     }
@@ -93,7 +95,23 @@
 
             <!--Descripcion-->
             <div class="sidebar-item categories">
+                
                 <h3 class="sidebar-title"><?=($servicio["user_nombre"])?></h3>
+                <div class="star-rating">
+                  <span class="rating-text">(<?php echo $cantidad_comentarios; ?>)</span>
+                    <?php
+                    for($i = 5; $i >= 1; $i--) {
+                        if($i <= $average_rating) {
+                            echo '<i class="fas fa-star" aria-hidden="true"></i>';
+                        } else if($i - 0.5 <= $average_rating) {
+                            echo '<i class="fas fa-star-half-alt" aria-hidden="true"></i>';
+                        } else {
+                            echo '<i class="far fa-star" aria-hidden="true"></i>';
+                        }
+                    }
+                    ?>
+                    <span class="rating-text"><?php echo $average_rating; ?></span>
+                </div>
                     <section id="redes" class="redes">
                           <ul class="mt-3">
                             <?=(isset($servicio["redSocial_LinkedIn"])  && $servicio["redSocial_LinkedIn"]!="--") ? '<a href="'.$servicio["redSocial_LinkedIn"].'" target="_blank" class="linkedin"><i class="bi bi-linkedin"></i></a>' : ''?>
@@ -226,44 +244,80 @@
          </div>
         </div>
 
-        <!--Comentarios-->
+              <!--Comentarios-->
         <div class="comments">
           <h4 class="comments-count">Comentarios</h4>
-            <input type="hidden" id="idServicio" value='<?=$_GET["idServicio"]?>'>
-            <div class="contenedorComentarios">
-              <?php require_once("./controller/userComentario.php");?>
-              <?php while($row=mysqli_fetch_array($comentarios)){?>
-                <div id="comment-1" class="comment">
-                  <div class="d-flex">
-                      <div class="comment-img"><img src="assets/img/logos/negroFondoAmarillo.png" alt=""></div>
-                      <div>
-                          <h5><a><?= $row['user_nombre'] ?></a></h5>
-                          <time datetime="2022-01-01"><?= $row['fec_alta'] ?></time>
-                          <p><?= $row['comentario'] ?></p>
-                      </div>
-                  </div>
-                </div>
-              <?php }?>
-            </div>          
-              <div class="reply-form">
-                <h4>Deja tu comentario</h4>
-                <p>Tu email no sera publicado.</p>
-                  <div class="row">
-                    <div class="col-md-6 form-group">
-                      <input id="name" name="name" type="text" class="form-control" maxlength="30" pattern="[A-Za-z]{5,30}" title="Un nombre válido consiste en una cadena con 5 a 30 caracteres. No se aceptan número, símbolos o metacaracteres." placeholder="Nombre y Apellido *">
+          <input type="hidden" id="idServicio" value='<?=$_GET["idServicio"]?>'>
+
+
+          <div class="contenedorComentarios">
+                <?php require_once("./controller/userComentario.php");?>
+                <?php 
+                $comment_count = 0;
+                while($row = mysqli_fetch_array($comentarios)) {
+                    $comment_count++;
+                    $hidden_class = $comment_count > 4 ? 'hidden-comment' : '';
+                ?>
+                    <div id="comment-<?= $comment_count ?>" class="comment <?= $hidden_class ?>">
+                        <div class="d-flex">
+                            <div class="comment-img"><img src="assets/img/logos/negroFondoAmarillo.png" alt=""></div>
+                            <div>
+                                <h5><a><?= $row['user_nombre'] ?></a></h5>
+                                <time datetime="2022-01-01"><?= $row['fec_alta'] ?></time>
+                                <div class="star-rating">
+                                    <?php
+                                    for($i = 1; $i <= (5 -  $row['puntaje']); $i++) {
+                                        echo '<i class="far fa-star" aria-hidden="true"></i>';
+                                    }
+                                    for($i = 1; $i <= $row['puntaje']; $i++) {
+                                        echo '<i class="fas fa-star" aria-hidden="true"></i>';
+                                    }
+                                    ?>
+                                </div>
+                                <p><?= $row['comentario'] ?></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6 form-group">
-                      <input id="email" name="email" type="email" class="form-control" placeholder="Email *">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col form-group">
-                      <textarea id="comment" name="comment" class="form-control" placeholder="Comentario *"></textarea>
-                    </div>
-                  </div>
-                  <button type="button" id="btnAñadirComentario" class="btn btn-secondary w-100">Publicar comentario</button>
+                <?php } ?>
+            </div>
+            <?php if ($comment_count > 4) { ?>
+             <button id="toggleComments" class="btn btn-custom mt-3">Ver más</button>
+            <?php } ?>  
+
+
+
+          <div class="reply-form">
+            <h4>Deja tu comentario</h4>
+            <p>Tu email no sera publicado.</p>
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <input id="name" name="name" type="text" class="form-control" maxlength="30" pattern="[A-Za-z]{5,30}" title="Un nombre válido consiste en una cadena con 5 a 30 caracteres. No se aceptan número, símbolos o metacaracteres." placeholder="Nombre y Apellido *">
               </div>
+              <div class="col-md-6 form-group">
+                <input id="email" name="email" type="email" class="form-control" placeholder="Email *">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col form-group">
+                <textarea id="comment" name="comment" class="form-control" placeholder="Comentario *" maxlength="240"></textarea>
+                <div id="charCount" class="char-count">240 caracteres restantes</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col form-group">
+                <div class="star-rating">
+                  <i class="far fa-star" data-rating="5"></i>
+                  <i class="far fa-star" data-rating="4"></i>
+                  <i class="far fa-star" data-rating="3"></i>
+                  <i class="far fa-star" data-rating="2"></i>
+                  <i class="far fa-star" data-rating="1"></i>
+                </div>
+              </div>
+            </div>
+            <button type="button" id="btnAñadirComentario" class="btn btn-secondary w-100">Publicar comentario</button>
           </div>
+        </div>
+
       </div>
     </section><!-- End Blog Details Section -->
     

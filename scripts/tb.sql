@@ -27,6 +27,11 @@ CREATE TABLE IF NOT EXISTS suscripcion (
 
 ALTER TABLE galeria ADD fec_baja datetime;
 
+
+#Script para añadir columna servicio_puntaje (para mostrar promedio de rating) a tabla servicio 09/01/2025 10:24am
+
+ALTER TABLE servicio ADD servicio_puntaje FLOAT;
+
 #Script para añadir columna fecha_actua_plan a tabla usuario 7/1/2024 20.15hs
 ALTER TABLE usuario
 ADD fecha_actua_plan DATE;

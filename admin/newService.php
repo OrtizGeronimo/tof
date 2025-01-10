@@ -285,14 +285,16 @@
                     <div class="row mb-3">
                       <label for="categoria" class="col-md-4 col-lg-3 col-form-label">Categoría <span class="camposObligatorios">*</span></label>
                       <div class="col-md-8 col-lg-9">
-                        <p class="col-12 mt-3"><span class="camposObligatorios">Para seleccionar varias categorias mantenga la tecla CTRL o COMMAND apretada</span></p>
+                        <p class="col-12 mt-3"><span class="camposObligatorios">Haga clic en las categorías para seleccionarlas</span></p>
                         <input type="text" class="form-control mb-2" id="categorySearch" placeholder="Buscar categoría...">
-                        <select name="categoria[]" id="categoria" class="form-select form-select-cat" aria-label="Default select example" required multiple size="8">
-                          <option value = "" disabled>Seleccione una o mas categorias</option>
-                        <!-- aca van a ir las cat -->
-                        </select>
+                        <div class="category-container">
+                          <ul id="categoria" class="category-list" aria-label="Lista de categorías">
+                            <!-- Las categorías se agregarán aquí dinámicamente -->
+                          </ul>
+                        </div>
+                        <input type="hidden" name="categoria[]" id="selectedCategories" value="">
                       </div>
-                      <p id="categorias-seleccionadas" class="col-12 mt-3">Categorias Seleccionadas:</p>
+                      <p id="categorias-seleccionadas" class="col-12 mt-3">Categorias Seleccionadas: </p>
                     </div>
 
                     <div class="row mb-3">
@@ -839,83 +841,113 @@
   <script src="../assets/js/main.js"></script>
   <script src="../assets/js/selectCategorias.js"></script>
   
-<script>
-  const selectElement = document.getElementById("categoria");
-
-  let isDragging = false;
-
-  selectElement.addEventListener("mousedown", (event) => {
-    if (event.button === 0) { // Botón izquierdo del mouse
-      isDragging = false;
-    }
-  });
-
-  selectElement.addEventListener("mousemove", () => {
-    isDragging = true; // Si el mouse se mueve, el usuario está arrastrando
-  });
-
-  selectElement.addEventListener("mouseup", (event) => {
-    if (isDragging) {
-      event.preventDefault(); // Cancela la selección si hubo arrastre
-    }
-  });
-
-  selectElement.addEventListener("click", (event) => {
-    if (isDragging) {
-      event.preventDefault(); // Cancela el clic si hubo arrastre
-      isDragging = false; // Reinicia el estado
-    }
-  });
-</script>
-
-  
   <script>
-    let selectedCategories = [];
+  let selectedCategories = [];
+
 
 function populateCategories(cats) {
   const categoryList = document.getElementById('categoria');
+  categoryList.innerHTML = ''; // Limpiar la lista existente
 
   cats.forEach(category => {
-    
-    const opt = document.createElement('option');
-
-    
-    opt.id = `categoria_option_${category.idCategoria}`;
-    opt.innerHTML = category.tipo;
-    opt.value = category.idCategoria;
-    opt.classList.add('dropdown-item');
-    if (selectedCategories.includes(category.idCategoria) ){
-      opt.classList.add("checked");
-      opt.selected = true;
+    const li = document.createElement('li');
+    li.id = `categoria_option_${category.idCategoria}`;
+    li.innerHTML = `
+      <span class="category-text">${category.tipo}</span>
+      <i class="bi bi-check-circle-fill check-icon"></i>
+      <i class="bi bi-x-lg remove-icon"></i>
+    `;
+    li.dataset.categoryId = category.idCategoria;
+    li.classList.add('category-item');
+    if (selectedCategories.includes(category.idCategoria)) {
+      li.classList.add("checked");
     }
-    categoryList.appendChild(opt);
+    li.addEventListener('click', toggleCategory);
+    categoryList.appendChild(li);
   });
+  updateHiddenInput();
+}
 
+function toggleCategory(event) {
+  const categoryItem = event.currentTarget;
+  const categoryId = categoryItem.dataset.categoryId;
+
+  if (categoryItem.classList.contains('checked')) {
+    // Deseleccionar categoría
+    categoryItem.classList.remove('checked');
+    selectedCategories = selectedCategories.filter(id => id !== categoryId);
+  } else {
+    // Seleccionar categoría
+    if (selectedCategories.length >= limiteCategorias) {
+      showLimitAlert();
+      return;
+    }
+    categoryItem.classList.add('checked');
+    selectedCategories.push(categoryId);
+  }
+
+  updateSelectedCategoriesDisplay();
+  updateHiddenInput();
+}
+
+function updateSelectedCategoriesDisplay() {
+  const categoriasSeleccionadasLabel = document.querySelector("#categorias-seleccionadas");
+  const selectedItems = document.querySelectorAll('#categoria .checked');
+  const selectedTexts = Array.from(selectedItems).map(item => item.querySelector('.category-text').textContent);
+  
+  categoriasSeleccionadasLabel.textContent = "Categorías Seleccionadas: " + selectedTexts.join(', ');
+}
+
+function updateHiddenInput() {
+  const hiddenInput = document.getElementById('selectedCategories');
+  hiddenInput.value = selectedCategories.join(',');
+}
+
+function showLimitAlert() {
+  Swal.fire({
+    title: '¿Desea cambiar su plan?',
+    text: 'No puede seleccionar más categorías porque alcanzó el límite de su plan.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#F2C94C',
+    cancelButtonColor: '#F2C94C',
+    cancelButtonText: 'Mantener plan',
+    confirmButtonText: 'Cambiar Plan',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = "./../editUser.php";
+    }
+  });
 }
 
 function filterCategories() {
   const searchTerm = document.getElementById('categorySearch').value.toLowerCase();
-  const categoryItems = document.querySelectorAll('#categoria .dropdown-item');
+  const categoryItems = document.querySelectorAll('#categoria .category-item');
   categoryItems.forEach(item => {
-    const text = item.textContent.toLowerCase();
+    const text = item.querySelector('.category-text').textContent.toLowerCase();
     item.style.display = text.includes(searchTerm) ? '' : 'none';
   });
 }
 
-
 document.getElementById('categorySearch').addEventListener('input', filterCategories);
 
 document.addEventListener('DOMContentLoaded', async () => {
-      
-      await fetch('.././controller/api/getCategories.php')
-        .then(response => response.json())
-        .then(data => {
-          categories = data;
-          populateCategories(categories);
-        });
+ 
+  
+  await fetch('.././controller/api/getCategories.php')
+    .then(response => response.json())
+    .then(data => {
+      categories = data;
+      populateCategories(categories);
+      updateSelectedCategoriesDisplay();
+    });
 
-      
+  // Ensure the hidden input is updated on form submission
+  const form = document.querySelector('form'); // Adjust this selector if needed
+  form.addEventListener('submit', function(e) {
+    updateHiddenInput();
   });
+});
   </script>
 </body>
 
