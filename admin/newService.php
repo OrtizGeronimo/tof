@@ -283,19 +283,24 @@
                     <h4 class="card-title">Detalles</h4>
 
                     <div class="row mb-3">
-                      <label for="categoria" class="col-md-4 col-lg-3 col-form-label">Categoría <span class="camposObligatorios">*</span></label>
-                      <div class="col-md-8 col-lg-9">
-                        <p class="col-12 mt-3"><span class="camposObligatorios">Haga clic en las categorías para seleccionarlas</span></p>
-                        <input type="text" class="form-control mb-2" id="categorySearch" placeholder="Buscar categoría...">
-                        <div class="category-container">
-                          <ul id="categoria" class="category-list" aria-label="Lista de categorías">
-                            <!-- Las categorías se agregarán aquí dinámicamente -->
-                          </ul>
-                        </div>
-                        <input type="hidden" name="categoria[]" id="selectedCategories" value="">
-                      </div>
-                      <p id="categorias-seleccionadas" class="col-12 mt-3">Categorias Seleccionadas: </p>
-                    </div>
+  <label for="categoria" class="col-md-4 col-lg-3 col-form-label">Categoría <span class="camposObligatorios">*</span></label>
+  <div class="col-md-8 col-lg-9">
+    <p class="col-12 mt-3"><span class="camposObligatorios">Haga clic en las categorías para seleccionarlas</span></p>
+    <input type="text" class="form-control mb-2" id="categorySearch" placeholder="Buscar categoría...">
+    <div class="category-container">
+      <ul id="categoria" class="category-list" aria-label="Lista de categorías">
+        <li id="categoria_option_solicitar" class="category-item">
+          <span class="category-text">Solicitar Categoria</span>
+          <i class="bi bi-check-circle-fill check-icon"></i>
+          <i class="bi bi-x-lg remove-icon"></i>
+        </li>
+        <!-- Las categorías se agregarán aquí dinámicamente -->
+      </ul>
+    </div>
+    <input type="hidden" name="categoria[]" id="selectedCategories" value="">
+  </div>
+  <p id="categorias-seleccionadas" class="col-12 mt-3">Categorias Seleccionadas: </p>
+</div>
 
                     <div class="row mb-3">
                       <label for="tags" class="col-md-4 col-lg-3 col-form-label">Tags</label>
@@ -842,12 +847,17 @@
   <script src="../assets/js/selectCategorias.js"></script>
   
   <script>
-  let selectedCategories = [];
-
+let selectedCategories = [];
+let categories = [];
 
 function populateCategories(cats) {
   const categoryList = document.getElementById('categoria');
-  categoryList.innerHTML = ''; // Limpiar la lista existente
+  const solicitarCategoriaItem = document.getElementById('categoria_option_solicitar');
+
+  // Remove all items except "Solicitar Categoria"
+  while (categoryList.lastChild && categoryList.lastChild !== solicitarCategoriaItem) {
+    categoryList.removeChild(categoryList.lastChild);
+  }
 
   cats.forEach(category => {
     const li = document.createElement('li');
@@ -866,11 +876,30 @@ function populateCategories(cats) {
     categoryList.appendChild(li);
   });
   updateHiddenInput();
+  updateSelectedCategoriesDisplay();
+}
+
+function updateSelectedCategoriesDisplay() {
+  const categoriasSeleccionadasLabel = document.querySelector("#categorias-seleccionadas");
+  const selectedItems = document.querySelectorAll('#categoria .checked');
+  const selectedTexts = Array.from(selectedItems).map(item => item.querySelector('.category-text').textContent);
+  
+  categoriasSeleccionadasLabel.textContent = "Categorías Seleccionadas: " + selectedTexts.join(', ');
+}
+
+function updateHiddenInput() {
+  const hiddenInput = document.getElementById('selectedCategories');
+  hiddenInput.value = selectedCategories.join(',');
 }
 
 function toggleCategory(event) {
   const categoryItem = event.currentTarget;
   const categoryId = categoryItem.dataset.categoryId;
+
+  if (categoryItem.id === 'categoria_option_solicitar') {
+    solicitarCategoria();
+    return;
+  }
 
   if (categoryItem.classList.contains('checked')) {
     // Deseleccionar categoría
@@ -890,17 +919,62 @@ function toggleCategory(event) {
   updateHiddenInput();
 }
 
-function updateSelectedCategoriesDisplay() {
-  const categoriasSeleccionadasLabel = document.querySelector("#categorias-seleccionadas");
-  const selectedItems = document.querySelectorAll('#categoria .checked');
-  const selectedTexts = Array.from(selectedItems).map(item => item.querySelector('.category-text').textContent);
-  
-  categoriasSeleccionadasLabel.textContent = "Categorías Seleccionadas: " + selectedTexts.join(', ');
-}
+function solicitarCategoria() {
+  Swal.fire({
+    title: 'Solicitar nueva categoría',
+    input: 'text',
+    inputLabel: 'Por favor, ingresa qué categoria solicitas que agreguemos',
+    showCancelButton: true,
+    confirmButtonText: 'Enviar solicitud',
+    cancelButtonText: 'Cancelar',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'Debes ingresar una categoría'
+      }
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Show loading spinner
+      Swal.fire({
+        title: 'Enviando solicitud',
+        text: 'Por favor espere...',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
 
-function updateHiddenInput() {
-  const hiddenInput = document.getElementById('selectedCategories');
-  hiddenInput.value = selectedCategories.join(',');
+      // Call your existing PHP script to send email
+      fetch('.././controller/solicitarCategoria.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `categoria=${encodeURIComponent(result.value)}&email=${encodeURIComponent('<?= $usuario["user_email"] ?>')}&usuario=${encodeURIComponent('<?= $usuario['user_login'] ?>')}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Close loading spinner
+        Swal.close();
+
+        if (data.success) {
+          Swal.fire('Gracias!', 'Analizaremos tu solicitud', 'success');
+        } else {
+          Swal.fire('Error', 'Hubo un problema al enviar tu solicitud', 'error');
+        }
+      })
+      .catch(error => {
+        // Close loading spinner
+        Swal.close();
+
+        console.error('Error:', error);
+        Swal.fire('Error', 'Hubo un problema al enviar tu solicitud', 'error');
+      });
+    }
+  });
 }
 
 function showLimitAlert() {
@@ -925,15 +999,17 @@ function filterCategories() {
   const categoryItems = document.querySelectorAll('#categoria .category-item');
   categoryItems.forEach(item => {
     const text = item.querySelector('.category-text').textContent.toLowerCase();
-    item.style.display = text.includes(searchTerm) ? '' : 'none';
+    if (item.id === 'categoria_option_solicitar') {
+      item.style.display = ''; // Always show "Solicitar Categoria"
+    } else {
+      item.style.display = text.includes(searchTerm) ? '' : 'none';
+    }
   });
 }
 
-document.getElementById('categorySearch').addEventListener('input', filterCategories);
-
 document.addEventListener('DOMContentLoaded', async () => {
- 
-  
+  document.getElementById('categorySearch').addEventListener('input', filterCategories);
+
   await fetch('.././controller/api/getCategories.php')
     .then(response => response.json())
     .then(data => {
@@ -942,13 +1018,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       updateSelectedCategoriesDisplay();
     });
 
+  // Add event listener for "Solicitar Categoria"
+  document.getElementById('categoria_option_solicitar').addEventListener('click', solicitarCategoria);
+
   // Ensure the hidden input is updated on form submission
   const form = document.querySelector('form'); // Adjust this selector if needed
   form.addEventListener('submit', function(e) {
     updateHiddenInput();
   });
 });
-  </script>
+</script>
+
 </body>
 
 </html>
