@@ -72,7 +72,14 @@ foreach ($menu_items as $item_url => $item_name) {
                   </li>
 
                   <li>
-                      <a class="dropdown-item d-flex align-items-center" href="<?=file_exists('./admin/updateService.php')?'./admin/updateService.php':'./updateService.php'?>">
+                  <a class="dropdown-item d-flex align-items-center" 
+                    href="<?php 
+                    if (isset($_SESSION['s_id_servicio'])) {
+                        echo file_exists('./admin/updateService.php') ? './admin/updateService.php' : './updateService.php';
+                    } else {
+                        echo file_exists('./admin/newService.php') ? './admin/newService.php' : './newService.php';
+                    }
+                    ?>">
                         <i class="bi bi-bag"></i>
                         <span>Mi servicio</span>
                       </a>

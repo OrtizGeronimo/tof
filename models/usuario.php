@@ -52,6 +52,15 @@ class Usuario{
         return $servicio;                                            
     }
 
+    public static function getServicios($idUsuario){
+        $servicio = BaseDeDatos::consulta(" SELECT idServicio
+                                            FROM usuario u
+                                            LEFT JOIN servicio s
+                                            ON u.idUsuario = s.FK_idUsuario
+                                            WHERE u.idUsuario = $idUsuario;");
+        return $servicio;                                            
+    }
+    
     public static function getUsuario($idUsuario){
         $user = BaseDeDatos::consulta("SELECT *
                                       FROM usuario u
@@ -125,17 +134,20 @@ class Usuario{
     }
 
     public static function getUsuariosEmail($email){
-        $getUsuariosEmail = BaseDeDatos::consulta("SELECT u.* FROM usuario u WHERE '$email' = u.user_email;");
+        $getUsuariosEmail = BaseDeDatos::consulta("SELECT u.* FROM usuario u WHERE u.user_email = '$email';");
 
         return $getUsuariosEmail;  
         
     }
 
     public static function getUsuarioContraseña($user,$pass){
-        $getUsuarioContraseña = BaseDeDatos::consulta("SELECT * 
-                                                       FROM usuario u, rol r
-                                                       WHERE r.idRol = u.FK_idRol
-                                                       AND u.user_login = '$user'
+        $getUsuarioContraseña = BaseDeDatos::consulta("SELECT u.*, r.*, s.idServicio 
+                                                       FROM usuario u
+                                                       INNER JOIN rol r
+                                                       ON r.idRol = u.FK_idRol
+                                                       LEFT JOIN servicio s
+                                                       ON s.FK_idUsuario = u.idUsuario
+                                                       WHERE u.user_login = '$user'
                                                        AND u.user_pass = '$pass';");
         return $getUsuarioContraseña;
     }
@@ -193,11 +205,31 @@ class Usuario{
     }
 
     public static function generarReporteUsuario($userIds){
-        return BaseDeDatos::consulta("SELECT user_nombre, user_email, servicio_nombre, user_telefono, rol, u.fec_alta 
-                                        FROM usuario u
-                                        INNER JOIN rol r ON r.idRol = u.FK_idRol
-                                        LEFT JOIN servicio s ON u.idUsuario = s.FK_idUsuario
-                                        WHERE u.idUsuario IN ($userIds)");
+        return BaseDeDatos::consulta("SELECT 
+                                        u.idUsuario, 
+                                        u.user_nombre, 
+                                        u.user_email, 
+                                        s.servicio_nombre, 
+                                        u.user_telefono, 
+                                        r.rol, 
+                                        u.fec_alta,
+                                        GROUP_CONCAT(c.tipo ORDER BY c.tipo SEPARATOR ', ') AS categorias
+                                    FROM 
+                                        usuario u
+                                    INNER JOIN 
+                                        rol r ON r.idRol = u.FK_idRol
+                                    LEFT JOIN 
+                                        servicio s ON u.idUsuario = s.FK_idUsuario
+                                    LEFT JOIN 
+                                        categoria_servicio cs ON s.idServicio = cs.FK_idServicio
+                                    LEFT JOIN 
+                                        categoria c ON cs.FK_idCategoria = c.idCategoria
+                                    WHERE 
+                                        u.idUsuario IN ($userIds)
+                                    GROUP BY 
+                                        u.idUsuario, 
+                                        s.idServicio
+                                    ");
     }
 
 }

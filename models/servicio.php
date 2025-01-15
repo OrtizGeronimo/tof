@@ -266,10 +266,20 @@ class Servicio{
                                       WHERE idServicio = $idServicio;");
     }
 
+    public static function bajaFisicaServicio($idServicio){
+        return BaseDeDatos::consulta("DELETE FROM servicio
+                                      WHERE idServicio = $idServicio;");
+    }
+
     public static function deleteServicioHorarios($idServicio,$usuarioBaja){
         return BaseDeDatos::consulta("UPDATE servicio_horario
                                         SET usr_baja = '$usuarioBaja',
                                             fec_baja = now()
+                                        WHERE FK_idServicio  = '$idServicio';");
+    }
+
+    public static function bajaFisicaHorarios($idServicio){
+        return BaseDeDatos::consulta("DELETE FROM servicio_horario
                                         WHERE FK_idServicio  = '$idServicio';");
     }
 
@@ -280,10 +290,20 @@ class Servicio{
                                       WHERE FK_idServicio = $idServicio;");
     }
 
+    public static function bajaFisicaTipo($idServicio){
+        return BaseDeDatos::consulta("DELETE FROM servicio_tipo
+                                      WHERE FK_idServicio = $idServicio;");
+    }
+
     public static function deleteRedSocialServicio($idServicio,$usuarioBaja){
         return BaseDeDatos::consulta("UPDATE red_social
                                         SET usr_baja = '$usuarioBaja',
                                             fec_baja = now()
+                                        WHERE FK_idServicio = $idServicio;");
+    }
+
+    public static function bajaFisicaRedSocial($idServicio){
+        return BaseDeDatos::consulta("DELETE FROM red_social
                                         WHERE FK_idServicio = $idServicio;");
     }
 
@@ -292,6 +312,22 @@ class Servicio{
                                         SET usr_baja = '$usuarioBaja',
                                             fec_baja = now()
                                         WHERE FK_idServicio = $idServicio;");
+    }
+
+    public static function bajaFisicaCategoriaServicio($idServicio){
+        return BaseDeDatos::consulta("DELETE FROM categoria_servicio
+                                        WHERE FK_idServicio = $idServicio;");
+    }
+
+    public static function bajaFisicaTags($idServicio){
+        return BaseDeDatos::consulta("DELETE FROM servicio_tags
+                                        WHERE FK_idServicio = $idServicio;");
+    }
+
+    public static function bajaFisicaComentario($idServicio){
+        $servicio = BaseDeDatos::consulta(" DELETE FROM comentario_servicio
+                                            WHERE FK_idServicio = $idServicio;");
+        return $servicio;                                            
     }
     
     public static function agregarServiciosBasicos($descripción,$idCategoria,$idProvincia,$idDepartamento,$idUsuario,$emailContacto,$sitioWeb,$nombreServicio){

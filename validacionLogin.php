@@ -25,6 +25,7 @@
             $nombre    = $row['user_nombre'];
             $rol        = $row['rol'];
             $img_perfil = $row['user_img_perfil'];
+            $id_servicio = $row['idServicio'];
         }
         if ($user == $usuario && $passEnc == $pw) {
             $_SESSION["s_id_usuario"] = $idUsuario;
@@ -32,6 +33,7 @@
             $_SESSION["s_nombre_usuario"] = $usuario;
             $_SESSION["s_rol"] = $rol;
             $_SESSION["s_img_perfil"] = 'archivos/user_'.$usuario.'/user_profile.webp';
+            $_SESSION["s_id_servicio"] = $id_servicio;
 
             $response = "no entra a validar suscripcion porque es gratuito, rol: ".$rol;
 

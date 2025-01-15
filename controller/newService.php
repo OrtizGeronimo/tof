@@ -65,6 +65,7 @@ if(
         $lastServicio = $Servicio::getLastServicio();
         if($row = mysqli_fetch_array($lastServicio)){
             $idLastServicio = $row["idServicio"];
+            $_SESSION["s_id_servicio"] = $idLastServicio;
 
             /*----------------- CATEGORIA -----------------*/
             $categorias  = $servicio["categoria"];
@@ -150,12 +151,20 @@ if(
                 }
             }
             
-
+            if(strtoupper($_SESSION["s_rol"]) == "ADMIN"){
                 header("Location: ./../admin/index.php?successService");
+            }else{
+                header("Location: ./../admin/updateService.php?successService");
+            }
+                
         }
 
     } else{
-        header("Location: ./../admin/index.php?errorService");
+        if(strtoupper($_SESSION["s_rol"]) == "ADMIN"){
+            header("Location: ./../admin/index.php?errorService");
+        }else{
+            header("Location: ./../admin/updateService.php?errorService");
+        }
     }
 }
 

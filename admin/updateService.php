@@ -1089,7 +1089,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 });
 </script>
-
+<?php
+if(isset($_GET["successService"])){
+      echo "
+        <script>
+          alertSwal('success','Se creo el servicio con exito');
+        </script>
+      ";
+}else if(isset($_GET["errorService"])){
+  echo "
+    <script>
+      alertSwal('error','Hubo un problema al crear el servicio');
+    </script>
+  ";
+}
+?>
 </body>
 
 </html>

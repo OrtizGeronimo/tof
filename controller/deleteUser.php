@@ -8,21 +8,30 @@ $email = $_POST['email'];
 if(isset($email)){
     try {
         $user = mysqli_fetch_array(Usuario::getUsuariosEmail($email));
-        $servicioResult = Usuario::getAllServicios($user["idUsuario"]);  
+        $servicioResult = Usuario::getServicios($user["idUsuario"]);  
         
         if(mysqli_num_rows($servicioResult) > 0){
             $servicio = mysqli_fetch_array($servicioResult);
-            Servicio::deleteCategoriaServicio($servicio["idServicio"],$_SESSION["s_nombre"]);
-            Servicio::deleteServicioHorarios($servicio["idServicio"],$_SESSION["s_nombre"]);
-            Servicio::deleteServicioTipo($servicio["idServicio"],$_SESSION["s_nombre"]);
-            Servicio::deleteServicio($servicio["idServicio"],$_SESSION["s_nombre"]);            
+            Servicio::bajaFisicaComentario($servicio["idServicio"]); 
+            Servicio::bajaFisicaTags($servicio["idServicio"]);
+            Servicio::bajaFisicaRedSocial($servicio["idServicio"]);            
+            Servicio::bajaFisicaHorarios($servicio["idServicio"]);
+            Servicio::bajaFisicaTipo($servicio["idServicio"]);
+            Servicio::bajaFisicaCategoriaServicio($servicio["idServicio"]);
+            Servicio::bajaFisicaServicio($servicio["idServicio"]);            
         }
         Usuario::deleteUsuario($email);
-        header('Location:./../admin/users.php?deleteUser');
+        if(strtoupper($_SESSION["s_rol"]) == "ADMIN"){
+            header('Location:./../admin/users.php?deleteUser');
+        }
     } catch (\Throwable $th) {
-        header('Location:./../admin/users.php?errorDeleteUser');
+        if(strtoupper($_SESSION["s_rol"]) == "ADMIN"){
+            header('Location:./../admin/users.php?errorDeleteUser&message='. urlencode($th));
+        }
     }
 }else{
-    header('Location:./../admin/users.php');
+    if(strtoupper($_SESSION["s_rol"]) == "ADMIN"){
+        header('Location:./../admin/users.php');
+    }
 }
 ?>
