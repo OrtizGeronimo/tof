@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_users'])) {
     $sheet->setTitle('Reporte de Usuarios');
 
     // Encabezados
-    $headers = ['Nombre', 'Email', 'Servicio', 'Teléfono', 'Rol', 'Fecha Alta'];
+    $headers = ['ID Proveedor', 'Nombre', 'Servicio', 'Categorias', 'Teléfono', 'Email', 'Fecha Alta', 'Rol'];
     $sheet->fromArray($headers, null, 'A1');
 
     // Aplicar estilo en negrita a los encabezados
@@ -32,22 +32,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_users'])) {
             'horizontal' => Alignment::HORIZONTAL_CENTER,
         ],
     ];
-    $sheet->getStyle('A1:F1')->applyFromArray($headerStyle);
+    $sheet->getStyle('A1:H1')->applyFromArray($headerStyle);
 
     // Datos
     $row = 2;
     while ($user = mysqli_fetch_assoc($result)) {
-        $sheet->setCellValue("A$row", $user['user_nombre']);
-        $sheet->setCellValue("B$row", $user['user_email']);
+        $sheet->setCellValue("A$row", $user['idUsuario']);
+        $sheet->setCellValue("B$row", $user['user_nombre']);        
         $sheet->setCellValue("C$row", $user['servicio_nombre'] ?? 'No tiene');
-        $sheet->setCellValue("D$row", $user['user_telefono']);
-        $sheet->setCellValue("E$row", $user['rol']);
-        $sheet->setCellValue("F$row", $user['fec_alta']);
+        $sheet->setCellValue("D$row", $user['categorias'] ?? 'No tiene');
+        $sheet->setCellValue("E$row", $user['user_telefono']);
+        $sheet->setCellValue("F$row", $user['user_email']);
+        $sheet->setCellValue("G$row", $user['fec_alta']);
+        $sheet->setCellValue("H$row", $user['rol']);
         $row++;
     }
 
+    // Aplicar alineación a la izquierda a todas las columnas de datos
+    $dataStyle = [
+        'alignment' => [
+            'horizontal' => Alignment::HORIZONTAL_CENTER,
+        ],
+    ];
+    $sheet->getStyle("A2:H$row")->applyFromArray($dataStyle);
+
     // Ajustar automáticamente el ancho de las columnas
-    foreach (range('A', 'F') as $column) {
+    foreach (range('A', 'H') as $column) {
         $sheet->getColumnDimension($column)->setAutoSize(true);
     }
 

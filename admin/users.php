@@ -102,10 +102,8 @@
                               <td><?=$row["fec_alta"]?></td>
                               <td>
                                   <a id="" href="./../editUser.php?idUsuario=<?=$row["idUsuario"]?>" class="btn btn-warning" type="button">Modificar</a>
-                                  <form action="./../controller/deleteUser.php" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar el usuario <?=$row['user_nombre']?>?')">
-                                    <input type="hidden" name="email" value="<?=$row['user_email']?>">
-                                    <button class="btn btn-danger" type="submit">Eliminar</button>
-                                  </form>
+                                  <!-- Botón para eliminar usuario -->
+                                  <button type="button" class="btn btn-danger" onclick="eliminarUsuario('<?= $row['user_email'] ?>', '<?= $row['user_nombre'] ?>')">Eliminar</button>
                             </td>
                             </tr>
                       <?php } ?>
@@ -129,6 +127,22 @@
 
   <div id="preloader"></div>
 
+  <!-- Formulario oculto para eliminar usuario -->
+<form id="deleteUserForm" action="./../controller/deleteUser.php" method="POST" style="display: none;">
+  <input type="hidden" name="email" id="deleteUserEmail">
+</form>
+
+<script>
+  function eliminarUsuario(email, nombre) {
+    if (confirm(`¿Estás seguro de que deseas eliminar el usuario ${nombre}?`)) {
+      // Asignar el email al formulario oculto
+      document.getElementById('deleteUserEmail').value = email;
+      // Enviar el formulario
+      document.getElementById('deleteUserForm').submit();
+    }
+  }
+</script>
+
   <!-- Vendor JS Files -->
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/vendor/aos/aos.js"></script>
@@ -151,6 +165,17 @@
     });
   </script>
   <?php
+    if (isset($_GET["errorNoUsers"])) {
+      echo "
+        <script>
+          Swal.fire({
+            icon: 'error',
+            title: 'No se seleccionaron usuarios',
+            text: 'Por favor, selecciona al menos un usuario para generar el reporte.',
+          });
+        </script>
+      ";
+    }
     if(isset($_GET["successUser"])){
       echo "
         <script>
